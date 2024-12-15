@@ -1,8 +1,12 @@
-# predictive_maintenance
-
+# predictive_maintenance  
+<div align="center">
+<img src="./md/images/logo.png" width="80%">
+</div>
 
 ## NASA Turbofan Jet Engine Data Set  
+<div align="center"> 
 <img src="./dataset/Turbofan_Jet_Engine.png">  
+</div>  
 https://www.kaggle.com/datasets/behrad3d/nasa-cmaps  
 
 
@@ -16,6 +20,8 @@ https://www.kaggle.com/datasets/behrad3d/nasa-cmaps
 https://github.com/mathworks/WindTurbineHighSpeedBearingPrognosis-Data  
 https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-prognosis-data  
 
-<img src="./dataset/dataset-card.jpeg" width="80%">  
+<div align="center">
+<img src="./dataset/dataset-card.jpeg" width="80%">
+</div>  
 <img src="./md/images/result.gif">  
 
