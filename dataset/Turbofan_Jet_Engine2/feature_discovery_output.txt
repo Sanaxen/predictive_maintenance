@@ -1,0 +1,10 @@
+sensor7.peak2peak
+sensor12.range
+textBox10,48
+textBox11,12
+textBox5,0
+textBox6,0
+textBox13,12
+textBox12,1
+comboBox3,+
+textBox21,419.469792

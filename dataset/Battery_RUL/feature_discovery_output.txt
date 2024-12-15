@@ -1,0 +1,10 @@
+RUL.logEnergy
+RUL.mean
+textBox10,60
+textBox11,15
+textBox5,0
+textBox6,0
+textBox13,15
+textBox12,1
+comboBox3,-
+textBox21,-14.028210

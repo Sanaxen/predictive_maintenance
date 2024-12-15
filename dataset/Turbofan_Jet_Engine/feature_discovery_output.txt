@@ -1,0 +1,10 @@
+sensor7.mean
+sensor7.spectrum
+textBox10,24
+textBox11,6
+textBox5,0
+textBox6,0
+textBox13,6
+textBox12,1
+comboBox3,-
+textBox21,-552.438899
