@@ -8,6 +8,10 @@ This only needs to be done once.
 You can choose between Japanese or English. After setting, restart to apply the specified language.
 <img src="./images/003.png">
 
+## File encoding settings
+Currently, it is fixed to UTF-8, and all input CSV files are automatically converted to UTF-8.
+Also, all output files are output in UTF-8.
+
 ## Importing CSV Data
 CSV data can be either accumulated data from periodic saving or consolidated CSV files. One or multiple files are acceptable. Place these CSV files under an appropriately named folder. Use the "CSV" button to access the folder and select the first CSV file.
 <img src="./images/004.png">
