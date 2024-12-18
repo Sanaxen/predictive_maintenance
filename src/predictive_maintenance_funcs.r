@@ -2695,7 +2695,7 @@ if(T)
 	
 	if ( failure_time != failure_time_init && failure_time < h )
 	{
-		for ( i in (failure_time+1):h )
+		for ( i in (failure_time):h )
 		{
 			if ( !is.null(fit_predict))
 			{
@@ -2710,7 +2710,7 @@ if(T)
 	
 	if ( failure_time50p != failure_time_init && failure_time50p < h )
 	{
-		for ( i in (failure_time50p+1):h )
+		for ( i in (failure_time50p):h )
 		{
 			if ( !is.null(fit_predict))
 			{
