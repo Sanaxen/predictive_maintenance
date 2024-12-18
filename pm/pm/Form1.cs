@@ -1455,6 +1455,18 @@ namespace pm
                 if (MessageBox.Show("Cannot write in " + file, "", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                     return;
             }
+            if (checkBox5.Checked)
+            {
+                System.IO.Directory.SetCurrentDirectory(base_dir);
+                try
+                {
+                    execute_bat(file);
+                }
+                catch
+                {
+
+                }
+            }
 
             cmd = "";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";
