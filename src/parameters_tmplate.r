@@ -1,4 +1,4 @@
-csv_encoding = 'sjis'
+csv_encoding = 'utf-8'
 base_name = ""
 
 #•½ŠŠ‰»‚Åspline

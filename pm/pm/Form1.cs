@@ -119,10 +119,12 @@ namespace pm
         void save()
         {
             string file = csv_dir + "\\pm_setting_" + base_name0 + string.Format("{0}", output_idx) + ".txt";
-            
+
+            var encoding = new System.Text.UTF8Encoding(false);
+
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding("shift_jis")))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(output_idx.ToString() + "\n");
                     sw.Write(listBox1.Items.Count.ToString() + "\n");
@@ -303,8 +305,10 @@ namespace pm
             string rexe1 = textBox1.Text + "\\x64\\Rscript.exe";
             string rexe = rexe1;
 
+            var encoding = new System.Text.UTF8Encoding(false);
+
             bool rpath_chg = false;
-            System.IO.StreamReader sr = new System.IO.StreamReader(file, Encoding.GetEncoding("SHIFT_JIS"));
+            System.IO.StreamReader sr = new System.IO.StreamReader(file, encoding);
             if (sr != null)
             {
                 while (sr.EndOfStream == false)
@@ -970,6 +974,7 @@ namespace pm
             }
         }
 
+
         public void execute_bat(string script_file, bool wait = true)
         {
             ProcessStartInfo pInfo = new ProcessStartInfo();
@@ -1015,6 +1020,7 @@ namespace pm
 
             //string cmd1 = tft_header_ru();
 
+            encoding = comboBox1.Text;
             string cmd = "";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";
             cmd += "dir='" + work_dir.Replace("\\", "\\\\") + "'\r\n";
@@ -1030,9 +1036,10 @@ namespace pm
 
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                var encoding = new System.Text.UTF8Encoding(false);
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
-                    sw.Write("options(encoding=\"" + encoding + "\")\r\n");
+                    sw.Write("options(encoding=\"" + comboBox1.Text + "\")\r\n");
 
                     sw.Write("options(width=1000)\r\n");
                     sw.Write("sink(file = \"names.txt\")\r\n");
@@ -1166,7 +1173,33 @@ namespace pm
             string tmp = Path.GetDirectoryName(work_dir + "\\" + base_name + ".csv");
             if (csv_dir != Path.GetDirectoryName(work_dir + "\\" + base_name + ".csv"))
             {
-                File.Copy(csv_file, base_name + ".csv", true);
+                string bat = "..\\bin\\nkf.exe";
+                bat += " -w " + csv_file + " > " + base_name + ".csv";
+
+                var encoding2 = new System.Text.UTF8Encoding(false);
+
+                string nkf_bat = base_name + "_nkf.bat";
+                try
+                {
+                    using (System.IO.StreamWriter sw = new StreamWriter(nkf_bat, false, encoding2))
+                    {
+                        sw.Write(bat + "\n");
+                    }
+                }
+                catch
+                {
+                    if (MessageBox.Show("nkf", "", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        return;
+                }
+                try
+                {
+                    execute_bat(nkf_bat);
+                }
+                catch
+                {
+
+                }
+                //File.Copy(csv_file, base_name + ".csv", true);
             }
             base_name0 = base_name;
 
@@ -1177,9 +1210,11 @@ namespace pm
 
             string file = exePath + "R_install_path.txt";
 
+            var encoding = new System.Text.UTF8Encoding(false);
+
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(textBox1.Text + "\n");
                 }
@@ -1190,6 +1225,8 @@ namespace pm
                     return;
             }
         }
+
+
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
@@ -1338,10 +1375,13 @@ namespace pm
             cmd += "save.image('./predictive_maintenance.RData')\r\n";
 
             string file = base_dir+"\\" +base_name0 + "_parameters.r";
+
+            var encoding = new System.Text.UTF8Encoding(false);
+
             try
             {
                 var utf8Encoding = new System.Text.UTF8Encoding(false);
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, utf8Encoding))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(cmd + "\n");
                 }
@@ -1392,12 +1432,19 @@ namespace pm
                     File.Copy(f.FullName, tmp, true);
                 }
             }
-            cmd += "copy /B \"%data%\\*.csv\" %serv% /v /y\r\n";
+            cmd += "for %%i in (\"%data%\\*.csv\")do ( \r\n";
+            cmd += "  .\\bin\\nkf.exe -w \"%%i\" > \"%serv%\\%%~ni.csv\"\r\n";
+            cmd += ")\r\n";
+
+            cmd += ":copy /B \"%data%\\*.csv\" %serv% /v /y\r\n";
 
             string file = base_dir+"\\" + base_name0 + "_IoT_Emulator.bat";
+            
+            var encoding = new System.Text.UTF8Encoding(false);
+
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(cmd + "\n");
                 }
@@ -1414,16 +1461,19 @@ namespace pm
             cmd += "library(data.table)\r\n";
             cmd += "source('./src/csv_division.r')\r\n";
             cmd += "file = \"";
-            cmd += csv_file.Replace("\\", "/");
+
+            string csv_name = Path.GetFileNameWithoutExtension(csv_file);
+            cmd += csv_name + ".csv";
             cmd += "\"\r\n";
             cmd += "size =" + textBox4.Text +"\r\n";
             cmd += "csv_division(file, size)\r\n";
 
 
             file = base_dir + "\\" + base_name0 + "_Emulator.r";
+
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(cmd + "\n");
                 }
@@ -1444,6 +1494,7 @@ namespace pm
             cmd += "\r\n";
             cmd += "cd %~dp0\r\n";
             cmd += "\r\n";
+            cmd += ".\\bin\\nkf.exe -w \"" + csv_file + "\" > " + csv_name + ".csv\r\n";
             cmd += "\r\n";
             cmd += "\"%R_INSTALL_PATH%\\bin\\x64\\Rscript.exe\" --vanilla "+ "\"" + file + "\"\r\n";
 
@@ -1452,7 +1503,7 @@ namespace pm
 
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(cmd + "\n");
                 }
@@ -1492,13 +1543,31 @@ namespace pm
                 status = -1;
                 return;
             }
-            if (listBox1.Text == "")
+            if (textBox1.Text == "")
             {
+                if (comboBox6.Text == "ja-JP")
+                {
+                    MessageBox.Show("Rの実行環境パスが未設定です");
+                }
+                else
+                {
+                    MessageBox.Show("R execution environment path is not set");
+
+                }
                 status = -1;
                 return;
             }
             if (comboBox2.Text == "")
             {
+                if (comboBox6.Text == "ja-JP")
+                {
+                    MessageBox.Show("データの時間項目が未選択です");
+                }
+                else
+                {
+                    MessageBox.Show("Time item of data is not selected");
+
+                }
                 status = -1;
                 return;
             }
@@ -1530,9 +1599,11 @@ namespace pm
                 if ( !dup ) arg.Items.Add(s[0]);
             }
 
+            var encoding = new System.Text.UTF8Encoding(false);
+
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(args, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(args, false, encoding))
                 {
                     sw.Write("var" + "\r\n");
 
@@ -1592,7 +1663,7 @@ namespace pm
             
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     sw.Write(cmd + "\n");
                 }
@@ -1913,7 +1984,7 @@ namespace pm
         public void summary(object sender, EventArgs e, bool summary = true)
         {
             string cmd = "";
-            cmd += "options(encoding = 'utf-8')\r\n";
+            cmd += "options(encoding = '" + comboBox1.Text +"')\r\n";
             cmd += "\r\n";
             cmd += "curdir = getwd()\r\n";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";
@@ -2039,9 +2110,12 @@ namespace pm
             {
                 batfile = base_dir+"\\" + base_name0 + "_feature_discovery.bat";
             }
+
+            var encoding = new System.Text.UTF8Encoding(false);
+
             try
             {
-                using (System.IO.StreamWriter sw = new StreamWriter(batfile, false, System.Text.Encoding.GetEncoding(comboBox1.Text)))
+                using (System.IO.StreamWriter sw = new StreamWriter(batfile, false, encoding))
                 {
                     sw.Write(bat + "\n");
                 }
@@ -2176,7 +2250,7 @@ namespace pm
             bool x = checkBox5.Checked;
 
             checkBox5.Checked = false;
-            save();
+            //save();
             button2_Click(sender, e);
             button3_Click(sender, e);
             button4_Click(sender, e);

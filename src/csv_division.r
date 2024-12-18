@@ -3,7 +3,7 @@ curdir = getwd()
 library(data.table)
 
 
-read_csv_file <- function( csv, csv_encoding= "sjis")
+read_csv_file <- function( csv, csv_encoding= "utf-8")
 {
 	print(sprintf("read_csv_file(%s)", file))
 	print(sprintf("csv_encoding=%s", csv_encoding))
@@ -14,7 +14,7 @@ read_csv_file <- function( csv, csv_encoding= "sjis")
 		df <- try(
 			read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'Shift_JIS')
 		,silent=F)
-		if ( class(df) == "try-error" || is.null(df) || nrow(df) == 0)
+		if ( class(df) == "try-error" || is.null(df) == T|| nrow(df) == 0)
 		{
 			df <- fread(file, na.strings=c("", "NULL"), header = TRUE, stringsAsFactors = TRUE)
 		}
@@ -23,9 +23,10 @@ read_csv_file <- function( csv, csv_encoding= "sjis")
 		df <- try(
 			fread(file, na.strings=c("", "NULL"), header = TRUE, stringsAsFactors = TRUE)
 		,silent=F)
-		if ( class(df) == "try-error" || is.null(df)  || nrow(df) == 0)
+		print(df)
+		if ( class(df) == "try-error" || is.null(df) == T || nrow(df) == 0)
 		{
-			df <- read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'Shift_JIS')
+			df <- read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'utf-8')
 		}
 	}
 	df <- as.data.frame(df)
@@ -40,9 +41,9 @@ read_csv_file <- function( csv, csv_encoding= "sjis")
 	return (df)
 }
 
-csv_division <- function(csv, size)
+csv_division <- function(csv, size, enc="utf-8")
 {
-	csv_encoding= "sjis"
+	csv_encoding= enc
 
 	if ( ! file.exists("files") )
 	{
@@ -93,7 +94,7 @@ csv_division <- function(csv, size)
 			write.csv(df2, file, row.names = F, fileEncoding  = 'Shift_JIS')
 		}else
 		{
-			write.csv(df2, file, row.names = F, fileEncoding  = 'cp932')
+			write.csv(df2, file, row.names = F, fileEncoding  = 'utf-8')
 		}
 		s = e + 1
 		if ( e == nrow(df))
@@ -106,7 +107,6 @@ csv_division <- function(csv, size)
 	
 	return(1)
 }
-
 
 
 #csv_division(file, size)

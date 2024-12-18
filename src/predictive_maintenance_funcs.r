@@ -1,3 +1,4 @@
+options(encoding = "utf-8")
 library(ggplot2)
 library(dplyr)
 library(e1071)
@@ -318,7 +319,7 @@ get_data_frame<- function(file, timeStamp)
 		df <- try(
 			read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'Shift_JIS')
 		,silent=F)
-		if ( class(df) == "try-error" || is.null(df) || nrow(df) == 0)
+		if ( class(df) == "try-error" || is.null(df) == T|| nrow(df) == 0)
 		{
 			df <- fread(file, na.strings=c("", "NULL"), header = TRUE, stringsAsFactors = F)
 		}
@@ -327,9 +328,9 @@ get_data_frame<- function(file, timeStamp)
 		df <- try(
 			fread(file, na.strings=c("", "NULL"), header = TRUE, stringsAsFactors = F)
 		,silent=F)
-		if ( class(df) == "try-error" || is.null(df)  || nrow(df) == 0)
+		if ( class(df) == "try-error" || is.null(df) == T || nrow(df) == 0)
 		{
-			df <- read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'Shift_JIS')
+			df <- read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'UTF-8')
 		}
 	}
 	df <- df %>%
@@ -3281,8 +3282,8 @@ get_csvdata <- function( file, tracking_feature_ , timeStamp)
 	print(sprintf("get_csvdata(%s)", file))
 	df0 <- get_data_frame(file, timeStamp)
 	#print(tracking_feature_)
-	#print("==== df0 colnames====")
-	#print(colnames(df0))
+	print("==== df0 colnames====")
+	print(colnames(df0))
 	#print(df0[,tracking_feature_])
 
 	maintenance_flag_idx = which("maintenance" == colnames(df0))

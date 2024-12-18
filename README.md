@@ -25,6 +25,9 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 </div>  
 <img src="./md/images/result.gif">  
 
+
+using nkf to encode the character code.  
+https://github.com/kkato233/nkf/releases
 ---
 Notes.  
 ``

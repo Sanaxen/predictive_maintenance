@@ -47,6 +47,7 @@ abnormality_detected_data <- FALSE
 watch_name <<- paste(tracking_feature_, "..", sep="")
 
 files <- get_csvfile()
+print(files)
 
 print("============================")
 print(tracking_feature_)
@@ -73,7 +74,7 @@ while( TRUE )
 	for ( i in 1:length(files))
 	{
 		file = files[i]
-		file.copy(paste("Untreated\\",file,sep=""), getwd())
+		file.copy(paste("Untreated\\",file,sep=""), getwd(), overwrite = TRUE)
 		delete_csvfile(i)
 		
 		df <- NULL

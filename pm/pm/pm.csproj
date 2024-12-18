@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7D29DE4A-4B99-4CEC-A45F-F3F7F03132BA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>pm</RootNamespace>
-    <AssemblyName>pm</AssemblyName>
+    <RootNamespace>pm_el</RootNamespace>
+    <AssemblyName>pm_el</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -93,6 +93,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
