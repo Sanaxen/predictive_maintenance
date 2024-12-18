@@ -29,8 +29,8 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 using nkf to encode the character code.  
 https://github.com/kkato233/nkf/releases
 ---
+
 Notes.  
-``
 The plot of the probability density function is fairly approximate.  
 The confidence intervals for the predictions are tentatively calculated and not yet correct.  
-``
+
