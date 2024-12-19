@@ -302,6 +302,12 @@ namespace pm
                 file = setting_file;
             }
 
+            string utf8file = conv_utf8(file);
+            if ( utf8file != "")
+            {
+                file = utf8file;
+            }
+
             string rexe1 = textBox1.Text + "\\x64\\Rscript.exe";
             string rexe = rexe1;
 
@@ -867,6 +873,11 @@ namespace pm
                 }
             }
             if (sr != null) sr.Close();
+
+            if (File.Exists(utf8file))
+            {
+                File.Delete(utf8file);
+            }
             if (!rpath_chg)
             {
                 MessageBox.Show(rexe + " is not found.\nThe path of the loaded setting was ignored.");
@@ -978,16 +989,10 @@ namespace pm
         public void execute_bat(string script_file, bool wait = true)
         {
             ProcessStartInfo pInfo = new ProcessStartInfo();
-            //pInfo.FileName = textBox1.Text + "\\R.exe";
-            //pInfo.Arguments = "CMD BATCH  --vanilla " + script_file;
+            pInfo.FileName = "cmd.exe";
+            pInfo.Arguments = " /c " + script_file;
 
-            //pInfo.FileName = textBox1.Text + "\\Rscript.exe";
-            //pInfo.Arguments = "" + script_file;
-
-            pInfo.FileName = script_file;
-            pInfo.Arguments = "";
-
-            if (!File.Exists(pInfo.FileName))
+            if (!File.Exists(script_file))
             {
                 MessageBox.Show(pInfo.FileName + " is not found.\nPlease confirm that " + textBox1.Text + " is specified as the file path, which is correct.");
                 return;
@@ -1010,6 +1015,61 @@ namespace pm
             }
         }
 
+        public string conv_utf8(string file, bool wait = true)
+        {
+            System.IO.Directory.SetCurrentDirectory(work_dir);
+
+            string ext = Path.GetExtension(csv_file);
+
+            string outfile = "_tmp_" + ext;
+
+            string bat = "..\\bin\\nkf.exe";
+            bat += " -w " + file + " > " + outfile;
+
+            var encoding = new System.Text.UTF8Encoding(false);
+
+            string nkf_bat = "_tmp_nkf.bat";
+            try
+            {
+                using (System.IO.StreamWriter sw = new StreamWriter(nkf_bat, false, encoding))
+                {
+                    sw.Write(bat + "\n");
+                }
+            }
+            catch
+            {
+                if (MessageBox.Show("nkf", "", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                    return "";
+            }
+            ProcessStartInfo pInfo = new ProcessStartInfo();
+
+
+            pInfo.FileName = "cmd.exe";
+            pInfo.Arguments = " /c " + nkf_bat;
+
+            if (!File.Exists(nkf_bat))
+            {
+                MessageBox.Show(pInfo.FileName + " is not found.\nPlease confirm that " + textBox1.Text + " is specified as the file path, which is correct.");
+                return "";
+            }
+            Process p = new Process();
+            p.StartInfo = pInfo;
+
+            if (wait)
+            {
+                p.Start();
+                p.WaitForExit();
+            }
+            else
+            {
+                stopwatch.Start();
+                p.Exited += new EventHandler(Proc_Exited);
+                p.EnableRaisingEvents = true;
+                p.Start();
+            }
+
+            return outfile;
+        }
 
         public ListBox GetNames()
         {
@@ -1467,7 +1527,6 @@ namespace pm
 
                 }
             }
-
             cmd = "";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";
             cmd += "library(data.table)\r\n";
@@ -2324,8 +2383,14 @@ namespace pm
                 file = setting_file;
             }
 
+            string utf8file = conv_utf8(file);
+            if (utf8file != "")
+            {
+                file = utf8file;
+            }
+            var encoding = new System.Text.UTF8Encoding(false);
 
-            System.IO.StreamReader sr = new System.IO.StreamReader(file, Encoding.GetEncoding("SHIFT_JIS"));
+            System.IO.StreamReader sr = new System.IO.StreamReader(file, encoding);
             if (sr != null)
             {
                 while (sr.EndOfStream == false)
@@ -2391,6 +2456,10 @@ namespace pm
                 }
             }
             if (sr != null) sr.Close();
+            if (File.Exists(utf8file))
+            {
+                File.Delete(utf8file);
+            }
         }
 
         private void button21_Click(object sender, EventArgs e)
