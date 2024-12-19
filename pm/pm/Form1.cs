@@ -860,7 +860,15 @@ namespace pm
 
                             if (!File.Exists(rexe))
                             {
-                                continue;
+                                if ( textBox1.Text != "" && textBox1.Text != path)
+                                {
+                                    if (File.Exists(textBox1.Text + "\\x64\\Rscript.exe"))
+                                    {
+                                        path = textBox1.Text;
+                                        rpath_chg = true;
+                                    }
+                                }
+                                if (!rpath_chg ) continue;
                             }
                             else
                             {
@@ -990,7 +998,7 @@ namespace pm
         {
             ProcessStartInfo pInfo = new ProcessStartInfo();
             pInfo.FileName = "cmd.exe";
-            pInfo.Arguments = " /c " + script_file;
+            pInfo.Arguments = " /c \"" + script_file + "\"";
 
             if (!File.Exists(script_file))
             {
@@ -1024,7 +1032,7 @@ namespace pm
             string outfile = "_tmp_" + ext;
 
             string bat = "..\\bin\\nkf.exe";
-            bat += " -w " + file + " > " + outfile;
+            bat += " -w \"" + file + "\" > \"" + outfile + "\"";
 
             var encoding = new System.Text.UTF8Encoding(false);
 
@@ -1234,7 +1242,7 @@ namespace pm
             if (csv_dir != Path.GetDirectoryName(work_dir + "\\" + base_name + ".csv"))
             {
                 string bat = "..\\bin\\nkf.exe";
-                bat += " -w " + csv_file + " > " + base_name + ".csv";
+                bat += " -w \"" + csv_file + "\" > \"" + base_name + ".csv\"";
 
                 var encoding2 = new System.Text.UTF8Encoding(false);
 
