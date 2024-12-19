@@ -60,7 +60,7 @@ textBox18,max_prediction_length*unit_of_record
 textBox19,0.075
 textBox20,0.05
 textBox21,-14.028210
-comboBox1,sjis
+comboBox1,utf-8
 comboBox2,time
 comboBox3,-
 comboBox4,h

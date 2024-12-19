@@ -77,7 +77,7 @@ textBox18,max_prediction_length*unit_of_record
 textBox19,0.3
 textBox20,0.05
 textBox21,-552.438899
-comboBox1,sjis
+comboBox1,utf-8
 comboBox2,cycles_time_dummy
 comboBox3,-
 comboBox4,day
