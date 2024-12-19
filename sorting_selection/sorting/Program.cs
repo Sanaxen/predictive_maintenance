@@ -85,8 +85,10 @@ namespace sorting_el
 
         static List<Employee> ReadCsvFile(string filePath)
         {
+            var encoding = new System.Text.UTF8Encoding(false);
+
             List<Employee> employees = new List<Employee>();
-            var lines = File.ReadAllLines(filePath, Encoding.GetEncoding("Shift_JIS"));
+            var lines = File.ReadAllLines(filePath, encoding);
 
             int count = 0;
             foreach (var line in lines)
@@ -122,7 +124,8 @@ namespace sorting_el
 
         static void save_csv(string filePath,List<Employee> employees)
         {
-            using (var writer = new StreamWriter(filePath, false, Encoding.GetEncoding("Shift_JIS")))
+            var encoding = new System.Text.UTF8Encoding(false);
+            using (var writer = new StreamWriter(filePath, false, encoding))
             {
                 writer.WriteLine("id,monotonicity,feature," +
                    "lookback,lookback_slide,smooth_window,smooth_window_slide," +

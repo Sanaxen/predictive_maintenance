@@ -70,7 +70,9 @@ namespace sorting_selection_el
         {
             List<Employee> employees = new List<Employee>();
             //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            var lines = File.ReadAllLines(filePath, Encoding.GetEncoding("shift_jis"));
+
+            var encoding = new System.Text.UTF8Encoding(false);
+            var lines = File.ReadAllLines(filePath, encoding);
 
             int count = 0;
             foreach (var line in lines)
@@ -265,8 +267,10 @@ namespace sorting_selection_el
 
                 string[] delimiter = { " = " };
 
+                var encoding = new System.Text.UTF8Encoding(false);
+
                 string file = "feature_discovery_output.txt";
-                using (System.IO.StreamWriter sw = new StreamWriter(file, false, System.Text.Encoding.GetEncoding("shift_jis")))
+                using (System.IO.StreamWriter sw = new StreamWriter(file, false, encoding))
                 {
                     string[] delimiter2 = { "_feature" };
                     string[] tmp2 = filePath.Replace(".png", "").Split(delimiter2, StringSplitOptions.RemoveEmptyEntries);
