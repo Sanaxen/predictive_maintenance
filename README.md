@@ -12,9 +12,11 @@ https://www.kaggle.com/datasets/behrad3d/nasa-cmaps
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD001_Uint1  
 <img src="./dataset/Turbofan_Jet_Engine/result.gif">  
+- Time stamp items added as appropriate
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD004_Uint1  
 <img src="./dataset/Turbofan_Jet_Engine2/result.gif">  
+- Time stamp items added as appropriate
 
 ## WindTurbineHighSpeedBearingPrognosis-Data  
 https://github.com/mathworks/WindTurbineHighSpeedBearingPrognosis-Data  
@@ -24,6 +26,7 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 <img src="./dataset/dataset-card.jpeg" width="80%">
 </div>  
 <img src="./md/images/result.gif">  
+- Time stamp items added as appropriate
 
 
 ## using nkf to encode the character code.  
