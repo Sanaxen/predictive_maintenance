@@ -3618,7 +3618,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			}
 			df2[,k] <- as.numeric(df2[,k])
 		}
-		#過去データとの結合と最大長超えカット
+		#Combining with past data and cutting beyond maximum length
 		if ( is.null(past))
 		{
 			past <<- df2
@@ -3707,14 +3707,14 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		if ( n < max(abs(train_num),abs(monotonicity_num)))
 		{
 			print(sprintf("n:%d max(abs(train_num),abs(monotonicity_num)):%d",n, max(abs(train_num),abs(monotonicity_num))))
-			#print("#データがまだ足りていない")
+			#print("#There's still not enough data")
 			flush.console()
 			#next
 		}
 		
 		#if ( nrow(df2) - smooth_window <  max_data_len*3 )
 		#{
-		#	print("*データがまだ足りていない")
+		#	print("*There's still not enough data")
 		#	#print(lookback)
 		#	print(sprintf("past:%d",nrow(past)))
 		#	flush.console()
@@ -3730,7 +3730,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			if ( class(df2_tmp) == "try-error"  || is.null(df2_tmp))
 			{
 				print(sprintf("past:%d",nrow(past)))
-				print("*データがまだ足りていない")
+				print("*There's still not enough data")
 				flush.console()
 				next
 			}
@@ -3757,7 +3757,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		#if ( lookback*3 > nrow(df2_tmp) || smooth_window*3 > nrow(df2_tmp) || max(abs(monotonicity_num),abs(train_num)) > nrow(df2_tmp))
 		if ( max(abs(monotonicity_num),abs(train_num)) > nrow(df2_tmp))
 		{
-			print("データがまだ足りていない")
+			print("There's still not enough data")
 			#print(lookback)
 			print(sprintf("past:%d",nrow(past)))
 			flush.console()
@@ -3793,7 +3793,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		print(str(df2_tmp))
 		flush.console()
 		
-		#異常度計算モデル作成
+		#Creation of anomaly calculation model
 		mahalanobis_train <- past[1:min(10000,(nrow(past))*0.8),]
 		print(sprintf("mahalanobis_train:%d", nrow(mahalanobis_train)))
 		flush.console()
@@ -3803,7 +3803,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		#print(m_mahalanobis)
 		flush.console()
 		
-		#特徴量生成
+		#Feature Generation
 		print("create feature start")
 		feature_df <- try(
 			feature(df2_tmp, lookback=lookback, slide_window = lookback_slide))
@@ -3833,7 +3833,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			smooth(feature_df, smooth_window = smooth_window2, smooth_window_slide=smooth_window_slide2),silent=F)
 			if ( class(feature_df) == "try-error" || is.null(feature_df))
 			{
-				print("データがまだ足りていない")
+				print("There's still not enough data")
 				print(sprintf("smooth_window2:%d", smooth_window2))
 				flush.console()
 				next
@@ -3849,7 +3849,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		result_png = sprintf("result-%06d.png", index_number)
 		
 		
-		#各特徴量のmonotonicity算出
+		#Monotonicity calculation of each feature
 		if ( nrow(feature_df) <= max(abs(train_num),abs(monotonicity_num)))
 		{
 			print(sprintf("nrow(feature_df):%d <= abs(monotonicity_num):%d", nrow(feature_df),abs(monotonicity_num)) )
@@ -3864,13 +3864,13 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 
 		print("fm")
 		print(colnames(fm))
-		#各特徴量のパラメータ並べ替え
+		#Parameter sorting for each feature
 		f1 <- data.frame(matrix(colnames(fm)),ncol=1)[,1]
 		f2 <- cbind(f1, data.frame(as.numeric(fm[1,]),ncol=1))[,1:2]
 		f2 <- cbind(f2, data.frame(as.numeric(fm[2,]),ncol=1))[,1:3]
 		colnames(f2) <- c("feature", "monotonicity", "index")
 		
-		#各特徴量のパラメータの初期値設定（閾値、Ymaxのパラメータセット）
+		#Initial value setting of parameters for each feature (threshold, Ymax parameter set)
 		if ( is.null(feature_param) )
 		{
 			feature_param <<- init_feature_param(f2, threshold, -10000, 10000)
@@ -3884,7 +3884,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		#	if ( fm[1,k] < 0 ) feature_df[,k] <- (-1.0)*feature_df[,k]
 		#}
 		
-		#注視したいターゲットPlot
+		#Target Plot to watch
 		id <- which(watch_name == colnames(feature_df))
 		gfm2 <- data.frame(x=feature_df_org$time_index, y=feature_df_org[,id])
 		looked_var_plt <- ggplot(data=gfm2, aes(x = x, y = y)) + geom_line(color = "#4169e1", linewidth =1.0)+
@@ -3912,7 +3912,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		tracking_feature_tmp <- c(1:5)
 		if ( is.null(tracking_feature))
 		{
-			#monotonicityの大きい順にソート
+			#Sort by increasing monotonicity
 			if ( sigin > 0 )
 			{
 				fm2 <- f2[order((f2$monotonicity), decreasing=T),][1:5,]
@@ -3923,14 +3923,14 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			print("fm2")
 			print(colnames(fm2))
 
-			#monotonicity毎の棒グラフ
+			#Bar graph by monotonicity
 			plt0 <- fm2 %>% ggplot(aes(x = feature, y = abs(monotonicity), fill = feature))+ geom_bar(stat = "identity")
 			#ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt0, dpi = 320)
 
 			max_id <- which(abs(fm2$monotonicity) == max(abs(fm2$monotonicity)))
 			fm2$feature[max_id]
 
-			#注視したいターゲット
+			#Targets to watch
 			#watch_name = colnames(feature_df)[2]
 			#print(sprintf("watch_name %s", watch_name))
 			
@@ -4030,7 +4030,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		}
 		feature_param
 		
-		#各特徴量の予測結果とPlot
+		#Prediction results for each feature and Plot
 		tracking_feature_Num = 3
 		failure_time_s = c(1:tracking_feature_Num)
 		failure_time50p_s = c(1:tracking_feature_Num)
@@ -4078,10 +4078,10 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		}
 
 
-		#monotonicity最大になった特徴量を１カウントUp
+		#monotonicity Up 1 count of maximized features
 		#feature_param <<- set_count(tracking_feature_tmp[1])
 
-		#異常発生時刻が早い順にソート
+		#Sort by earliest anomaly occurrence time
 		plt_list = list(plt_s[[1]], plt_s[[2]], plt_s[[3]])
 		failure = data.frame(time = failure_time50p_s, pltid=c(1,2,3))
 		#failure <- failure[order(failure$time),]
@@ -4565,6 +4565,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 time_out <- 60*3
 get_csvfile <- function()
 {
+	os <- "win_jp"
+
 	cmdstr='cmd /c dir '
 	cmdstr=paste(cmdstr, "\"", getwd(), sep="")
 	cmdstr=paste(cmdstr,"\\Untreated\\*.csv\" /b /od", sep="")
@@ -4577,10 +4579,22 @@ get_csvfile <- function()
 		tryCatch({
 				files = system(cmdstr, intern=T)
 				print(files)
-				if ( files[1] != "ファイルが見つかりません")
+				
+				if ( os == "win_jp" )
 				{
-					break
+					if ( files[1] != "ファイルが見つかりません")
+					{
+						break
+					}
 				}
+				if ( os == "win_en" )
+				{
+					if ( files[1] != "File Not Found")
+					{
+						break
+					}
+				}
+				
 			},error = function(e)
 			{
 				files <- NULL
