@@ -131,10 +131,12 @@ abnormal_value <- function(f)
 	a = (( f - mu)/sigma )^2
 }
 
-convert_time <- function(x, unit_of_record=1, from="day", to="day")
+convert_time <- function(x, unit_of_record=1, from="day", to="day", float_out = F)
 {
  if ( from == to )
  {
+ 	if ( float_out ) return(as.integer(100.0*unit_of_record*x)/100.0)
+
  	return(as.integer(unit_of_record*x))
  }
  if ( from == "day" )
@@ -172,6 +174,8 @@ convert_time <- function(x, unit_of_record=1, from="day", to="day")
  	if ( to == "min" ) x = x/1000/60
  	if ( to == "sec" ) x = x/1000
  }
+ 
+ if ( float_out )  return( as.integer(100.0*unit_of_record*x)/100.0)
  return( as.integer(unit_of_record*x))
 }
 
@@ -2788,7 +2792,7 @@ if(T)
 		{
 			failure_time50p_str = sprintf("50%%[%f %s]",  
 					convert_time((failure_time50p_float)*dt, unit_of_record=unit_of_record,
-					from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit)
 		}
 	}else
 	{
