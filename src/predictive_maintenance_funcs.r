@@ -2721,7 +2721,7 @@ if(T)
 		}
 	}
 	
-	if ( failure_time50p_float > 0 && failure_time50p_float >= i && failure_time50p_float <= i + 1 )
+	if ( failure_time50p_float > 0 && failure_time50p_float >= failure_time50p && failure_time50p_float <= failure_time50p + 1 )
 	{
 		failure_time50p_float
 	}else
@@ -3882,7 +3882,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		{
 			print(sprintf("nrow(feature_df):%d <= abs(monotonicity_num):%d", nrow(feature_df),abs(monotonicity_num)) )
 			print(sprintf("nrow(feature_df):%d <= abs(train_num):%d", nrow(feature_df),abs(train_num)) )
-			print("データがまだ足りていない")
+			print("There's still not enough data")
 			flush.console()
 			next
 		}
