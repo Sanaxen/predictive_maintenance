@@ -1,3 +1,4 @@
+options(digits.secs=3)
 curdir = getwd()
 .libPaths(c('./library',.libPaths()))
 library(data.table)

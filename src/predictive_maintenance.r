@@ -1,3 +1,4 @@
+options(digits.secs=3)
 curdir = getwd()
 setwd( paste(curdir, "/work", sep=""))
 putpng_path= paste(curdir, "/images/", sep="")

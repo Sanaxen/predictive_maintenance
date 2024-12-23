@@ -1,4 +1,5 @@
 options(encoding = "utf-8")
+options(digits.secs=3)
 library(ggplot2)
 library(dplyr)
 library(e1071)
@@ -2693,6 +2694,18 @@ if(T)
 		}
 	}
 	
+	failure_time50p_float = -1.0
+	if ( fit_pred[[2]] == "exp" )
+	{
+		fit_param <- get_param(rank)
+		z = (threshold - fit_param[3])/fit_param[1]
+		
+		if ( z > 0 && fit_param[2] > 0 )
+		{
+			failure_time50p_float = (log(z)-fit_param[4])/fit_param[2]
+		}
+	}
+	
 	if ( failure_time != failure_time_init && failure_time < h )
 	{
 		for ( i in (failure_time):h )
@@ -2706,6 +2719,14 @@ if(T)
 				}
 			}
 		}
+	}
+	
+	if ( failure_time50p_float > 0 && failure_time50p_float >= i && failure_time50p_float <= i + 1 )
+	{
+		failure_time50p_float
+	}else
+	{
+		failure_time50p_float = -1.0
 	}
 	
 	if ( failure_time50p != failure_time_init && failure_time50p < h )
@@ -2762,6 +2783,13 @@ if(T)
 		failure_time50p_str = sprintf("50%%[%d %s]",  
 				convert_time((failure_time50p-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
+				
+		if ( failure_time50p_float > 0 )
+		{
+			failure_time50p_str = sprintf("50%%[%f %s]",  
+					convert_time((failure_time50p_float)*dt, unit_of_record=unit_of_record,
+					from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
+		}
 	}else
 	{
 		failure_time_str = sprintf(" > %d step 5%%[> %d %s]", as.integer(h),

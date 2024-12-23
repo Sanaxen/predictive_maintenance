@@ -52,7 +52,7 @@ textBox18,1000*max_prediction_length*unit_of_record
 textBox19,0.8
 textBox20,0.3
 textBox21,1.19
-comboBox1,utf-8
+comboBox1,utf-6
 comboBox2,datetime
 comboBox3,+
 comboBox4,sec

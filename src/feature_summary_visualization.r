@@ -1,4 +1,4 @@
-
+options(digits.secs=3)
 
 # library(patchwork)
 library(cowplot)

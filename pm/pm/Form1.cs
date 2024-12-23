@@ -1090,6 +1090,7 @@ namespace pm
 
             encoding = comboBox1.Text;
             string cmd = "";
+            cmd += "options(digits.secs=3)\r\n";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";
             cmd += "dir='" + work_dir.Replace("\\", "\\\\") + "'\r\n";
             cmd += "library(data.table)\r\n";
@@ -1315,6 +1316,7 @@ namespace pm
         {
 
             string cmd = "";
+            cmd += "options(digits.secs=3)\r\n";
             cmd += "base_name <<- '" + base_name + "'\r\n";
             cmd += "csv_encoding = '" + comboBox1.Text + "'\r\n";
             cmd += "#spline with smoothing\r\n";
@@ -1536,6 +1538,7 @@ namespace pm
                 }
             }
             cmd = "";
+            cmd += "options(digits.secs=3)\r\n";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";
             cmd += "library(data.table)\r\n";
             cmd += "source('./src/csv_division.r')\r\n";
@@ -2064,6 +2067,7 @@ namespace pm
         {
             string cmd = "";
             cmd += "options(encoding = '" + comboBox1.Text +"')\r\n";
+            cmd += "options(digits.secs=3)\r\n";
             cmd += "\r\n";
             cmd += "curdir = getwd()\r\n";
             cmd += ".libPaths(c('" + RlibPath + "',.libPaths()))\r\n";

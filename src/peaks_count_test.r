@@ -1,3 +1,4 @@
+options(digits.secs=3)
 # ƒf[ƒ^‚Ìì¬
 set.seed(42)
 x <- 1:100

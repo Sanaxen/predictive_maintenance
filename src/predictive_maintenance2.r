@@ -1,3 +1,4 @@
+options(digits.secs=3)
 #args <- "args.csv"
 ########################### program start
 args <- commandArgs(trailingOnly = T)

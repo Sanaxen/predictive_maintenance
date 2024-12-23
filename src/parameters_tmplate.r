@@ -1,3 +1,4 @@
+options(digits.secs=3)
 csv_encoding = 'utf-8'
 base_name = ""
 
