@@ -136,8 +136,7 @@ convert_time <- function(x, unit_of_record=1, from="day", to="day", float_out = 
  if ( from == to )
  {
  	if ( float_out ) return(as.integer(100.0*unit_of_record*x)/100.0)
-
- 	return(as.integer(unit_of_record*x))
+	return(as.integer(unit_of_record*x))
  }
  if ( from == "day" )
  {
@@ -174,8 +173,7 @@ convert_time <- function(x, unit_of_record=1, from="day", to="day", float_out = 
  	if ( to == "min" ) x = x/1000/60
  	if ( to == "sec" ) x = x/1000
  }
- 
- if ( float_out )  return( as.integer(100.0*unit_of_record*x)/100.0)
+ if ( float_out ) return( as.integer(100.0*unit_of_record*x)/100.0)
  return( as.integer(unit_of_record*x))
 }
 
@@ -2672,6 +2670,10 @@ if(T)
 	failure_time2 = failure_time_init
 	
 	
+	failure_time_float = -1.0
+	delta_i = 0
+	delta_j = 0
+	
 	for ( i in 1:h )
 	{
 		if ( !is.null(fit_predict))
@@ -2682,34 +2684,50 @@ if(T)
 			#print(head(fit_predict))
 			if (  (fit_predict$l05[i] > fit_predict$u95[i]) && fit_predict$l05[i] > threshold )
 			{
+				delta_i = threshold - fit_predict$l05[max(1,i-1)]
+				delta_j = fit_predict$l05[i] - threshold
 				failure_time = i
 				break
 			}
 			if (  (fit_predict$u95[i] > fit_predict$l05[i]) && fit_predict$u95[i] > threshold )
 			{
+				delta_i = threshold - fit_predict$u95[max(1,i-1)]
+				delta_j = fit_predict$u95[i] - threshold
 				failure_time = i
 				break
 			}
 			if (  fit_predict$y[i] > threshold )
 			{
+				delta_i = threshold - fit_predict$y[max(1,i-1)]
+				delta_j = fit_predict$y[i] - threshold
 				failure_time = i
 				break
 			}
 		}
 	}
-	
-	failure_time50p_float = -1.0
-	if ( fit_pred[[2]] == "exp" )
+	if ( failure_time != failure_time_init )
 	{
-		fit_param <- get_param(rank)
-		z = (threshold - fit_param[3])/fit_param[1]
-		
-		if ( z > 0 && fit_param[2] > 0 )
-		{
-			failure_time50p_float = (log(z)-fit_param[4])/fit_param[2]
-		}
+		failure_time_float = failure_time + delta_i/(delta_i+delta_j)
 	}
 	
+	failure_time50p_float = -1.0
+#	if ( fit_pred[[2]] == "exp" )
+#	{
+#		fit_param <- get_param(rank)
+#		z = (threshold - fit_param[3])/fit_param[1]
+#		
+#		if ( z > 0 && abs(fit_param[2]) > 0 )
+#		{
+#			z = (log(z)-fit_param[4])/fit_param[2]
+#			if ( z > 0 )
+#			{
+#				failure_time50p_float = z*(length(yy) + h)
+#			}
+#		}
+#	}
+	
+	delta_i = 0
+	delta_j = 0
 	if ( failure_time != failure_time_init && failure_time < h )
 	{
 		for ( i in (failure_time):h )
@@ -2719,13 +2737,28 @@ if(T)
 				if (  fit_predict$y[i] > threshold )
 				{
 					failure_time50p = i
+					delta_i = threshold - fit_predict$y[max(1,i-1)]
+					delta_j = fit_predict$y[i] - threshold
 					break
 				}
 			}
 		}
 	}
 	
-	if ( failure_time50p_float > 0 && failure_time50p_float >= failure_time50p && failure_time50p_float <= failure_time50p + 1 )
+	if ( failure_time50p != failure_time_init )
+	{
+		failure_time50p_float = failure_time50p + delta_i/(delta_i+delta_j)
+	}
+	
+	if ( failure_time50p_float > 0 )
+	{
+		cat("##failure_time50p:")
+		print(failure_time50p)
+		cat("##failure_time50p_float:")
+		print(failure_time50p_float)
+	}
+	
+	if ( failure_time50p_float > 0 && failure_time50p_float >= failure_time50p-1 && failure_time50p_float <= failure_time50p + 1 )
 	{
 		failure_time50p_float
 	}else
@@ -2788,9 +2821,15 @@ if(T)
 				convert_time((failure_time50p-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
 				
+		if ( failure_time_float > 0 )
+		{
+			failure_time_str = sprintf("%.2f step 5%%[%.2f %s]", failure_time_float, 
+					convert_time((failure_time_float)*dt, unit_of_record=unit_of_record,
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit)
+		}
 		if ( failure_time50p_float > 0 )
 		{
-			failure_time50p_str = sprintf("50%%[%f %s]",  
+			failure_time50p_str = sprintf("50%%[%.2f %s]",  
 					convert_time((failure_time50p_float)*dt, unit_of_record=unit_of_record,
 					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit)
 		}
@@ -4462,7 +4501,12 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					#print(tmp2$TimeStamp)
 					#print(nrow(tmp2))
 					timeStamp_ = tmp2$TimeStamp[nrow(tmp2)]
-					#print(sprintf("#timeStamp_:%s", timeStamp_))
+					cat("#timeStamp_:")
+					print(timeStamp_)
+					cat("#delta_index:")
+					print(delta_index)
+					cat("#delta_time:")
+					print(delta_time)
 				}
 				
 				sum <- sum(RUL_hist_tmp$z1[1:nrow(RUL_hist_tmp)])
