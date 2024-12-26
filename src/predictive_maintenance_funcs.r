@@ -2612,46 +2612,23 @@ if(T)
 				fit_predict_org$l05 = fit_predict_org$y
 				fit_predict_org$u95 = fit_predict_org$y
 				
+				fd <- 20
+				q75 =  qt((1-0.75)/2, fd, lower.tail=F)
+				q95 =  qt((1-0.95)/2, fd, lower.tail=F)
 				for ( i in 1:length(fit_predict_org$y))
 				{
-#					sd1 <- 1
-#					if ( i >= length(fit_predict$y))
-#					{
-#						#sd1 <- sd(fit_predict_org$y[1:i])
-#						sd1 = sd(residual_error)
-#					}else
-#					{
-#						if ( i <= 3 )
-#						{
-#							#sd1 <- sd(fit_predict_org$y[1:3])
-#							sd1 = sd(residual_error[1:3])
-#						}else
-#						{
-#							#sd1 <- sd(fit_predict_org$y[1:i])
-#							sd1 = sd(residual_error[1:min(i,length(residual_error))])
-#						}
-#						if ( sd1 > sd_max )
-#						{
-#							sd_max = sd1
-#						}
-#					}
-#					sd1 <- sd_max
 					
-					fd <- i
 					sd1 <- var(fit_predict_org$y[1:i])*(1+1/fd)
-					if ( i >= lookback*3 )
+					if ( i >= lookback )
 					{
-						fd <- lookback*3
-						sd1 <- var(fit_predict_org$y[(i-lookback*3+1):i])*(1+1/fd)
+						sd1 <- var(fit_predict_org$y[(i-lookback+1):i])*(1+1/fd)
 					}
 					
-					q =  qt((1-0.75)/2, fd, lower.tail=F)
-					dd = q*sqrt(sd1)
+					dd = q75*sqrt(sd1)
 					fit_predict_org$l25[i] = fit_predict_org$y[i]- dd
 					fit_predict_org$u75[i] = fit_predict_org$y[i]+ dd
 
-					q =  qt((1-0.95)/2, fd, lower.tail=F)
-					dd = q*sqrt(sd1)
+					dd = q95*sqrt(sd1)
 					fit_predict_org$l05[i] = fit_predict_org$y[i]- dd
 					fit_predict_org$u95[i] = fit_predict_org$y[i]+ dd
 				}
@@ -2812,14 +2789,20 @@ if(T)
 
 	failure_time_str = "+Infinity"
 	failure_time50p_str = "+Infinity"
+	
+	train_mode <- "trained"
+	if ( dynamic_threshold )
+	{
+		train_mode <- "training"
+	}
 	if ( failure_time < failure_time_init && failure_time50p < failure_time_init )
 	{
 		failure_time_str = sprintf("%d step 5%%[%d %s]", as.integer(failure_time-1), 
 				convert_time((failure_time-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
-		failure_time50p_str = sprintf("50%%[%d %s]",  
+		failure_time50p_str = sprintf("50%%[%d %s] %s",  
 				convert_time((failure_time50p-1)*dt, unit_of_record=unit_of_record,
-				from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
+				from=unit_of_time,to=forecast_time_unit), forecast_time_unit, train_mode)
 				
 		if ( failure_time_float > 0 )
 		{
@@ -2829,18 +2812,18 @@ if(T)
 		}
 		if ( failure_time50p_float > 0 )
 		{
-			failure_time50p_str = sprintf("50%%[%.2f %s]",  
+			failure_time50p_str = sprintf("50%%[%.2f %s] %s",  
 					convert_time((failure_time50p_float)*dt, unit_of_record=unit_of_record,
-					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit)
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit, train_mode)
 		}
 	}else
 	{
 		failure_time_str = sprintf(" > %d step 5%%[> %d %s]", as.integer(h),
 			 convert_time(h*dt, unit_of_record=unit_of_record,
 			 from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
-		failure_time50p_str = sprintf("50%%[> %d %s]", 
+		failure_time50p_str = sprintf("50%%[> %d %s] %s", 
 			 convert_time(h*dt, unit_of_record=unit_of_record,
-			 from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
+			 from=unit_of_time,to=forecast_time_unit), forecast_time_unit, train_mode)
 	}
 	
 	
