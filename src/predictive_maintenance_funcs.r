@@ -26,7 +26,18 @@ library(data.table)
 #install.packages("ggridges")
 library(ggridges)
 
+library(crayon)
+
 freeram <- function(...) invisible(gc(...))
+
+yellow_text <- function( t )
+{
+	cat( yellow(t, "\r\n"))
+}
+green_text <- function( t )
+{
+	cat( green(t, "\r\n"))
+}
 
 time_data_length <- function(length, length_unit="")
 {
@@ -2299,6 +2310,9 @@ library(outliers)
 fit_id = 1
 gyap_ratio = 0.075
 break_index_df <- NULL
+train_progress <<- ""
+
+
 plot_plot_feature_predict <- function(feature_df_, train_num = 20, rank="", h=600, feature_smooth_window=2)
 {
 	threshold = get_threshold(rank)
@@ -2603,16 +2617,20 @@ if(T)
 				}
 			}else
 			{
-				sd.fit <- NULL
-				fd = min(3, length(fit_predict_org$y))
+				#sd.fit <- NULL
+				#fd = min(3, length(fit_predict_org$y))
 				
-				sd_max <- 0.00001
+				#sd_max <- 0.00001
 				fit_predict_org$l25 = fit_predict_org$y
 				fit_predict_org$u75 = fit_predict_org$y
 				fit_predict_org$l05 = fit_predict_org$y
 				fit_predict_org$u95 = fit_predict_org$y
 				
-				fd <- 20
+				dy = (ymax -ymin)/20
+				residual_error_tmp = residual_error[residual_error != 0]
+				dy = mean(residual_error_tmp)/2
+				
+				fd <- 40
 				q75 =  qt((1-0.75)/2, fd, lower.tail=F)
 				q95 =  qt((1-0.95)/2, fd, lower.tail=F)
 				for ( i in 1:length(fit_predict_org$y))
@@ -2625,12 +2643,12 @@ if(T)
 					}
 					
 					dd = q75*sqrt(sd1)
-					fit_predict_org$l25[i] = fit_predict_org$y[i]- dd
-					fit_predict_org$u75[i] = fit_predict_org$y[i]+ dd
+					fit_predict_org$l25[i] = fit_predict_org$y[i]- max(dy,dd)
+					fit_predict_org$u75[i] = fit_predict_org$y[i]+ max(dy,dd)
 
 					dd = q95*sqrt(sd1)
-					fit_predict_org$l05[i] = fit_predict_org$y[i]- dd
-					fit_predict_org$u95[i] = fit_predict_org$y[i]+ dd
+					fit_predict_org$l05[i] = fit_predict_org$y[i]- max(dy,dd)
+					fit_predict_org$u95[i] = fit_predict_org$y[i]+ max(dy,dd)
 				}
 				fit_predict <- fit_predict_org[(nrow(fit_predict_org)-h+1):nrow(fit_predict_org),]
 			}
@@ -2645,6 +2663,7 @@ if(T)
 	failure_time = failure_time_init
 	failure_time50p = failure_time_init
 	failure_time2 = failure_time_init
+	failure_time95p = failure_time_init
 	
 	
 	failure_time_float = -1.0
@@ -2688,21 +2707,6 @@ if(T)
 	}
 	
 	failure_time50p_float = -1.0
-#	if ( fit_pred[[2]] == "exp" )
-#	{
-#		fit_param <- get_param(rank)
-#		z = (threshold - fit_param[3])/fit_param[1]
-#		
-#		if ( z > 0 && abs(fit_param[2]) > 0 )
-#		{
-#			z = (log(z)-fit_param[4])/fit_param[2]
-#			if ( z > 0 )
-#			{
-#				failure_time50p_float = z*(length(yy) + h)
-#			}
-#		}
-#	}
-	
 	delta_i = 0
 	delta_j = 0
 	if ( failure_time != failure_time_init && failure_time < h )
@@ -2726,15 +2730,7 @@ if(T)
 	{
 		failure_time50p_float = failure_time50p + delta_i/(delta_i+delta_j)
 	}
-	
-	if ( failure_time50p_float > 0 )
-	{
-		cat("##failure_time50p:")
-		print(failure_time50p)
-		cat("##failure_time50p_float:")
-		print(failure_time50p_float)
-	}
-	
+		
 	if ( failure_time50p_float > 0 && failure_time50p_float >= failure_time50p-1 && failure_time50p_float <= failure_time50p + 1 )
 	{
 		failure_time50p_float
@@ -2743,40 +2739,41 @@ if(T)
 		failure_time50p_float = -1.0
 	}
 	
+	
+		
+	failure_time95p_float = -1.0
+	delta_i = 0
+	delta_j = 0
 	if ( failure_time50p != failure_time_init && failure_time50p < h )
 	{
 		for ( i in (failure_time50p):h )
 		{
 			if ( !is.null(fit_predict))
 			{
-				#if ( is.na(fit_predict$l05[i])) break
-				#if ( is.na(fit_predict$u95[i])) break
-
-				#print(head(fit_predict))
 				if ( !is.na(fit_predict$l05[i]) && fit_predict$l05[i] > threshold )
 				{
 					failure_time2 = i
+					failure_time95p = i
+					delta_i = threshold - fit_predict$l05[max(1,i-1)]
+					delta_j = fit_predict$l05[i] - threshold
 					break
 				}
-				#if ( !is.na(fit_predict$u95[i]) && fit_predict$u95[i] > threshold )
-				#{
-				#	failure_time2 = i
-				#	break
-				#}
-				#if ( !is.na(fit_predict$u75[i]) && fit_predict$u75[i] > threshold )
-				#{
-				#	failure_time2 = i
-				#	break
-				#}
-				#if ( !is.na(fit_predict$l25[i]) && fit_predict$l25[i] > threshold )
-				#{
-				#	failure_time2 = i
-				#	break
-				#}
 			}
 		}
 	}
-	
+	if ( failure_time95p != failure_time_init )
+	{
+		failure_time95p_float = failure_time95p + delta_i/(delta_i+delta_j)
+	}
+		
+	if ( failure_time95p_float > 0 && failure_time95p_float >= failure_time95p-1 && failure_time95p_float <= failure_time95p + 1 )
+	{
+		failure_time95p_float
+	}else
+	{
+		failure_time95p_float = -1.0
+	}
+		
 
 	
 	dt <- mean(diff(gfm2$time_index))
@@ -2785,6 +2782,7 @@ if(T)
 	print(sprintf("failure_time:%d  failure_time_init:%d", as.integer(failure_time), as.integer(failure_time_init)))
 	print(sprintf("failure_time2:%d  failure_time_init:%d", as.integer(failure_time2), as.integer(failure_time_init)))
 	print(sprintf("failure_time50p:%d  failure_time_init:%d", as.integer(failure_time50p), as.integer(failure_time_init)))
+	print(sprintf("failure_time95p:%d  failure_time_init:%d", as.integer(failure_time95p), as.integer(failure_time_init)))
 	print("===========================================================")
 
 	failure_time_str = "+Infinity"
@@ -2793,15 +2791,17 @@ if(T)
 	train_mode <- "trained"
 	if ( dynamic_threshold )
 	{
-		train_mode <- "training"
+		train_mode <- train_progress
 	}
 	if ( failure_time < failure_time_init && failure_time50p < failure_time_init )
 	{
 		failure_time_str = sprintf("%d step 5%%[%d %s]", as.integer(failure_time-1), 
 				convert_time((failure_time-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
-		failure_time50p_str = sprintf("50%%[%d %s] %s",  
+		failure_time50p_str = sprintf("50%%[%d %s]  95%%[%d %s] %s",  
 				convert_time((failure_time50p-1)*dt, unit_of_record=unit_of_record,
+				from=unit_of_time,to=forecast_time_unit), forecast_time_unit,
+				convert_time((failure_time95p-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit, train_mode)
 				
 		if ( failure_time_float > 0 )
@@ -2814,7 +2814,15 @@ if(T)
 		{
 			failure_time50p_str = sprintf("50%%[%.2f %s] %s",  
 					convert_time((failure_time50p_float)*dt, unit_of_record=unit_of_record,
-					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit, train_mode)
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit,train_mode)
+		}
+		if ( failure_time50p_float > 0 && failure_time95p_float > 0)
+		{
+			failure_time50p_str = sprintf("50%%[%.2f %s] 95%%[%.2f %s] %s",  
+					convert_time((failure_time50p_float)*dt, unit_of_record=unit_of_record,
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit,
+					convert_time((failure_time95p_float)*dt, unit_of_record=unit_of_record,
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit,train_mode)
 		}
 	}else
 	{
@@ -3691,7 +3699,10 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			#break
 		}
 		
-		print(sprintf("train:%d/%d %.3f%%", df2$time_index[nrow(df2)], max_train_span, 100*df2$time_index[nrow(df2)]/max_train_span))
+		train_progress <<- sprintf("training:%d/%d %.3f%%", df2$time_index[nrow(df2)], max_train_span, 100*df2$time_index[nrow(df2)]/max_train_span)
+		green_text(train_progress)
+		train_progress <<- sprintf("training:%.3f%%", 100*df2$time_index[nrow(df2)]/max_train_span)
+
 		if ( df2$time_index[nrow(df2)] > max_train_span )
 		{
 			dynamic_threshold = FALSE
@@ -3784,7 +3795,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			if ( class(df2_tmp) == "try-error"  || is.null(df2_tmp))
 			{
 				print(sprintf("past:%d",nrow(past)))
-				print("*There's still not enough data")
+				yellow_text("*There's still not enough data")
 				flush.console()
 				next
 			}
@@ -3811,7 +3822,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		#if ( lookback*3 > nrow(df2_tmp) || smooth_window*3 > nrow(df2_tmp) || max(abs(monotonicity_num),abs(train_num)) > nrow(df2_tmp))
 		if ( max(abs(monotonicity_num),abs(train_num)) > nrow(df2_tmp))
 		{
-			print("There's still not enough data")
+			yellow_text("There's still not enough data")
 			#print(lookback)
 			print(sprintf("past:%d",nrow(past)))
 			flush.console()
@@ -3863,7 +3874,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			feature(df2_tmp, lookback=lookback, slide_window = lookback_slide))
 		if ( class(feature_df) == "try-error" )
 		{
-			print(sprintf("feature_df:%d",nrow(feature_df)))
+			yellow_text(sprintf("feature_df:%d",nrow(feature_df)))
 			flush.console()
 			next
 		}
@@ -3887,7 +3898,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			smooth(feature_df, smooth_window = smooth_window2, smooth_window_slide=smooth_window_slide2),silent=F)
 			if ( class(feature_df) == "try-error" || is.null(feature_df))
 			{
-				print("There's still not enough data")
+				yellow_text("There's still not enough data")
 				print(sprintf("smooth_window2:%d", smooth_window2))
 				flush.console()
 				next
@@ -3908,7 +3919,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		{
 			print(sprintf("nrow(feature_df):%d <= abs(monotonicity_num):%d", nrow(feature_df),abs(monotonicity_num)) )
 			print(sprintf("nrow(feature_df):%d <= abs(train_num):%d", nrow(feature_df),abs(train_num)) )
-			print("There's still not enough data")
+			yellow_text("There's still not enough data")
 			flush.console()
 			next
 		}
@@ -4055,7 +4066,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				
 				if (tracking_feature_tmp[k] == "mahalanobis")
 				{
-					 thr = qchisq(0.9999,1)*0.8
+					 #thr = qchisq(0.9999,1)*0.8
 				}
 				if ( thr0 > thr )
 				{
@@ -4066,7 +4077,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					thr = ymax0
 					
 				}
-				if (tracking_feature_tmp[k] != "mahalanobis" && (!threshold_empty))
+				#if (tracking_feature_tmp[k] != "mahalanobis" && (!threshold_empty))
+				if ((!threshold_empty))
 				{
 					if ( thr < ymax0 + abs((ymax0-ymin0)*0.175) )
 					{
