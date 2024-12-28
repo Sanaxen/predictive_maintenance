@@ -2808,7 +2808,7 @@ if(T)
 		{
 			failure_time_str = sprintf("%.2f step 5%%[%.2f %s]", failure_time_float, 
 					convert_time((failure_time_float)*dt, unit_of_record=unit_of_record,
-					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit)
+					from=unit_of_time,to=forecast_time_unit, float_out=T), forecast_time_unit,train_mode)
 		}
 		if ( failure_time50p_float > 0 )
 		{
@@ -3702,10 +3702,10 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		train_progress <<- sprintf("training:%d/%d %.3f%%", df2$time_index[nrow(df2)], max_train_span, 100*df2$time_index[nrow(df2)]/max_train_span)
 		green_text(train_progress)
 		train_progress <<- sprintf("training:%.3f%%", 100*df2$time_index[nrow(df2)]/max_train_span)
-
+		
 		if ( df2$time_index[nrow(df2)] > max_train_span )
 		{
-			dynamic_threshold = FALSE
+			dynamic_threshold <<- FALSE
 		}
 
 		if ( !is.null(pre) )
@@ -3859,7 +3859,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		flush.console()
 		
 		#Creation of anomaly calculation model
-		mahalanobis_train <- past[1:min(10000,(nrow(past))*0.8),]
+		mahalanobis_train <- past[1:min(100000,(nrow(past))*0.8),]
 		print(sprintf("mahalanobis_train:%d", nrow(mahalanobis_train)))
 		flush.console()
 		m_mahalanobis <<- anomaly_detection_train(mahalanobis_train)
@@ -4064,10 +4064,10 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				print(sprintf("thr0:%.3f thr:%.3f", thr0, thr))
 				print(sprintf("ymax0:%.3f ymin0:%.3f", ymax0, ymin0))
 				
-				if (tracking_feature_tmp[k] == "mahalanobis")
-				{
-					 #thr = qchisq(0.9999,1)*0.8
-				}
+				#if (tracking_feature_tmp[k] == "mahalanobis")
+				#{
+				#	 thr = qchisq(0.9999,1)*0.8
+				#}
 				if ( thr0 > thr )
 				{
 					thr = thr0
@@ -4080,9 +4080,9 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				#if (tracking_feature_tmp[k] != "mahalanobis" && (!threshold_empty))
 				if ((!threshold_empty))
 				{
-					if ( thr < ymax0 + abs((ymax0-ymin0)*0.175) )
+					if ( thr < ymax0 + abs((ymax0-ymin0)*0.17) )
 					{
-						thr = ymax0 + abs((ymax0-ymin0)*0.175)
+						thr = ymax0 + abs((ymax0-ymin0)*0.17)
 					}
 				}
 				if ( k == 2 && exists("threshold_target") )
@@ -4378,7 +4378,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			{
 				ymax0 = max
 				ymin0 = min
-				thr0 = ymax0 + abs((ymax0-ymin0)*0.175)
+				thr0 = ymax0 + abs((ymax0-ymin0)*0.17)
 				if ( exists("threshold_target") )
 				{
 					print(sprintf("threshold_target:%f", threshold_target))
@@ -4622,7 +4622,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
 			}
 		}
-		ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*1.2, height = 6.8*1.0)
+		ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
 		rm(plt)
 		freeram()
 		
