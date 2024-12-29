@@ -2055,7 +2055,27 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			
 			if ( err == 1 )
 			{
-				print("fit_pred## in NA")
+				#print("fit_pred## in NA")
+				#print(fit_pred)
+				#print(fit_pred25)
+				#print(fit_pred75)
+				#print(fit_pred05)
+				#print(fit_pred95)
+				#quit()
+				
+				fit_pred[is.na(fit_pred)] <- mean(fit_pred, na.rm = TRUE)
+				fit_pred25[is.na(fit_pred25)] <- mean(fit_pred25, na.rm = TRUE)
+				fit_pred75[is.na(fit_pred75)] <- mean(fit_pred75, na.rm = TRUE)
+				fit_pred05[is.na(fit_pred05)] <- mean(fit_pred05, na.rm = TRUE)
+				fit_pred95[is.na(fit_pred95)] <- mean(fit_pred95, na.rm = TRUE)
+
+				fit_pred[!is.finite(fit_pred)] <- 0
+				fit_pred25[!is.finite(fit_pred25)] <- 0
+				fit_pred75[!is.finite(fit_pred75)] <- 0
+				fit_pred05[!is.finite(fit_pred05)] <- 0
+				fit_pred95[!is.finite(fit_pred95)] <- 0
+
+				err = 0
 			}
 			if ( coef[1] < 0 )
 			{
@@ -2616,7 +2636,6 @@ if(T)
 					fit_predict$u95[i] = fit_predict$y[i]+ q*sd(fit_predict$y[1:i])*sqrt(1/i)
 				}
 			}else{
-
 
 				fit_predict_org$l25 = fit_predict_org$y
 				fit_predict_org$u75 = fit_predict_org$y
@@ -3560,6 +3579,7 @@ current_time <- NULL
 current_time_index <- 0
 delta_time <- NULL
 startup_data_frame <- TRUE
+
 predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 {
 	print("======tracking_feature_args==")
