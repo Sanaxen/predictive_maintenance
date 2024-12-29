@@ -2615,40 +2615,80 @@ if(T)
 					fit_predict$l05[i] = fit_predict$y[i]- q*sd(fit_predict$y[1:i])*sqrt(1/i)
 					fit_predict$u95[i] = fit_predict$y[i]+ q*sd(fit_predict$y[1:i])*sqrt(1/i)
 				}
-			}else
-			{
-				#sd.fit <- NULL
-				#fd = min(3, length(fit_predict_org$y))
-				
-				#sd_max <- 0.00001
+			}else{
+
+
 				fit_predict_org$l25 = fit_predict_org$y
 				fit_predict_org$u75 = fit_predict_org$y
 				fit_predict_org$l05 = fit_predict_org$y
 				fit_predict_org$u95 = fit_predict_org$y
 				
-				dy = (ymax -ymin)/20
-				residual_error_tmp = residual_error[residual_error != 0]
-				dy = mean(residual_error_tmp)/2
-				
-				fd <- 40
-				q75 =  qt((1-0.75)/2, fd, lower.tail=F)
-				q95 =  qt((1-0.95)/2, fd, lower.tail=F)
-				for ( i in 1:length(fit_predict_org$y))
+				if ( F )
 				{
-					
-					sd1 <- var(fit_predict_org$y[1:i])*(1+1/fd)
-					if ( i >= lookback )
-					{
-						sd1 <- var(fit_predict_org$y[(i-lookback+1):i])*(1+1/fd)
-					}
-					
-					dd = q75*sqrt(sd1)
-					fit_predict_org$l25[i] = fit_predict_org$y[i]- max(dy,dd)
-					fit_predict_org$u75[i] = fit_predict_org$y[i]+ max(dy,dd)
+					abs_residual_error <- abs(residual_error)
+					rerr_men = mean(abs_residual_error)
+					rerr_max = max(abs(abs_residual_error))
+					rerr_75 = as.numeric(quantile(abs_residual_error, probs=c(0.75)))/100.0
+					rerr_95 = as.numeric(quantile(abs_residual_error, probs=c(0.95)))/100.0
 
-					dd = q95*sqrt(sd1)
-					fit_predict_org$l05[i] = fit_predict_org$y[i]- max(dy,dd)
-					fit_predict_org$u95[i] = fit_predict_org$y[i]+ max(dy,dd)
+
+					residual_error_n = length(abs_residual_error)
+					
+					fd <- 5
+					q75 =  qt((1-0.75)/2, fd, lower.tail=F)
+					q95 =  qt((1-0.95)/2, fd, lower.tail=F)
+					for ( i in 1:length(fit_predict_org$y))
+					{
+						
+						sd1 <- sd(abs_residual_error[1:min(i,residual_error_n)])/sqrt(residual_error_n)
+						
+						dd = rerr_men + q75*sd1
+						fit_predict_org$l25[i] = fit_predict_org$y[i]- dd
+						fit_predict_org$u75[i] = fit_predict_org$y[i]+ dd
+						
+						for ( j in (i-2):(i+2 ))
+						{
+							if ( j >= 1 && j <= length(fit_predict_org$y))
+							{
+								fit_predict_org$l25[j] = fit_predict_org$l25[i]
+								fit_predict_org$u75[j] = fit_predict_org$u75[i]
+							}
+						}
+
+						dd = rerr_men + q95*sd1
+						fit_predict_org$l05[i] = fit_predict_org$y[i]- dd
+						fit_predict_org$u95[i] = fit_predict_org$y[i]+ dd
+						
+						for ( j in (i-4):(i+4 ))
+						{
+							if ( j >= 1 && j <= length(fit_predict_org$y))
+							{
+								fit_predict_org$l05[j] = fit_predict_org$l05[i]
+								fit_predict_org$u95[j] = fit_predict_org$u95[i]
+							}
+						}
+					}
+				}else {
+					for ( i in 1:length(fit_predict_org$y))
+					{
+						fd <- i
+						sd1 <- var(fit_predict_org$y[1:i])*(1+1/fd)
+						if ( i >= lookback*3 )
+						{
+							fd <- lookback*3
+							sd1 <- var(fit_predict_org$y[(i-lookback*3+1):i])*(1+1/fd)
+						}
+						
+						q =  qt((1-0.75)/2, fd, lower.tail=F)
+						dd = q*sqrt(sd1)*0.5
+						fit_predict_org$l25[i] = fit_predict_org$y[i]- dd
+						fit_predict_org$u75[i] = fit_predict_org$y[i]+ dd
+
+						q =  qt((1-0.95)/2, fd, lower.tail=F)
+						dd = q*sqrt(sd1)*0.5
+						fit_predict_org$l05[i] = fit_predict_org$y[i]- dd
+						fit_predict_org$u95[i] = fit_predict_org$y[i]+ dd
+					}
 				}
 				fit_predict <- fit_predict_org[(nrow(fit_predict_org)-h+1):nrow(fit_predict_org),]
 			}
@@ -3510,8 +3550,8 @@ window_moving_size <- function(N, window_size, slide_size)
 	return( floor((N - window_size) / slide_size) + 1)
 }
 
-RUL_hist <- NULL
-RUL_hist_pre <- NULL
+RUL_hist <<- NULL
+RUL_hist_pre <<- NULL
 
 RUL <- NULL
 sigin = 1
@@ -4056,7 +4096,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				{
 					ymax0 = max
 					ymin0 = min
-					thr0 = ymax0 + abs((ymax0-ymin0)*0.175)
+					thr0 = ymax0 + abs((ymax0-ymin0)*0.17)
 				}
 				print(thr0)
 				print(sprintf("%s N:%d", tracking_feature_tmp[k], n))
@@ -4189,7 +4229,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				x <- rev(seq(current_time_index, length.out = nrow(feature_df), by=-delta_index))
 				x <- seq(x[1], length.out = as.integer(failure_time_index2/delta_index + 1), by = delta_index)
 
-				RUL_hist <- data.frame(time_index = x, hist=numeric(length(x)))
+				RUL_hist <<- data.frame(time_index = x, hist=numeric(length(x)))
 
 				print("*nrow(RUL_hist)")
 				print(nrow(RUL_hist))
@@ -4237,7 +4277,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					cat("RUL_tmp")
 					print(str(RUL_tmp))
 
-					RUL_hist <- dplyr::bind_rows(RUL_hist, RUL_tmp)
+					RUL_hist <<- dplyr::bind_rows(RUL_hist, RUL_tmp)
 				}
 			}
 
@@ -4315,7 +4355,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			{
 				x <- rev(seq(current_time_index, length.out = nrow(feature_df), by=-delta_index))
 				x <- seq(x[1], length.out = nrow(feature_df)+max_prediction_length, by = delta_index)
-				RUL_hist <- data.frame(time_index = x, hist=numeric(length(x)))
+				RUL_hist <<- data.frame(time_index = x, hist=numeric(length(x)))
 			}else
 			{
 				RUL_hist$hist <- 0
@@ -4534,7 +4574,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				#plt_s[[2]] <- plt_s[[2]] + scale_x_continuous(breaks = break_pos, labels = labels)
 				#plt_s[[3]] <- plt_s[[3]] + scale_x_continuous(breaks = break_pos, labels = labels)
 				
-				RUL_hist_pre <- RUL_hist_tmp
+				RUL_hist_pre <<- RUL_hist_tmp
 				
 				RUL_hist_tmp <- NULL
 				rm(RUL_hist_tmp)
