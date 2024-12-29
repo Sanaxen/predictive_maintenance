@@ -2751,7 +2751,7 @@ if(T)
 	delta_j = 0
 	if ( failure_time != failure_time_init && failure_time < h )
 	{
-		for ( i in (failure_time):h )
+		for ( i in (failure_time+1):h )
 		{
 			if ( !is.null(fit_predict))
 			{
@@ -2786,7 +2786,7 @@ if(T)
 	delta_j = 0
 	if ( failure_time50p != failure_time_init && failure_time50p < h )
 	{
-		for ( i in (failure_time50p):h )
+		for ( i in (failure_time50p+1):h )
 		{
 			if ( !is.null(fit_predict))
 			{
@@ -3550,8 +3550,8 @@ window_moving_size <- function(N, window_size, slide_size)
 	return( floor((N - window_size) / slide_size) + 1)
 }
 
-RUL_hist <<- NULL
-RUL_hist_pre <<- NULL
+RUL_hist <- NULL
+RUL_hist_pre <- NULL
 
 RUL <- NULL
 sigin = 1
@@ -4229,7 +4229,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				x <- rev(seq(current_time_index, length.out = nrow(feature_df), by=-delta_index))
 				x <- seq(x[1], length.out = as.integer(failure_time_index2/delta_index + 1), by = delta_index)
 
-				RUL_hist <<- data.frame(time_index = x, hist=numeric(length(x)))
+				RUL_hist <- data.frame(time_index = x, hist=numeric(length(x)))
 
 				print("*nrow(RUL_hist)")
 				print(nrow(RUL_hist))
@@ -4277,7 +4277,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					cat("RUL_tmp")
 					print(str(RUL_tmp))
 
-					RUL_hist <<- dplyr::bind_rows(RUL_hist, RUL_tmp)
+					RUL_hist <- dplyr::bind_rows(RUL_hist, RUL_tmp)
 				}
 			}
 
@@ -4355,7 +4355,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			{
 				x <- rev(seq(current_time_index, length.out = nrow(feature_df), by=-delta_index))
 				x <- seq(x[1], length.out = nrow(feature_df)+max_prediction_length, by = delta_index)
-				RUL_hist <<- data.frame(time_index = x, hist=numeric(length(x)))
+				RUL_hist <- data.frame(time_index = x, hist=numeric(length(x)))
 			}else
 			{
 				RUL_hist$hist <- 0
@@ -4574,7 +4574,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				#plt_s[[2]] <- plt_s[[2]] + scale_x_continuous(breaks = break_pos, labels = labels)
 				#plt_s[[3]] <- plt_s[[3]] + scale_x_continuous(breaks = break_pos, labels = labels)
 				
-				RUL_hist_pre <<- RUL_hist_tmp
+				RUL_hist_pre <- RUL_hist_tmp
 				
 				RUL_hist_tmp <- NULL
 				rm(RUL_hist_tmp)
