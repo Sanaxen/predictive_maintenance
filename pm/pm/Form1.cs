@@ -24,7 +24,7 @@ namespace pm
 
         public string exePath = "";
         public string RlibPath = "";
-        public string encoding = "sjis";
+        public string encoding = "utf-8";
         public string base_dir;
         public string work_dir;
         public string csv_file;
@@ -61,6 +61,37 @@ namespace pm
         public string htmlPictureBox6 = "";
 
         public bool LanguageChangeMessageOff = false;
+
+        void init()
+        {
+            exist_number = 1;
+            status = -1;
+            stopwatch.Stop();
+
+            imageFiles = null;
+            start_index = 1;
+            max_image_limit = 100000;
+
+            num_image = 0;
+            step_image = 1;
+            max_image = 0;
+            animation_stop = false;
+            output_idx = 0;
+
+            imagePictureBox1 = "";
+            imagePictureBox2 = "";
+            imagePictureBox3 = "";
+            imagePictureBox4 = "";
+            imagePictureBox5 = "";
+            imagePictureBox6 = "";
+
+            htmlPictureBox1 = "";
+            htmlPictureBox2 = "";
+            htmlPictureBox3 = "";
+            htmlPictureBox4 = "";
+            htmlPictureBox5 = "";
+            htmlPictureBox6 = "";
+        }
 
         public Form1()
         {
@@ -120,6 +151,18 @@ namespace pm
         {
             string file = csv_dir + "\\pm_setting_" + base_name0 + string.Format("{0}", output_idx) + ".txt";
 
+            if ( File.Exists(file))
+            {
+                if (comboBox6.Text == "ja-JP")
+                {
+                    if (MessageBox.Show("上書きしますか?", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+                        return;
+                }else
+                {
+                    if (MessageBox.Show("Can I overwrite it?", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+                        return;
+                }
+            }
             var encoding = new System.Text.UTF8Encoding(false);
 
             try
@@ -1221,6 +1264,8 @@ namespace pm
             {
                 return;
             }
+
+            init();
             System.IO.Directory.SetCurrentDirectory(exePath + "\\..\\..\\..\\..\\");
             Directory.CreateDirectory("work");
             System.IO.Directory.SetCurrentDirectory(exePath + "\\..\\..\\..\\..\\");
