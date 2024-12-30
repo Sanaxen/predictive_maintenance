@@ -75,7 +75,7 @@ textBox17,50
 textBox18,max_prediction_length*unit_of_record
 textBox19,0.2
 textBox20,0.05
-textBox21,422.5
+textBox21,423
 comboBox1,utf-8
 comboBox2,cycles_time_dummy
 comboBox3,+

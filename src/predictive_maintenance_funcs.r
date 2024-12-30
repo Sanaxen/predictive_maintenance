@@ -3569,8 +3569,8 @@ window_moving_size <- function(N, window_size, slide_size)
 	return( floor((N - window_size) / slide_size) + 1)
 }
 
-RUL_hist <- NULL
-RUL_hist_pre <- NULL
+RUL_hist <<- NULL
+RUL_hist_pre <<- NULL
 
 RUL <- NULL
 sigin = 1
@@ -4249,7 +4249,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				x <- rev(seq(current_time_index, length.out = nrow(feature_df), by=-delta_index))
 				x <- seq(x[1], length.out = as.integer(failure_time_index2/delta_index + 1), by = delta_index)
 
-				RUL_hist <- data.frame(time_index = x, hist=numeric(length(x)))
+				RUL_hist <<- data.frame(time_index = x, hist=numeric(length(x)))
 
 				print("*nrow(RUL_hist)")
 				print(nrow(RUL_hist))
@@ -4297,7 +4297,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					cat("RUL_tmp")
 					print(str(RUL_tmp))
 
-					RUL_hist <- dplyr::bind_rows(RUL_hist, RUL_tmp)
+					RUL_hist <<- dplyr::bind_rows(RUL_hist, RUL_tmp)
 				}
 			}
 
@@ -4375,7 +4375,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			{
 				x <- rev(seq(current_time_index, length.out = nrow(feature_df), by=-delta_index))
 				x <- seq(x[1], length.out = nrow(feature_df)+max_prediction_length, by = delta_index)
-				RUL_hist <- data.frame(time_index = x, hist=numeric(length(x)))
+				RUL_hist <<- data.frame(time_index = x, hist=numeric(length(x)))
 			}else
 			{
 				RUL_hist$hist <- 0
@@ -4503,7 +4503,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 						s = nrow(RUL_hist_pre)
 						p <- RUL_hist_tmp[1:nrow(RUL_hist_tmp),]
 						p$z1 <- thr0
-						RUL_hist_pre <- rbind(RUL_hist_pre, p[(s+1):nrow(p),])
+						RUL_hist_pre <<- rbind(RUL_hist_pre, p[(s+1):nrow(p),])
 					}
 					looked_var_plt <- looked_var_plt + geom_line(data=RUL_hist_pre, aes(x=RUL_hist_pre$time_index, y=RUL_hist_pre$z1), color = "#ff69b4",linetype="dashed", alpha = 0.3)
 					looked_var_plt <- looked_var_plt + geom_ribbon(data=RUL_hist_pre, fill="#ff69b4", mapping = aes_string(x = 'time_index', ymin = thr0, ymax = RUL_hist_pre$z1), alpha = 0.3)
@@ -4594,7 +4594,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				#plt_s[[2]] <- plt_s[[2]] + scale_x_continuous(breaks = break_pos, labels = labels)
 				#plt_s[[3]] <- plt_s[[3]] + scale_x_continuous(breaks = break_pos, labels = labels)
 				
-				RUL_hist_pre <- RUL_hist_tmp
+				RUL_hist_pre <<- RUL_hist_tmp
 				
 				RUL_hist_tmp <- NULL
 				rm(RUL_hist_tmp)

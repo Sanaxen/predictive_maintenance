@@ -22,5 +22,7 @@ install.packages("cowplot", repos = "http://cran.us.r-project.org",lib=install_l
 install.packages("plotly", repos = "http://cran.us.r-project.org",lib=install_libpath)
 install.packages("outliers", repos = "http://cran.us.r-project.org",lib=install_libpath)
 install.packages("ggridges", repos = "http://cran.us.r-project.org",lib=install_libpath)
+install.packages("crayon", repos = "http://cran.us.r-project.org",lib=install_libpath)
+
 .libPaths( org_libpath)
 
