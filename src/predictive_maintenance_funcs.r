@@ -27,11 +27,22 @@ library(data.table)
 library(ggridges)
 
 library(crayon)
+#library(crayons)
 
 freeram <- function(...) invisible(gc(...))
 
+warning1_text <- function( t )
+{
+	cat( white$bgGreen(t, "\r\n"))
+}
+warning2_text <- function( t )
+{
+	cat( white$bgYellow(t, "\r\n"))
+}
+
 yellow_text <- function( t )
 {
+	
 	cat( yellow(t, "\r\n"))
 }
 green_text <- function( t )
@@ -2729,6 +2740,13 @@ if(T)
 	delta_i = 0
 	delta_j = 0
 	
+	cat("================================================================\n")
+	cat("nrow(fit_predict)")
+	print(nrow(fit_predict))
+	cat("h")
+	print(h)
+	cat("================================================================\n")
+	
 	for ( i in 1:h )
 	{
 		if ( !is.null(fit_predict))
@@ -2764,6 +2782,10 @@ if(T)
 	{
 		failure_time_float = failure_time + delta_i/(delta_i+delta_j)
 	}
+	cat("================================================================\n")
+	cat("failure_time")
+	print(failure_time)
+	cat("================================================================\n")
 	
 	failure_time50p_float = -1.0
 	delta_i = 0
@@ -2784,6 +2806,10 @@ if(T)
 			}
 		}
 	}
+	cat("================================================================\n")
+	cat("failure_time50p")
+	print(failure_time50p)
+	cat("================================================================\n")
 	
 	if ( failure_time50p != failure_time_init )
 	{
@@ -2824,6 +2850,12 @@ if(T)
 	{
 		failure_time95p_float = failure_time95p + delta_i/(delta_i+delta_j)
 	}
+	cat("================================================================\n")
+	cat("failure_time2")
+	print(failure_time2)
+	cat("failure_time95p")
+	print(failure_time95p)
+	cat("================================================================\n")
 		
 	if ( failure_time95p_float > 0 && failure_time95p_float >= failure_time95p-1 && failure_time95p_float <= failure_time95p + 1 )
 	{
@@ -3163,7 +3195,8 @@ if(T)
 		}
 #///////////////////////////////////////////////
 		
-		plt2 <- plt2 + labs(x=sprintf("[%s] Current time:%s",timeStamp, current_time))
+		plt2 <- plt2 + labs(x=sprintf("[%s] Current time:%s",timeStamp, current_time))+
+		theme(plot.title = element_text(size = 8))
 		#plt2 <- plt2 + scale_x_continuous(breaks = break_pos, labels = labels)
 		#plt2 <- plt2 + theme(axis.text.x = element_text(angle = 0, vjust=0.0, hjust=0.5, face="bold")) 
 		#plt2 <- plt2 + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=0.0, face="bold")) 
@@ -3244,7 +3277,8 @@ if(T)
 		geom_ribbon(data=pred_tmp, fill=fill_col[2], mapping = aes_string(x = 'time_index', ymin = 'l25', ymax = 'h25'), alpha = alp)+
 		#scale_y_continuous(limits = c(0, ymax))+
 		labs(title=sprintf("[%s] RUL:%s([%s] arima)\n%s", colname, failure_time_str, fit_model,failure_time50p_str))+
-		theme(legend.position = "none")
+		theme(legend.position = "none")+
+		theme(plot.title = element_text(size = 12))
 	}else{
 		plt2 <- plt2 +
 		geom_line(data=pred_tmp, mapping = aes_string(x = "time_index", y = "forecast")) +
@@ -3252,7 +3286,8 @@ if(T)
 		geom_ribbon(data=pred_tmp, fill=fill_col[1], mapping = aes_string(x = 'time_index', ymin = 'l95', ymax = 'h95'), alpha = alp)+
 		#scale_y_continuous(limits = c(0, ymax))+
 		labs(title=sprintf("[%s] RUL:%s([%s]prophet\n%s", colname, failure_time_str, fit_model,failure_time50p_str))+
-		theme(legend.position = "none")
+		theme(legend.position = "none")+
+		theme(plot.title = element_text(size = 12))
 	}
 	
 	plt2 <- plt2 + geom_hline(aes(yintercept=threshold, linetype = "twodash"),color = "red")
@@ -3260,7 +3295,8 @@ if(T)
 	if ( fit_model == "" )
 	{
 		
-		plt2 <- plt2 + labs(x=sprintf("[%s] Current time:%s",timeStamp, current_time))
+		plt2 <- plt2 + labs(x=sprintf("[%s] Current time:%s",timeStamp, current_time))+
+		theme(plot.title = element_text(size = 8))
 	}
 	#------------------------------------------------
 	print(plt1)
@@ -3484,24 +3520,24 @@ parameter_check <- function()
 
 initial_pm <- function(sigin_arg)
 {
-	#各特徴量毎の閾値、Ymaxのパラメータセット
+	#Parameter set of threshold and Ymax for each feature
 	feature_param <<- NULL
 	
 	m_mahalanobis <<- NULL
 
-	#送られてくるデータの全てで過去から現在まで
-	#予測に用いる最大データ長までに制限したデータフレーム
+	#All of the data sent to us, past and present.
+	#Data frames limited to the maximum data length used for prediction
 	pre <<- NULL
-	#最大保持長までに制限したデータフレーム
+	#Data frames limited to the maximum retention length
 	past <<- NULL
 
-	#予測モデル選択
+	#Predictive Model Selection
 	use_auto_arima <<- F
 	use_arima <<- F
 	use_ets <<- F
 	use_plophet <<- F
 
-	#追跡していく特徴量
+	#Features to be tracked
 	tracking_feature <<- c()
 	
 	dynamic_threshold <<- TRUE
@@ -3527,7 +3563,7 @@ file_division <- function(df)
 
 	files <- NULL
 	for ( i in 1:nrow(df))
-	{	#データ切り出し
+	{	#data cutout
 		if ( i*one_input > nrow(df) ) break
 		df2 <- as.data.frame(df[((i-1)*one_input+1):(i*one_input),])
 		if ( (i+1)*one_input >= nrow(df) )
@@ -3760,12 +3796,21 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		}
 		
 		train_progress <<- sprintf("training:%d/%d %.3f%%", df2$time_index[nrow(df2)], max_train_span, 100*df2$time_index[nrow(df2)]/max_train_span)
-		green_text(train_progress)
+		if ( !dynamic_threshold )
+		{
+			warning2_text(train_progress)
+		}
 		train_progress <<- sprintf("training:%.3f%%", 100*df2$time_index[nrow(df2)]/max_train_span)
 		
 		if ( df2$time_index[nrow(df2)] > max_train_span )
 		{
 			dynamic_threshold <<- FALSE
+		}
+		if ( !dynamic_threshold )
+		{
+			train_progress <<- ""
+			x <- sprintf("trained:%d/%d %.3f%%", df2$time_index[nrow(df2)], max_train_span, 100*df2$time_index[nrow(df2)]/max_train_span)
+			warning2_text(x)
 		}
 
 		if ( !is.null(pre) )
@@ -3855,7 +3900,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			if ( class(df2_tmp) == "try-error"  || is.null(df2_tmp))
 			{
 				print(sprintf("past:%d",nrow(past)))
-				yellow_text("*There's still not enough data")
+				warning1_text("*There's still not enough data")
 				flush.console()
 				next
 			}
@@ -3882,7 +3927,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		#if ( lookback*3 > nrow(df2_tmp) || smooth_window*3 > nrow(df2_tmp) || max(abs(monotonicity_num),abs(train_num)) > nrow(df2_tmp))
 		if ( max(abs(monotonicity_num),abs(train_num)) > nrow(df2_tmp))
 		{
-			yellow_text("There's still not enough data")
+			warning1_text("There's still not enough data")
 			#print(lookback)
 			print(sprintf("past:%d",nrow(past)))
 			flush.console()
@@ -3934,7 +3979,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			feature(df2_tmp, lookback=lookback, slide_window = lookback_slide))
 		if ( class(feature_df) == "try-error" )
 		{
-			yellow_text(sprintf("feature_df:%d",nrow(feature_df)))
+			warning1_text(sprintf("feature_df:%d",nrow(feature_df)))
 			flush.console()
 			next
 		}
@@ -3958,7 +4003,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			smooth(feature_df, smooth_window = smooth_window2, smooth_window_slide=smooth_window_slide2),silent=F)
 			if ( class(feature_df) == "try-error" || is.null(feature_df))
 			{
-				yellow_text("There's still not enough data")
+				warning1_text("There's still not enough data")
 				print(sprintf("smooth_window2:%d", smooth_window2))
 				flush.console()
 				next
@@ -3979,7 +4024,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		{
 			print(sprintf("nrow(feature_df):%d <= abs(monotonicity_num):%d", nrow(feature_df),abs(monotonicity_num)) )
 			print(sprintf("nrow(feature_df):%d <= abs(train_num):%d", nrow(feature_df),abs(train_num)) )
-			yellow_text("There's still not enough data")
+			warning1_text("There's still not enough data")
 			flush.console()
 			next
 		}
@@ -4284,20 +4329,66 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				}
 			
 				e = RUL_hist$time_index[nrow(RUL_hist)]
+				
+				print("===============================================")
+				#cat("nrow(RUL_hist)")
+				#print(nrow(RUL_hist))
+				#cat("e:")
+				#print(e)
 				print(sprintf("current_time_index:%d  failure_time50p_s:%f failure_time_index:%f failure_time_index2:%f", current_time_index, failure_time50p_s[2],failure_time_index,failure_time_index2))
+				print("===============================================")
 				flush.console()
 								 
 				
 				failure_time_index0 = failure_time_index2
 				if ( e < failure_time_index0 )
 				{
+					#cat("e")
+					#print(e)
+					#cat("failure_time_index0")
+					#print(failure_time_index0)
+					#cat("delta_index")
+					#print(delta_index)
+					
 					ee <- seq((e+delta_index), failure_time_index0, dy=delta_index)
+					#print(ee)
 
 					RUL_tmp <- data.frame(time_index = ee, hist=numeric(length(ee)))
-					cat("RUL_tmp")
-					print(str(RUL_tmp))
+					RUL_tmp$time_index <- as.integer(RUL_tmp$time_index)
+					
+					#cat("RUL_tmp")
+					#print(str(RUL_tmp))
+					#cat("nrow(RUL_tmp)")
+					#print(nrow(RUL_tmp))
+					#flush.console()
+					if ("TimeStamp" %in% names(RUL_hist)) {
+						RUL_hist$TimeStamp <- NULL
+					}
+					
+					#n = nrow(RUL_tmp)
+					#m = nrow(RUL_hist)
+					#cat("n,m")
+					#print(c(n,m))
 
-					RUL_hist <<- dplyr::bind_rows(RUL_hist, RUL_tmp)
+					RUL_hist$time_index <- as.integer(RUL_hist$time_index)
+					#cat("RUL_hist")
+					#print(str(RUL_hist))
+					#flush.console()
+					
+					tmp <<- dplyr::bind_rows(RUL_hist, RUL_tmp)
+					#cat("dplyr::bind_rows->nrow(tmp)")
+					#print(nrow(tmp))
+					
+					RUL_hist <- tmp
+					rm(tmp)
+					freeram()
+
+					#print(nrow(RUL_hist))
+					#flush.console()
+					#if ( nrow(RUL_hist) != n+m )
+					#{
+					#	quit()
+					#}
 				}
 			}
 
@@ -4319,13 +4410,13 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					row0 = which.min( abs(failure_time_index0 - RUL_hist$time_index))
 					indices1 = (row1:row0)
 
-					print("row")
+					cat("row")
 					print(row)
-					print("row1")
+					cat("row1")
 					print(row1)
-					print("row0")
+					cat("row0")
 					print(row0)
-					print("nrow(RUL_hist)")
+					cat("nrow(RUL_hist)")
 					print(nrow(RUL_hist))
 					
 					indices2 = indices1[indices1 < row]
@@ -4505,8 +4596,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 						p$z1 <- thr0
 						RUL_hist_pre <<- rbind(RUL_hist_pre, p[(s+1):nrow(p),])
 					}
-					looked_var_plt <- looked_var_plt + geom_line(data=RUL_hist_pre, aes(x=RUL_hist_pre$time_index, y=RUL_hist_pre$z1), color = "#ff69b4",linetype="dashed", alpha = 0.3)
-					looked_var_plt <- looked_var_plt + geom_ribbon(data=RUL_hist_pre, fill="#ff69b4", mapping = aes_string(x = 'time_index', ymin = thr0, ymax = RUL_hist_pre$z1), alpha = 0.3)
+					looked_var_plt <- looked_var_plt + geom_line(data=RUL_hist_pre, aes(x=RUL_hist_pre$time_index, y=RUL_hist_pre$z1), color = "#ff69b4",linetype="dashed", alpha = 0.5)
+					looked_var_plt <- looked_var_plt + geom_ribbon(data=RUL_hist_pre, fill="#ff69b4", mapping = aes_string(x = 'time_index', ymin = thr0, ymax = RUL_hist_pre$z1), alpha = 0.5)
 				}
 				if ( F )
 				{
@@ -4520,8 +4611,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 						##scale_fill_gradient(low="green", high="blue")
 				}else
 				{
-					looked_var_plt <- looked_var_plt + geom_line(data=RUL_hist_tmp, aes(x=time_index, y=z1),alpha = 0.9)
-					looked_var_plt <- looked_var_plt + geom_ribbon(data=RUL_hist_tmp, fill="green", mapping = aes_string(x = 'time_index', ymin = thr0, ymax = RUL_hist_tmp$z1), alpha = 0.9)
+					looked_var_plt <- looked_var_plt + geom_line(data=RUL_hist_tmp, aes(x=time_index, y=z1),alpha = 0.5)
+					looked_var_plt <- looked_var_plt + geom_ribbon(data=RUL_hist_tmp, fill="green", mapping = aes_string(x = 'time_index', ymin = thr0, ymax = RUL_hist_tmp$z1), alpha = 0.5)
 				}
 				
 				step <- nrow(RUL_hist)/4
@@ -4587,7 +4678,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				}
 				if ( text != "" )
 				{
-					looked_var_plt <- looked_var_plt + annotate("text", x=RUL_hist_tmp$time_index[z1max], y=y, label=text, colour="blue")
+					looked_var_plt <- looked_var_plt + annotate("text", x=RUL_hist_tmp$time_index[z1max], y=y, label=text, size=6, colour="blue")
 				}
 				
 				#plt_s[[1]] <- plt_s[[1]] + scale_x_continuous(breaks = break_pos, labels = labels)
@@ -4640,6 +4731,11 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			plt_s[[1]] <- plt_s[[1]] + scale_x_continuous(breaks = break_pos, labels = labels)
 			plt_s[[2]] <- plt_s[[2]] + scale_x_continuous(breaks = break_pos, labels = labels)
 			plt_s[[3]] <- plt_s[[3]] + scale_x_continuous(breaks = break_pos, labels = labels)
+			
+			plt_s[[1]] <- plt_s[[1]] + theme(axis.title.x = element_text(size = 8))
+			plt_s[[2]] <- plt_s[[2]] + theme(axis.title.x = element_text(size = 8))
+			plt_s[[3]] <- plt_s[[3]] + theme(axis.title.x = element_text(size = 8))
+			
 			#tmp2 <- NULL
 			#rm(tmp2)
 			#freeram()
@@ -4682,6 +4778,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
 			}
 		}
+		#ggsave(file = paste(putpng_path, result_png, sep=""), plot = looked_var_plt, dpi = 130, width = 14*1.5, height = 9.8*1.4)
 		ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
 		rm(plt)
 		freeram()
