@@ -3,6 +3,7 @@ options(digits.secs=3)
 
 library(ggplot2)
 library(zoo)
+library(plotly)
 
 #parameters <- paste("./", base_name,"parameters.r", sep="")
 source("./work/parameters.r")
@@ -188,6 +189,10 @@ plt
 
 
 ggsave(file = paste("./", base_name, "_RUL.png", sep=""), plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+
+plt <- ggplotly(plt)
+print(plt)
+htmlwidgets::saveWidget(as_widget(plt), paste("./work/",base_name,"_RUL.html",sep=''), selfcontained = F)
 
 
 rul_csv <- paste("./", base_name,"_RUL_output.csv", sep="")
