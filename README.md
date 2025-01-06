@@ -28,8 +28,10 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 <img src="./md/images/result.gif">  
 - Time stamp items added as appropriate
 
+### remaining useful life (RUL)
+<img src="./md/images/RUL.png" width="100%">  
 
-## using nkf to encode the character code.  
+### using nkf to encode the character code.  
 https://github.com/kkato233/nkf/releases  
 
 

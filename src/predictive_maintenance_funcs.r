@@ -2889,7 +2889,7 @@ if(T)
 		failure_time_str = sprintf("%d step 5%%[%d %s]", as.integer(failure_time-1), 
 				convert_time((failure_time-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit)
-		failure_time50p_str = sprintf("50%%[%d %s]  95%%[%d %s] %s",  
+		failure_time50p_str = sprintf("50%%[%d %s] 95%%[%d %s] %s",  
 				convert_time((failure_time50p-1)*dt, unit_of_record=unit_of_record,
 				from=unit_of_time,to=forecast_time_unit), forecast_time_unit,
 				convert_time((failure_time95p-1)*dt, unit_of_record=unit_of_record,
@@ -3304,7 +3304,7 @@ if(T)
 
 	gfm2_org <- NULL
 	rm(gfm2_org)
-	return( list(plt1, plt2, failure_time, failure_time50p, failure_time2))
+	return( list(plt1, plt2, failure_time, failure_time50p, failure_time2, failure_time_str,failure_time50p_str))
 }
 
 #Data feature confirmation
@@ -4206,6 +4206,9 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		failure_time_s = c(1:tracking_feature_Num)
 		failure_time50p_s = c(1:tracking_feature_Num)
 		failure_time2_s = c(1:tracking_feature_Num)
+		
+		failure_time_str_s = c(1:tracking_feature_Num)
+		failure_time50p_str_s = c(1:tracking_feature_Num)
 		plt_s = list()
 		
 		if ( max_prediction_length_org == 0 )
@@ -4230,6 +4233,9 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				failure_time_s[k] = plt1[[3]]
 				failure_time50p_s[k] = plt1[[4]]
 				failure_time2_s[k] = plt1[[5]]
+				
+				failure_time_str_s[k] = plt1[[6]]
+				failure_time50p_str_s[k] = plt1[[7]]
 				plt_s <- c(plt_s, list(plt1[[2]]))
 			}else
 			{
@@ -4472,6 +4478,23 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				RUL_hist$hist <- 0
 			}
 		}
+		rul_info = sprintf("rul_info-%06d.txt", index_number)
+		sink(file = paste(putpng_path, rul_info, sep=""))
+
+		cat(sprintf("%d,%s\n", index_number,as.character(current_time)))
+		if ( failure_time_set )
+		{
+			cat(failure_time_str_s[2])
+			cat("\n")
+			cat(failure_time50p_str_s[2])
+			cat("\n")
+		}else
+		{
+			cat("------------------------\n")
+			cat("------------------------\n")
+		}
+		sink()
+		
 #//////////////////////////
 			
 
