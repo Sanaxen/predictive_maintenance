@@ -185,15 +185,18 @@ rul_curve_plot <- function(index_number=-1)
 	if ( sum(!is.na(cur_rul_df$percent5)) >= 2)
 	{
 		cur_rul_plt <- ggplot( cur_rul_df, aes(x=cycle))
-		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent5, color="percent5"),linewidth =1.0,na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent50, color="percent50"),linewidth =1.0,na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent95, color="percent95"),linewidth =1.0,na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + labs(y = paste("RUL [ ", unit, " ]", sep=""))
+		cur_rul_plt <- cur_rul_plt + geom_ribbon(aes(x=cycle, ymin = percent5, ymax = percent95), fill="lightblue", alpha = 0.3,na.rm = TRUE)
+
+		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent5, color="percent5"),size =1.0,na.rm = TRUE)
+		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent50, color="percent50"),size =1.0,na.rm = TRUE)
+		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent95, color="percent95"),size =1.0,na.rm = TRUE)
+		cur_rul_plt <- cur_rul_plt + labs(y = paste("RUL [ ", valid_unit, " ]", sep=""))
 		cur_rul_plt <- cur_rul_plt + geom_hline(yintercept = 0, color = "red", size = 1)
 
 		cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent5,label = percent5, color="percent5"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
 		cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent50,label = percent50, color="percent50"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
 		cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent95,label = percent95, color="percent95"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
+		
 		cur_rul_plt
 
 		n = 3
@@ -227,6 +230,7 @@ rul_curve_plot <- function(index_number=-1)
 			}
 			file <- sprintf("../images/RUL/%s_RUL%06d.png", base_name, index_number)
 			ggsave(file = file, plot = cur_rul_plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+			
 		}else
 		{
 			cur_rul_plt <- ggplotly(cur_rul_plt)

@@ -12,11 +12,19 @@ https://www.kaggle.com/datasets/behrad3d/nasa-cmaps
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD001_Uint1  
 <img src="./dataset/Turbofan_Jet_Engine/result.gif">  
-- Time stamp items added as appropriate
+- Time stamp items added as appropriate  
+
+
+### remaining useful life (RUL)
+<img src="./md/images/NASA_Turbofan_Jet_Engine_Data_train_FD001_Uint1_RUL.png" width="100%">  
+
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD004_Uint1  
 <img src="./dataset/Turbofan_Jet_Engine2/result.gif">  
-- Time stamp items added as appropriate
+- Time stamp items added as appropriate  
+
+### remaining useful life (RUL)
+<img src="./md/images/NASA_Turbofan_Jet_Engine_Data_train_FD004_Unit1_RUL.png" width="100%">  
 
 ## WindTurbineHighSpeedBearingPrognosis-Data  
 https://github.com/mathworks/WindTurbineHighSpeedBearingPrognosis-Data  

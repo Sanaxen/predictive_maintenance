@@ -1783,6 +1783,8 @@ namespace pm
             cmd += "\"%R_INSTALL_PATH%\\bin\\x64\\Rscript.exe\" --vanilla %test% "
                     + " " + "args.csv"  + "\r\n";
 
+            cmd += "call gen_rul.bat\r\n";
+
             //mahalanobis vibration.kurtosis vibration.mean datetime + \r\n";
 
             string file = base_dir+"\\" + base_name0 + "_test.bat";
