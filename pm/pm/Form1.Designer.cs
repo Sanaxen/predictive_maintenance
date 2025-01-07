@@ -173,6 +173,7 @@ namespace pm
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel18.SuspendLayout();
             this.panel19.SuspendLayout();
@@ -1160,6 +1161,7 @@ namespace pm
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.checkBox6);
             this.panel8.Controls.Add(this.button11);
             this.panel8.Controls.Add(this.button12);
             this.panel8.Controls.Add(this.button9);
@@ -1248,6 +1250,12 @@ namespace pm
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // checkBox6
+            // 
+            resources.ApplyResources(this.checkBox6, "checkBox6");
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1456,6 +1464,7 @@ namespace pm
         private System.Windows.Forms.Button button20;
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox6;
     }
 }
 

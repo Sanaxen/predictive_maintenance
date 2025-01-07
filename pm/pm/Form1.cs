@@ -1773,9 +1773,12 @@ namespace pm
             cmd += "\r\n";
             cmd += "cd %~dp0\r\n";
             cmd += "\r\n";
+            cmd += "mkdir images\\RUL\r\n";
+            cmd += "del /Q images\\*.txt\r\n";
             cmd += "del /Q images\\*.png\r\n";
             cmd += "del /Q images\\*.r\r\n";
             cmd += "del /Q images\\debug\\*.png\r\n";
+            cmd += "del /Q images\\RUL\\*.png\r\n";
             cmd += "\r\n";
             cmd += "\"%R_INSTALL_PATH%\\bin\\x64\\Rscript.exe\" --vanilla %test% "
                     + " " + "args.csv"  + "\r\n";
@@ -1867,6 +1870,17 @@ namespace pm
         }
         public void GetImages_()
         {
+            if ( checkBox6.Checked)
+            {
+                imageFiles = Directory
+                  .GetFiles(work_dir + "\\..\\images\\RUL", "*.png", SearchOption.TopDirectoryOnly)
+                  .Where(filePath => Path.GetFileName(filePath) != ".DS_Store")
+                  .OrderBy(filePath => File.GetLastWriteTime(filePath).Date)
+                  .ThenBy(filePath => File.GetLastWriteTime(filePath).TimeOfDay)
+                  .ToList();
+
+                return;
+            }
             imageFiles = Directory
               .GetFiles(work_dir + "\\..\\images", "*.png", SearchOption.TopDirectoryOnly)
               .Where(filePath => Path.GetFileName(filePath) != ".DS_Store")

@@ -4494,6 +4494,14 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			cat("------------------------\n")
 		}
 		sink()
+		if ( !exists("rul_curve_plot", mode = "function") )
+		{
+			curdir = getwd()
+			setwd( paste("..", sep=""))
+			source("./src/rul_info.r")
+			setwd(curdir)
+		}
+		rul_curve_plot(index_number=index_number)
 		
 #//////////////////////////
 			
