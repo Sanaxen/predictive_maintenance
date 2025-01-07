@@ -2,15 +2,21 @@ options(encoding = "utf-8")
 options(digits.secs=3)
 
 if ("ggplot2" %in% .packages()) {
-  message("ggplot2 is already loaded。")
+  message("ggplot2 is already loaded")
 } else {
 	library(ggplot2)
 }
 if ("zoo" %in% .packages()) {
-  message("zoo is already loaded。")
+  message("zoo is already loaded")
 } else {
 	library(zoo)
 }
+if ("plotly" %in% .packages()) {
+  message("plotly is already loaded")
+} else {
+	library(plotly)
+}
+
 
 setwd( paste(getwd(), "/work", sep=""))
 
@@ -221,7 +227,8 @@ rul_curve_plot <- function(index_number=-1)
 			}
 			file <- sprintf("../images/RUL/%s_RUL%06d.png", base_name, index_number)
 			ggsave(file = file, plot = cur_rul_plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
-			
+		}else
+		{
 			cur_rul_plt <- ggplotly(cur_rul_plt)
 			print(cur_rul_plt)
 			htmlwidgets::saveWidget(as_widget(cur_rul_plt), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
