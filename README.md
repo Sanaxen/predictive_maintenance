@@ -37,7 +37,7 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 - Time stamp items added as appropriate
 
 ### remaining useful life (RUL)
-<img src="./md/images/RUL.png" width="100%">  
+<img src="./md/images/01st-day-vibration-2013_03_07 01_57_46.000_RUL 1.png" width="100%">  
 
 ### using nkf to encode the character code.  
 https://github.com/kkato233/nkf/releases  
