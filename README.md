@@ -37,10 +37,16 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 - Time stamp items added as appropriate
 
 ### remaining useful life (RUL)
-<img src="./md/images/01st-day-vibration-2013_03_07 01_57_46.000_RUL 1.png" width="100%">  
+<img src="./md/images/01st-day-vibration-2013_03_07 01_57_46.000_RUL.png" width="100%">  
 
-### using nkf to encode the character code.  
-https://github.com/kkato233/nkf/releases  
+
+---
+## requirements  
+
+- [R-4.2.3](https://www.r-project.org/)
+- [nkf](https://github.com/kkato233/nkf/releases )  
+  using nkf to encode the character code.  
+- 
 
 
 
@@ -48,4 +54,7 @@ https://github.com/kkato233/nkf/releases
 Notes.  
 The plot of the probability density function is fairly approximate.  
 The confidence intervals for the predictions are tentatively calculated and not yet correct.  
+
+Parts such as creating file lists from directories, processing files, and using batch startup are OS-dependent (Windows).  
+To run on non-Windows operating systems, OS-dependent parts must be modified.  
 
