@@ -38,7 +38,7 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 
 ### remaining useful life (RUL)
 <img src="./md/images/01st-day-vibration-2013_03_07 01_57_46.000_RUL.png" width="100%">  
-
+<img src="./md/images/rul.gif" >
 
 ---
 ## requirements  
