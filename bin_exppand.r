@@ -10,7 +10,7 @@ install_libpath = paste(curdir, "/library", sep="")
 
 
 
-install.packages("archive", repos = "http://cran.us.r-project.org",dependencies=TRUE, lib=install_libpath)
+install.packages("archive", repos = "http://cran.us.r-project.org",dependencies=TRUE, lib=install_libpath, type = "binary")
 
 library(archive)
 
