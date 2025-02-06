@@ -869,7 +869,7 @@ feature_summary_visualization <- function( csvfile, timeStamp , summary=FALSE)
 	}
 	xxxx <- xxxx[order((xxxx$rmse12), decreasing=F),]
 	#xxxx <- xxxx[order((xxxx$monotonicity), decreasing=T),]
-	write.csv(xxxx, '../images/feature_summarys.csv', row.names = F, fileEncoding = "CP932")
+	write.csv(xxxx, '../images/feature_summarys.csv', row.names = F, fileEncoding = "UTF-8")
 	
 
 	if ( summary )
