@@ -218,9 +218,9 @@ rul_curve_plot <- function(index_number=-1)
 		cur_rul_plt <- ggplot( cur_rul_df, aes(x=cycle))
 		cur_rul_plt <- cur_rul_plt + geom_ribbon(aes(x=cycle, ymin = percent5, ymax = percent95), fill="lightblue", alpha = 0.3,na.rm = TRUE)
 
-		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent5, color="percent5"),size =1.0,na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent50, color="percent50"),size =1.0,na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent95, color="percent95"),size =1.0,na.rm = TRUE)
+		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent5, color="percent5"),linewidth =1.0,na.rm = TRUE)
+		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent50, color="percent50"),linewidth =1.0,na.rm = TRUE)
+		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent95, color="percent95"),linewidth =1.0,na.rm = TRUE)
 		cur_rul_plt <- cur_rul_plt + labs(y = paste("RUL [ ", valid_unit, " ]", sep=""))
 		cur_rul_plt <- cur_rul_plt + geom_hline(yintercept = 0, color = "red", size = 1)
 
@@ -405,6 +405,17 @@ rul_curve_plot <- function(index_number=-1)
 	}
 	
 	rul_hist3$time <- as.factor(format(rul_hist3$time, "%Y-%m-%d"))
+	while ( length(unique(rul_hist3$time)) > 6 )
+	{
+		if ( nrow(rul_hist3) > 6 )
+		{
+			rul_hist3 <- rul_hist3 %>% slice_tail(n = nrow(rul_hist3)-2)
+		}else
+		{
+			break
+		}	
+	}
+	
 	hist_plt <- ggplot(rul_hist3, aes(x=time))
 	hist_plt <- hist_plt + geom_histogram(stat="count")
 	hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))

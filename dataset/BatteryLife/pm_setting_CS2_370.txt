@@ -37,7 +37,7 @@ capacity.RMS
 1
 textBox2,1
 textBox3,0
-textBox4,2
+textBox4,10
 textBox5,0
 textBox6,0
 textBox7,900

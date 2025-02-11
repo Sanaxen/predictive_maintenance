@@ -15,8 +15,11 @@ https://calce.umd.edu/data#CS2
 'Constant Current Charging Time (s)' -> 'CCCT'  
 'Constant Voltage Charging Time (s) -> 'CVCT'
 
-<img src="./dataset/BatteryLife/result-000429.png">  
+<img src="./dataset/BatteryLife/result.gif">  
 - Time stamp items added as appropriate  
+
+### remaining useful life (RUL)
+<img src="./dataset/BatteryLife/CS2_37_RUL000097.png">  
 
 ## NASA Turbofan Jet Engine Data Set  
 <div align="center"> 
