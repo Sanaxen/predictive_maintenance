@@ -3,6 +3,21 @@
 <img src="./md/images/logo.png" width="80%">
 </div>
 
+
+## Battery Research Data  
+<div align="center"> 
+<img src="./dataset/BatteryLife/image.png">  
+</div>  
+https://calce.umd.edu/data#CS2  
+
+'Discharge Capacity (mAh)' -> 'capacity'  
+'Internal Resistance (Ohm)' -> 'resistance'  
+'Constant Current Charging Time (s)' -> 'CCCT'  
+'Constant Voltage Charging Time (s) -> 'CVCT'
+
+<img src="./dataset/BatteryLife/result-000429.png">  
+- Time stamp items added as appropriate  
+
 ## NASA Turbofan Jet Engine Data Set  
 <div align="center"> 
 <img src="./dataset/Turbofan_Jet_Engine.png">  

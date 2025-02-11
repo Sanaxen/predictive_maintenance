@@ -426,9 +426,9 @@ rul_curve_plot <- function(index_number=-1)
 		ggsave(file = file, plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
 	}else
 	{
-		plt_pltly <- ggplotly(plt_pltly)
-		print(plt_pltly)
-		htmlwidgets::saveWidget(as_widget(plt_pltly), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
+		#plt_pltly <- ggplotly(cur_rul_plt)
+		#print(plt_pltly)
+		#htmlwidgets::saveWidget(as_widget(plt_pltly), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
 	}
 	file = paste("../", base_name, "_RUL.png", sep="")
 	ggsave(file = file, plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
