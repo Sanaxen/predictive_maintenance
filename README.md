@@ -16,6 +16,8 @@ https://calce.umd.edu/data#CS2
 'Constant Current Charging Time (s)' -> 'CCCT'  
 'Constant Voltage Charging Time (s) -> 'CVCT'
 
+
+<img src="./dataset/BatteryLife.png">  
 <img src="./dataset/BatteryLife/image.gif">  
 - Time stamp items added as appropriate  
 
@@ -31,7 +33,9 @@ https://calce.umd.edu/data#CS2
 https://www.kaggle.com/datasets/behrad3d/nasa-cmaps  
 
 
+
 ## NASA_Turbofan_Jet_Engine_Data_train_FD001_Uint1  
+<img src="./dataset/Turbofan_Jet_Engine_s7.png">  
 <img src="./dataset/Turbofan_Jet_Engine/result.gif">  
 - Time stamp items added as appropriate  
 
@@ -41,6 +45,7 @@ https://www.kaggle.com/datasets/behrad3d/nasa-cmaps
 
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD004_Uint1  
+<img src="./dataset/Turbofan_Jet_Engine2_s7.png">  
 <img src="./dataset/Turbofan_Jet_Engine2/result.gif">  
 - Time stamp items added as appropriate  
 
@@ -58,6 +63,7 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 <div align="center">
 <img src="./dataset/dataset-card.jpeg" width="60%">
 </div>  
+<img src="./dataset/vibration.png">  
 <img src="./md/images/result.gif">  
 - Time stamp items added as appropriate
 
