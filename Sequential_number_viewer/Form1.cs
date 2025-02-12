@@ -223,12 +223,51 @@ namespace Sequential_number_viewer
         {
             if (textBox1.Text == "") return;
 
-            string[] imageFiles_tmp = new string[imageFiles.Count];
-            for ( int i = 0; i < imageFiles.Count; i++)
+            if (false)
             {
-                imageFiles_tmp[i] = imageFiles[i];
+                string[] imageFiles_tmp = new string[imageFiles.Count];
+                for (int i = 0; i < imageFiles.Count; i++)
+                {
+                    imageFiles_tmp[i] = imageFiles[i];
+                }
+                CreateAnimatedGif(textBox1.Text + "\\result.gif", imageFiles_tmp);
+            }else
+            {
+                Directory.CreateDirectory("tmp");
+
+                for (int i = 0; i < imageFiles.Count; i++)
+                {
+                    string dest = String.Format("tmp\\result-{0:000000}.png", i + 1);
+                    File.Copy(imageFiles[i], dest, true);
+                }
+                Assembly myAssembly = Assembly.GetEntryAssembly();
+                string path = System.IO.Path.GetDirectoryName(myAssembly.Location);
+
+                string ffmpeg = path + "\\ffmpeg.exe";
+                var app = new ProcessStartInfo();
+                app.FileName = ffmpeg;
+
+                int x = imageFiles.Count / 300;
+                if (x < 2) x = 1;
+                app.Arguments = " -i " + textBox1.Text + "\\tmp\\result-%06d.png" +
+                    " -r " + x.ToString()+
+                    " image.gif";
+
+                var p = Process.Start(app);
+                p.WaitForExit();
+
+                var imageFiles_tmp = Directory
+                  .GetFiles(textBox1.Text + "\\tmp", "*.png", SearchOption.TopDirectoryOnly)
+                  .Where(filePath => Path.GetFileName(filePath) != ".DS_Store")
+                  .OrderBy(filePath => File.GetLastWriteTime(filePath).Date)
+                  .ThenBy(filePath => File.GetLastWriteTime(filePath).TimeOfDay)
+                  .ToList();
+
+                for (int i = 0; i < imageFiles_tmp.Count; i++)
+                {
+                    File.Delete(imageFiles_tmp[i]);
+                }
             }
-            CreateAnimatedGif(textBox1.Text+ "\\result.gif", imageFiles_tmp);
         }
 
         private void panel1_DragDrop(object sender, DragEventArgs e)

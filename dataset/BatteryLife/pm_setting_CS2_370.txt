@@ -37,7 +37,7 @@ capacity.RMS
 1
 textBox2,1
 textBox3,0
-textBox4,10
+textBox4,2
 textBox5,0
 textBox6,0
 textBox7,900
@@ -50,7 +50,7 @@ textBox13,8
 textBox14,-10
 textBox15,-10
 textBox16,-1000
-textBox17,20
+textBox17,100
 textBox18,max_prediction_length*unit_of_record
 textBox19,0.075
 textBox20,0.05
@@ -80,4 +80,4 @@ htmlPictureBox3,
 htmlPictureBox4,
 htmlPictureBox5,
 htmlPictureBox6,
-r_path,d:\Program Files\R\R-4.2.3\bin
+r_path,c:\Program Files\R\R-4.2.3\bin
