@@ -24,6 +24,8 @@ This is because it is inferred that maintenance (tool replacement) was performed
 
 ## milling cutter(tool wear (flank wear).) 1
 <img src="./dataset/miiling/image.gif">  
+
+### remaining useful life (RUL)  
 <img src="./dataset/miiling/milling_RUL000237.png">  
 
 The data set is useful for measuring tool wear and predicting remaining tool life,
@@ -39,7 +41,17 @@ Therefore, the following example shows a RUL estimation simulation without tool 
 
 ## milling cutter(tool wear (flank wear).) 2 
 <img src="./dataset/miiling2/image.gif">  
+
+### remaining useful life (RUL)  
 <img src="./dataset/miiling2/milling2_RUL000262.png">  
+
+The threshold could not be fixed if wear was not used as an indicator of residual life
+ and **smcAC** (AC spindle motor current), which is easier to observe, was used instead.
+ Therefore, the RUL estimation is quite unstable.  
+
+ This is probably due to the mixing of processing conditions (case).  
+
+ ---
 
 
 # Battery Research Data  

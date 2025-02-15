@@ -1,5 +1,5 @@
 
-lib="C:/Users/yamato/Desktop/work/predictive_maintenance-main/predictive_maintenance-main/tmp/lib"
+lib="./lib"
 .libPaths( c(lib, .libPaths()))
 
 library(R.matlab)
