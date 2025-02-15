@@ -18,7 +18,16 @@ The data set included experimental data under milling machine
  vibration sensor, and current sensor) and were acquired at each location.  
 
  A 'maintenance' column has been added for maintenance (tool change) information.
-This is because it is inferred that maintenance (tool replacement) was performed on areas where wear was extremely reduced in the process of increasing wear.
+This is because it is inferred that maintenance (tool replacement) was performed on areas where wear was extremely reduced in the process of increasing wear.  
+
+
+**Things to keep in mind**  
+We have added a maintenance column, where maintenance=1, assuming that the cutter was replaced at the end of the cutter life.
+However, the data shows that the cutter was probably replaced only because of switching between different cutting conditions.  
+
+Therefore, the simulation of the RUL estimation below may be unrelated to the cutter life.  
+
+
 
 - Time stamp items added as appropriate  
 
@@ -50,6 +59,17 @@ The threshold could not be fixed if wear was not used as an indicator of residua
  Therefore, the RUL estimation is quite unstable.  
 
  This is probably due to the mixing of processing conditions (case).  
+
+
+##  milling cutter(tool wear (AE_table).)  
+
+“AE_table” (Acoustic Emission at Table) is the data of
+ Acoustic Emission (AE) measured at the table (fixed surface of the workpiece),
+  which shows a similar trend to wear, so we estimated RUL with this item.
+<img src="./dataset/miiling_case2/image.gif"> 
+
+### remaining useful life (RUL)  
+<img src="./dataset/miiling_case2/miiling_case2_RUL000359.png"> 
 
  ---
 

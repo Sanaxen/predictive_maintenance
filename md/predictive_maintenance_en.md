@@ -13,7 +13,23 @@ Currently, it is fixed to UTF-8, and all input CSV files are automatically conve
 Also, all output files are output in UTF-8.
 
 ## Importing CSV Data
-CSV data can be either accumulated data from periodic saving or consolidated CSV files. One or multiple files are acceptable. Place these CSV files under an appropriately named folder. Use the "CSV" button to access the folder and select the first CSV file.
+CSV data can be either accumulated data from periodic saving or consolidated CSV files. One or multiple files are acceptable. Place these CSV files under an appropriately named folder. Use the "CSV" button to access the folder and select the first CSV file.　　
+Do not use **. ** in the column names of csv data. Be especially careful because the R language automatically converts characters that cannot be used as variables into **. ** in the column names of csv data.
+
+Automatically correct column names that do not conform to R's variable name rules. In this case, the following rules apply
+
+Whitespace (space) → “.” converted to “.”.  
+Example: “column name” → “column.name”  
+Special characters (-, +, ? , ! etc.) → “.” converted to  
+Example: “column-name” → “column.name”  
+Names starting with a number → append “X  
+Example: “123data” → “X123data”  
+Duplicate column names → “. Append “.” to make it unique  
+Example: c(“A”, “A”) → c(“A”, “A.1”)  
+
+Please replace the column name with **.** in advance, replace the column name with **_**, 
+etc. to prevent conversion to **.**
+
 <img src="./images/004.png">
 Select the first CSV file.
 <img src="./images/005.png" title="Select the first CSV file">

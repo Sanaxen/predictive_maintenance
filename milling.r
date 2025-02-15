@@ -20,10 +20,10 @@ df3 <- data.frame(
 	material=df2$material,
 	smcAC=df2$smcAC,
 	smcDC=df2$smcDC,
-	vib.table=df2$vib.table,
-	vib.spindle=df2$vib.spindle,
-	AE.table=df2$AE.table,
-	AE_spindle=df2$AE.table)
+	vib_table=df2$vib.table,
+	vib_spindle=df2$vib.spindle,
+	AE_table=df2$AE.table,
+	AE_spindle=df2$AE.spindle)
 	
 	df3$cutnumber <- 1
 	write.csv(df3, sprintf("../dataset/miiling/cut_number/cut%d.csv", 1),row.names=F)
@@ -43,10 +43,10 @@ for ( i in 2:167 )
 		material=df2$material,
 		smcAC=df2$smcAC,
 		smcDC=df2$smcDC,
-		vib.table=df2$vib.table,
-		vib.spindle=df2$vib.spindle,
-		AE.table=df2$AE.table,
-		AE_spindle=df2$AE.table)
+		vib_table=df2$vib.table,
+		vib_spindle=df2$vib.spindle,
+		AE_table=df2$AE.table,
+		AE_spindle=df2$AE.spindle)
 	df2$cutnumber <- i
 	
 	write.csv(df2, sprintf("../dataset/miiling/cut_number/cut%d.csv", i),row.names=F)

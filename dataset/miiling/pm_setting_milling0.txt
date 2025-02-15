@@ -7,9 +7,9 @@ feed
 material
 smcAC
 smcDC
-vib.table
-vib.spindle
-AE.table
+vib_table
+vib_spindle
+AE_table
 AE_spindle
 maintenance
 datetime

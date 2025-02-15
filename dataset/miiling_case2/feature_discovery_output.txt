@@ -1,0 +1,10 @@
+VB.spectrum
+VB..
+textBox10,960
+textBox11,240
+textBox5,0
+textBox6,0
+textBox13,240
+textBox12,1
+comboBox3,+
+textBox21,362.175000
