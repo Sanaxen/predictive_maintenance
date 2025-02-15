@@ -1,9 +1,46 @@
 # predictive_maintenance  
 <div align="center">
 <img src="./md/images/logo.png" width="80%">
-</div>
+</div>  
 
----
+# milling cutter(tool wear (flank wear).)  
+
+<div align="center"> 
+<img src="./dataset/miiling-cutter.png" width="70%">  
+</div>  
+
+UC Berkeley milling data set  
+https://www.tvhahn.com/posts/milling/  
+<img src="./tmp/mill/dataset_str_en.png">  
+The data set included experimental data under milling machine
+ operating conditions, with a particular focus on tool wear (flank wear).   
+ Data were collected by three different sensors (acoustic emission sensor, 
+ vibration sensor, and current sensor) and were acquired at each location.  
+
+ A 'maintenance' column has been added for maintenance (tool change) information.
+This is because it is inferred that maintenance (tool replacement) was performed on areas where wear was extremely reduced in the process of increasing wear.
+
+- Time stamp items added as appropriate  
+
+## milling cutter(tool wear (flank wear).) 1
+<img src="./dataset/miiling/image.gif">  
+<img src="./dataset/miiling/milling_RUL000237.png">  
+
+The data set is useful for measuring tool wear and predicting remaining tool life,
+ including tool replacement.
+
+Tool wear is measured by removing the tool and observing it under a microscope.  
+Therefore, the tool wear value (column VB) is a discontinuous observed value.  
+
+Although the simulation of RUL estimation predicts tool wear conditions,
+ in reality it is difficult to remove the tool and observe it under a microscope
+  in the same way as when this data set was created.  
+Therefore, the following example shows a RUL estimation simulation without tool wear values (column VB).  
+
+## milling cutter(tool wear (flank wear).) 2 
+<img src="./dataset/miiling2/image.gif">  
+<img src="./dataset/miiling2/milling2_RUL000262.png">  
+
 
 # Battery Research Data  
 <div align="center"> 

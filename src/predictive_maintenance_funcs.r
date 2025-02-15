@@ -344,7 +344,7 @@ get_data_frame<- function(file, timeStamp)
 		df <- try(
 			read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'Shift_JIS')
 		,silent=F)
-		if ( class(df) == "try-error" || is.null(df) == T|| nrow(df) == 0)
+		if ( class(df)[1] == "try-error" || is.null(df) == T|| nrow(df) == 0)
 		{
 			df <- fread(file, na.strings=c("", "NULL"), header = TRUE, stringsAsFactors = F)
 		}
@@ -353,7 +353,7 @@ get_data_frame<- function(file, timeStamp)
 		df <- try(
 			fread(file, na.strings=c("", "NULL"), header = TRUE, stringsAsFactors = F)
 		,silent=F)
-		if ( class(df) == "try-error" || is.null(df) == T || nrow(df) == 0)
+		if ( class(df)[1] == "try-error" || is.null(df) == T || nrow(df) == 0)
 		{
 			df <- read.csv( file, header=T, stringsAsFactors = F, na.strings = c("", "NA"), fileEncoding  = 'UTF-8')
 		}
@@ -375,6 +375,7 @@ get_data_frame<- function(file, timeStamp)
 	names <- NULL
 	for ( i in 1:ncol(df))
 	{
+		print(sprintf("i:%d colnames(df)[i]:%s", i, colnames(df)[i]))
 		if ( is.character(df[,i]) && colnames(df)[i]!=timeStamp && colnames(df)[i]!="maintenance")
 		{
 			df[,i] <- as.numeric(df[,i])
@@ -382,7 +383,7 @@ get_data_frame<- function(file, timeStamp)
 		}
 		if ( !is.character(df[,i]))
 		{
-			if ( length(unique(diff(df[,i]))) == 1)
+			if ( length(unique(diff(df[,i]))) == 1  && colnames(df)[i]!=timeStamp)
 			{
 				next
 			}
@@ -426,6 +427,7 @@ get_data_frame<- function(file, timeStamp)
 			#print(df_)
 		}
 	}
+	print(head(df_))
 	df <- as.data.frame(df_)
 	
 	colnames(df) <- names
@@ -4772,36 +4774,45 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			#freeram()
 #/////////////////////////////////////////////
 		}
-				
+	
+		print(tracking_feature_)
+		#trac_id <- which(paste(tracking_feature_[1],"..",sep="") == colnames(feature_df))
+		trac_id <- which(tracking_feature_[1]== colnames(past))
+		org_plt <- ggplot(data=past, aes(x=time_index, y=past[,trac_id]))
+		org_plt <- org_plt + geom_line(linewidth =0.8)+theme(axis.title.y = element_blank())
+
 		if ( is.null(tracking_feature))
 		{
 			if ( !is.null(rul_hist_plt) )
 			{
+				layout1 <- rbind(	c(7, 7, 7),
+									c(6, 6, 1),
+									c(2, 2, 1),
+				                 	c(3, 4, 5))
+				plt0 <- plt0 + 
+				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, org_plt,
+				layout_matrix = layout1, top = current_time, heights=c(0.1,0.5,2,1))
+			}else
+			{
+				#https://id.fnshr.info/2016/10/10/gridextra/
 				layout1 <- rbind(	c(6, 6, 1),
 									c(2, 2, 1),
 				                 	c(3, 4, 5))
 				plt0 <- plt0 + 
 				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, 
-				layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
-			}else
-			{
-				#https://id.fnshr.info/2016/10/10/gridextra/
-				layout1 <- rbind(c(2, 2, 1),
-				                 c(3, 4, 5))
-				plt0 <- plt0 + 
-				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
+				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
 			}
 		}else
 		{
 			if ( !is.null(rul_hist_plt) )
 			{
-				layout1 <- rbind(	c(5, 5, 5),
+				layout1 <- rbind(	c(6, 6, 6),
+									c(5, 5, 5),
 									c(1, 1, 1),
 				                 	c(2, 3, 4))
-				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, 
-				layout_matrix = layout1, top = current_time, heights=c(1,2,1))
+				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, org_plt, 
+				layout_matrix = layout1, top = current_time, heights=c(0.1,1,2,1))
 			}else
 			{
 				layout1 <- rbind(c(1, 1, 1),

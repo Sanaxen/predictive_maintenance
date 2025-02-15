@@ -66,15 +66,30 @@ for ( i in 2:167 )
 df3$maintenance <- 0
 cutnumber = 0
 print(head(df3))
-write.csv(df3, "../dataset/miiling/milling_.csv",row.names=F)
+#write.csv(df3, "../dataset/miiling/milling_.csv",row.names=F)
 
+df3$run <- NULL
+df3$time <- NULL
 for ( i in 1:nrow(df3) )
 {
 	if ( is.finite(df3$VB[i]) && df3$VB[i] <= 0.14 && cutnumber+3 <= df3$cutnumber[i])
 	{
-		df3$maintenance[i] <- 1
-		cutnumber = df3$cutnumber[i]
+		if ( i > 1 && df3$VB[i-1] > df3$VB[i] )
+		{
+			df3$maintenance[i] <- 1
+			cutnumber = df3$cutnumber[i]
+		}
 	}
 }
- 
+df3$cutnumber <- NULL
+
+n = nrow(df3)
+
+step = "min"
+
+start <- as.POSIXct("2024-01-01 00:00:00", format = "%Y-%m-%d %H:%M:%S")
+
+datetime <- seq(from = start,length.out = n, by = step)
+df3$datetime <- as.POSIXct(datetime, format = "%Y-%m-%d %H:%M:%S")
+
 write.csv(df3, "../dataset/miiling/milling.csv",row.names=F)

@@ -1,0 +1,10 @@
+VB.spectrum
+AE_spindle.range
+textBox10,600
+textBox11,150
+textBox5,0
+textBox6,0
+textBox13,150
+textBox12,1
+comboBox3,+
+textBox21,269.302000
