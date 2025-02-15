@@ -6,7 +6,7 @@
 # milling cutter(tool wear (flank wear).)  
 
 <div align="center"> 
-<img src="./dataset/miiling-cutter.png" width="70%">  
+<img src="./dataset/miiling-cutter.png" width="55%">  
 </div>  
 
 UC Berkeley milling data set  
