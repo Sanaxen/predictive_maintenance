@@ -221,8 +221,13 @@ init_feature_param <- function(f2, threshold, ymax, ymin)
 		feature_param <<-  cbind(feature_param, feature_param[,3]*0)
 		feature_param <<-  cbind(feature_param, feature_param[,3]*0)
 		feature_param <<-  cbind(feature_param, feature_param[,3]*0)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
 	}
-	colnames(feature_param) <<-  c("feature", "threshold", "ymax", "ymin", "count", "a", "b", "c", "d")
+	colnames(feature_param) <<-  c("feature", "threshold", "ymax", "ymin", "count", "a", "b", "c", "d", "t_scale", "RUL", "fit_start_index", "delta_index", "delta_time")
 	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
 
 	return(feature_param)
@@ -255,6 +260,43 @@ set_threshold <- function(feature_name, threshold_value)
 	return(feature_param)
 }
 
+set_fit_start_index <- function(feature_name, fit_start_index_v)
+{
+	feature_param <<- read.csv(feature_param_csv, header=T, stringsAsFactors = F, na.strings = c("", "NA"))
+
+	id = which(feature_name == feature_param["feature"])
+	feature_param["fit_start_index"][id,] <<-  fit_start_index_v
+
+	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
+	
+	return(feature_param)
+}
+
+set_RUL <- function(feature_name, RUL_value, t_scale_v)
+{
+	feature_param <<- read.csv(feature_param_csv, header=T, stringsAsFactors = F, na.strings = c("", "NA"))
+
+	id = which(feature_name == feature_param["feature"])
+	feature_param["RUL"][id,] <<-  RUL_value
+	feature_param["t_scale"][id,] <<-  t_scale_v
+
+	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
+	
+	return(feature_param)
+}
+set_delta <- function(feature_name, delta_index_v, delta_time_v)
+{
+	feature_param <<- read.csv(feature_param_csv, header=T, stringsAsFactors = F, na.strings = c("", "NA"))
+
+	id = which(feature_name == feature_param["feature"])
+
+	feature_param["delta_index"][id,] <<-  delta_index_v
+	feature_param["delta_time"][id,] <<-  delta_time_v
+
+	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
+	return(feature_param)
+}
+
 set_ymax <- function(feature_name, ymax)
 {
 	feature_param <<- read.csv(feature_param_csv, header=T, stringsAsFactors = F, na.strings = c("", "NA"))
@@ -284,6 +326,11 @@ set_count <- function(feature_name)
 	
 	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
 	return(feature_param)
+}
+get_delta <- function(feature_name)
+{
+	id = which(feature_name == feature_param["feature"])
+	return ( c(feature_param["delta_index"][id,], feature_param["delta_time"][id,]))
 }
 
 get_threshold <- function(feature_name)
@@ -1965,8 +2012,25 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			{
 				#if ( abs(coef[1]) < 0.0001 ) coef[1] = 0.0
 
-				set_param(rank, coef[1], coef[2], coef[3], fit_prm_e )
-
+				feature_param <<- set_param(rank, coef[1], coef[2], coef[3], fit_prm_e )
+				
+				rul = -1
+				t_scale = 0
+				if ( abs(coef[1]) > 1.0e-10 && abs(coef[2]) > 1.0e-10 )
+				{
+					tmp <- (threshold - coef[3])/coef[1]
+					
+					if ( tmp > 0 )
+					{
+						t_scale = (length(yy_org) + h)
+						rul <- ((log(tmp) - fit_prm_e)/coef[2])
+					}
+				}
+				if ( rul > 0 )
+				{
+					feature_param <<- set_RUL(rank, rul, t_scale)
+				}
+				
 				fit_pred <-  coef[3] + coef[1]*exp(coef[2]*xx + fit_prm_e)
 				
 				coef = coefficients(fit)
@@ -2563,6 +2627,8 @@ if(T)
 		}
 		
 		
+		feature_param <<- set_fit_start_index(rank, yo$time_index[1])
+		
 		#fit_pred <- curve_fitting(yy, h, reference=c(pred$forecast[1:20]), rank)
 		fit_pred <- curve_fitting(yy, h, reference=NULL, rank)
 
@@ -2939,6 +3005,8 @@ if(T)
 	gfm2_org[,timeStamp] <- as.POSIXct(gfm2_org[,timeStamp], tz='UTC')
 	x <- rev(seq(gfm2_org[,timeStamp][nrow(gfm2_org)], length.out = nrow(gfm2_org), by = -delta_time*delta_index))
 	gfm2_org[,timeStamp] <- x
+	
+	feature_param <<- set_delta(rank, delta_index,delta_time)
 	
 	plt2 <- ggplot()
 	plt2 <- plt2 + geom_line(data=gfm2_org,aes(x = time_index, y = y),color="blue", linewidth =0.5)+ 

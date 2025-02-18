@@ -171,3 +171,38 @@ The confidence intervals for the predictions are tentatively calculated and not 
 Parts such as creating file lists from directories, processing files, and using batch startup are OS-dependent (Windows).  
 To run on non-Windows operating systems, OS-dependent parts must be modified.  
 
+---
+### Exponential Degradation Mode
+
+#### output file  
+wrk/[csv_file_name]feature_params.csv  
+
+|feature|	threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|  
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|  
+|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|  
+
+$` \Large y(t) = c + a\ exp(b*t+ d) `$  
+
+Scaling time axis and undetermined coefficientsEstimating a,b,c,d  
+$`y ={y_{1}, y_{2}, \cdots y_{n}}`$  
+$`t ={1, 2, \cdots n}`$  
+$`\acute{t} = t / (n + h)`$   
+$`t\_scale =  (n + h)`$ 
+
+$`\acute{RUL} =\Large \frac{ log(\frac{𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑 - c}{a})}{b} - d `$ 
+
+Inverse scaling from the estimated model to the RUL obtained from the inverse model yields the correct RUL.
+
+$`RUL = fit\_start\_index + \acute{RUL} *t\_scale *delta\_index`$  
+
+Also, since the input data is subjected to moving average smoothing, the data interval is also transformed.
+Therefore, it is necessary to apply delta_index to the actual input data to convert it to the number of rows.  
+
+---  
+## References  
+https://calce.umd.edu/data#CS2  
+https://www.tvhahn.com/posts/milling/  
+https://github.com/mathworks/WindTurbineHighSpeedBearingPrognosis-Data  
+https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-prognosis-data  
+https://jp.mathworks.com/help/predmaint/ref/exponentialdegradationmodel.html  
+https://github.com/xxl4tomxu98/NASA-Jet-Engine-Maintenance  
