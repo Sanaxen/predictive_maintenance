@@ -226,8 +226,10 @@ init_feature_param <- function(f2, threshold, ymax, ymin)
 		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
 		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
 		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
+		feature_param <<-  cbind(feature_param, feature_param[,3]*0-1)
 	}
-	colnames(feature_param) <<-  c("feature", "threshold", "ymax", "ymin", "count", "a", "b", "c", "d", "t_scale", "RUL", "fit_start_index", "delta_index", "delta_time")
+	colnames(feature_param) <<-  c("feature", "threshold", "ymax", "ymin", "count", "a", "b", "c", "d", "t_scale", "RUL", "fit_start_index", "delta_index", "delta_time", "unit", "fit_start_time")
 	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
 
 	return(feature_param)
@@ -284,7 +286,7 @@ set_RUL <- function(feature_name, RUL_value, t_scale_v)
 	
 	return(feature_param)
 }
-set_delta <- function(feature_name, delta_index_v, delta_time_v)
+set_delta <- function(feature_name, delta_index_v, delta_time_v, unit, start_time)
 {
 	feature_param <<- read.csv(feature_param_csv, header=T, stringsAsFactors = F, na.strings = c("", "NA"))
 
@@ -292,6 +294,8 @@ set_delta <- function(feature_name, delta_index_v, delta_time_v)
 
 	feature_param["delta_index"][id,] <<-  delta_index_v
 	feature_param["delta_time"][id,] <<-  delta_time_v
+	feature_param["unit"][id,] <<-  unit
+	feature_param["fit_start_time"][id,] <<-  start_time
 
 	try(write.csv(feature_param, feature_param_csv, row.names = F), silent = FALSE)
 	return(feature_param)
@@ -3006,7 +3010,7 @@ if(T)
 	x <- rev(seq(gfm2_org[,timeStamp][nrow(gfm2_org)], length.out = nrow(gfm2_org), by = -delta_time*delta_index))
 	gfm2_org[,timeStamp] <- x
 	
-	feature_param <<- set_delta(rank, delta_index,delta_time)
+	feature_param <<- set_delta(rank, delta_index, delta_time,unit_of_time, as.character(gfm2_org[1,timeStamp]))
 	
 	plt2 <- ggplot()
 	plt2 <- plt2 + geom_line(data=gfm2_org,aes(x = time_index, y = y),color="blue", linewidth =0.5)+ 
