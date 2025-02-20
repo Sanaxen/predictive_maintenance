@@ -874,7 +874,16 @@ feature_summary_visualization <- function( csvfile, timeStamp , summary=FALSE)
 
 	if ( summary )
 	{
+		# Normalize each column
+		for ( ii in 1:ncol(feature_df))
+		{
+			if ( colnames(feature_df)[ii] == "time_index" ) next
+			if (( max(feature_df[,ii]) - min(feature_df[,ii]))==0) next
+			feature_df[,ii] = (feature_df[,ii] - min(feature_df[,ii]))/( max(feature_df[,ii]) - min(feature_df[,ii]))
+		}
+		
 		x <- feature_df[1:nrow(feature_df),]
+		
 		x <- reshape2::melt(x, id.vars=c("time_index"), measure.vars=colnames(x)[2:length(x)], 
 						variable.name="key",value.name="target")
 		

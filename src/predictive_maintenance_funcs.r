@@ -129,6 +129,51 @@ time_data_length <- function(length, length_unit="")
 	return( t )
 }
 
+spectral_kurtosis_fn <- function(x, window_length, overlap = 0) {
+  # x: input signal (numeric vector)
+  # window_length: length of each segment (e.g., 256, etc.)
+  # overlap: number of overlapping samples between segments (e.g., window_length/2, etc.)
+  # Calculate the step size
+  
+  step <- window_length - overlap
+  n_segments <- floor((length(x) - window_length) / step) + 1
+  if ( n_segments <= 0 )
+  {
+  	return (NULL)
+  }
+  
+  # Divide the signal into segments
+  segments <- matrix(NA, nrow = window_length, ncol = n_segments)
+  for(i in 1:n_segments) {
+    start_idx <- (i - 1) * step + 1
+    segments[, i] <- x[start_idx:(start_idx + window_length - 1)]
+  }
+  
+  # Create and apply a Hanning window
+  window <- 0.5 - 0.5 * cos(2 * pi * (0:(window_length - 1)) / (window_length - 1))
+  segments <- segments * window
+  
+  # Compute the FFT for each segment
+  fft_segments <- apply(segments, 2, fft)
+  fft_segments[is.na(fft_segments)] <- mean(fft_segments, na.rm = TRUE)
+
+  
+  # Get the absolute values of the FFT results
+  abs_fft <- abs(fft_segments)
+  
+  # Compute the 2nd and 4th moments for each frequency bin
+  second_moment <- apply(abs_fft^2, 1, mean)
+  fourth_moment <- apply(abs_fft^4, 1, mean)
+  
+  
+  # Calculate the Spectral Kurtosis
+  sk <- fourth_moment / (second_moment^2) - 2
+  
+  # Return the result list (sk: Spectral Kurtosis for each frequency bin,
+  # fft_segments: FFT results for each segment)
+  return(list(spectral_kurtosis = sk, fft_segments = fft_segments))
+}
+ 
 
 skewness_ <- function(x)
 {
@@ -1191,7 +1236,8 @@ feature_names <- c( ".", "mean", "sd", "var",
 			"skewness", "kurtosis", "peak2peak", "RMS","range",
 			"CrestFactor", "ShapeFactor", "ImpulseFactor", "MarginFactor"
 			,"logEnergy","spectrum","spectral_mean", "spectral_sd", "spectral_kurtosis"
-			,"spectral_skewness"
+			,"spectral_skewness","principal_component1","principal_component2"
+			,"SKMean", "SKStd", "SKSkewness", "SKKurtosis"
 			)
 
 
@@ -1233,10 +1279,9 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 		fff <- as.data.frame(matrix(nrow=rowN, ncol=1))
 	}else
 	{
-		fff <- as.data.frame(matrix(nrow=rowN, ncol=19))
+		fff <- as.data.frame(matrix(nrow=rowN, ncol=25))
 	}
 	row_cnt = 1
-	
 	
 	j = lookback
 	length_d <- length(d)
@@ -1256,6 +1301,19 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 		sd <- sigin*sd(dd, na.rm = TRUE)
 		var <- sigin*var(dd, na.rm = TRUE)
 		
+		#print(head(df2[(j-lookback+1):j,]))
+		#print(str(df2[(j-lookback+1):j,]))
+		pc <- try(prcomp(df2[(j-lookback+1):j,], scale=F), silent=F)
+		if ( class(pc)[1] == "try-error" || is.null(pc))
+		{
+			pc1 <- 0
+			pc2 <- 0
+		}else
+		{
+			pc1 <- pc$rotation[col_name,1]
+			pc2 <- pc$rotation[col_name,2]
+		}
+				
 		spectrum <- sigin*abs(fft(dd))
   		spectrum_mean <- mean(spectrum)
   		spectrum_std <- sd(spectrum)
@@ -1281,6 +1339,22 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 	    MarginFactor = sigin*max_dd/abs_dd_mean^2;
 	    logEnergy = sigin*log(sum(dd2)+1);
 	    
+	    ws = max(4,length(dd)/4)
+	    overlap = max(1,ws/4)
+	    sk <- try(spectral_kurtosis_fn(dd, ws, overlap = overlap), silent=F)
+		if ( class(sk)[1] == "try-error" || is.null(sk))
+		{
+		    SKMean <- 0
+		    SKStd <- 0
+		    SKSkewness <- 0
+		    SKKurtosis <- 0
+		}else
+		{
+		    SKMean <- sigin*mean(sk$spectral_kurtosis, na.rm=T)
+		    SKStd <- sigin*sd(sk$spectral_kurtosis, na.rm=T)
+		    SKSkewness <- sigin*skewness(sk$spectral_kurtosis, type=2)
+		    SKKurtosis <- sigin*kurtosis(sk$spectral_kurtosis, type=2)
+	    }
     
     	if ( i == time_index || i == maintenance_index)
     	{
@@ -1316,7 +1390,13 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 					  		spectrum_mean,
 					  		spectrum_std,
 					  		spectral_skewness,
-					  		spectral_kurtosis
+					  		spectral_kurtosis,
+					  		pc1,
+					  		pc2,
+					  		SKMean, 
+					  		SKStd, 
+					  		SKSkewness, 
+					  		SKKurtosis
 							),nrow=1))
 		}
 		fff[row_cnt,] <- f
@@ -3010,7 +3090,7 @@ if(T)
 	x <- rev(seq(gfm2_org[,timeStamp][nrow(gfm2_org)], length.out = nrow(gfm2_org), by = -delta_time*delta_index))
 	gfm2_org[,timeStamp] <- x
 	
-	feature_param <<- set_delta(rank, delta_index, delta_time,unit_of_time, as.character(gfm2_org[1,timeStamp]))
+	feature_param <<- set_delta(rank, delta_index, delta_time, unit_of_time,as.character(gfm2_org[1,timeStamp]))
 	
 	plt2 <- ggplot()
 	plt2 <- plt2 + geom_line(data=gfm2_org,aes(x = time_index, y = y),color="blue", linewidth =0.5)+ 
@@ -3541,6 +3621,16 @@ get_csvdata <- function( file, tracking_feature_ , timeStamp)
 features_plot <- function(tracking_feature)
 {
 	feature_df <- read.csv( "./feature_df.csv", header=T, stringsAsFactors = F, na.strings = c("", "NA"))
+	
+	#Normalize each column
+	#print(head(feature_df))
+	for ( ii in 1:ncol(feature_df))
+	{
+		if ( colnames(feature_df)[ii] == "time_index") next
+		if (( max(feature_df[,ii]) - min(feature_df[,ii]))==0) next
+		feature_df[,ii] = (feature_df[,ii] - min(feature_df[,ii]))/( max(feature_df[,ii]) - min(feature_df[,ii]))
+	}
+	#print(head(feature_df))
 	
 	if ( is.null(tracking_feature))
 	{
