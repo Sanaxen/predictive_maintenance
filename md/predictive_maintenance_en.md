@@ -213,3 +213,88 @@ Next, press the **feature_discovery_output load** button to set all the paramete
 ## Operation Execution
 Using the parameter settings generated in **Forecast Execution (Validation)**
 **"work/xxxx_feature_param.csv"**, RUL is tracked during operation. Once started, the folder (**work\Untreated**) for processing CSV files is periodically accessed, and files are processed if present.
+
+---
+# Appendix  
+
+## Time Domain Features
+
+### Mean
+- **Characteristics:** Represents the central tendency of the vibration signal.
+- **Advantages:** Helps track baseline shifts or long-term level changes, though it is less sensitive to impulsive events.
+
+### Standard Deviation (Std)
+- **Characteristics:** Quantifies the dispersion or spread of the signal values.
+- **Advantages:** Increases in variability may indicate abnormal behavior or the onset of degradation.
+
+### Skewness
+- **Characteristics:** Measures the asymmetry of the signal’s distribution.
+- **Advantages:** Changes in symmetry can signal early fault symptoms, as the distribution may shift when abnormal events occur.
+
+### Kurtosis
+- **Characteristics:** Assesses the “peakedness” or heaviness of the tails in the signal’s distribution.
+- **Advantages:** High kurtosis values often highlight sharp, impulsive peaks typical in fault conditions. In this example, kurtosis is identified as a key indicator.
+
+### Peak-to-Peak
+- **Characteristics:** The difference between the maximum and minimum signal values.
+- **Advantages:** Captures the overall amplitude variation, making it sensitive to sudden shocks or spikes.
+
+### RMS (Root Mean Square)
+- **Characteristics:** Represents the effective value or energy content of the vibration signal.
+- **Advantages:** Provides an overall measure of vibration energy, which can increase as degradation progresses.
+
+### Crest Factor
+- **Characteristics:** The ratio of the maximum amplitude to the RMS value.
+- **Advantages:** Emphasizes the impact of sudden peaks relative to the overall energy, serving as an indicator of impulsiveness.
+
+### Shape Factor
+- **Characteristics:** The ratio of the RMS value to the mean absolute value.
+- **Advantages:** Reflects the waveform shape, helping distinguish between normal and abnormal signal forms.
+
+### Impulse Factor
+- **Characteristics:** The ratio of the maximum value to the mean absolute value.
+- **Advantages:** Highlights the presence of extreme peaks, which are often associated with early fault symptoms.
+
+### Margin Factor
+- **Characteristics:** The ratio of the maximum value to the square of the mean absolute value.
+- **Advantages:** Further accentuates the effect of outliers or sudden bursts in the signal, enhancing sensitive fault detection.
+
+### Energy
+- **Characteristics:** The sum of the squared signal values.
+- **Advantages:** Measures the total energy in the vibration signal, which can increase as the component begins to deteriorate.
+
+---
+
+## Frequency Domain Features (Based on Spectral Kurtosis)
+
+### SKMean
+- **Characteristics:** The average value of the spectral kurtosis across different frequency bands.
+- **Advantages:** Provides an overall measure of impulsiveness in the frequency domain, revealing degradation trends over a range of frequencies.
+
+### SKStd
+- **Characteristics:** The standard deviation of the spectral kurtosis values.
+- **Advantages:** Captures variability in impulsiveness across frequencies, highlighting localized abnormal behavior.
+
+### SKSkewness
+- **Characteristics:** Evaluates the asymmetry of the spectral kurtosis distribution.
+- **Advantages:** A skewed distribution may indicate that certain frequency components are disproportionately affected, serving as an early warning sign.
+
+### SKKurtosis
+- **Characteristics:** Measures the peakedness of the spectral kurtosis distribution.
+- **Advantages:** Enhances detection of outlier frequency components that are often associated with incipient faults.
+
+---
+
+## Overall Benefits
+
+- **Comprehensive Signal Analysis:**  
+  By extracting both time-domain and frequency-domain features, the approach provides a multi-faceted view of the signal, capturing gradual changes (e.g., baseline shifts or energy increases) as well as sudden, impulsive events.
+
+- **Enhanced Fault Detection:**  
+  Features such as kurtosis, crest factor, and spectral kurtosis are particularly sensitive to impulsive changes and serve as early indicators of bearing degradation.
+
+- **Robust Health Indicator:**  
+  The combination and fusion of these features (using techniques like PCA) yield a more reliable health indicator, which is essential for predicting the remaining useful life (RUL) of the component.
+
+
+https://mathworks.com/help/predmaint/ug/wind-turbine-high-speed-bearing-prognosis.html
