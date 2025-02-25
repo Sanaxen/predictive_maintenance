@@ -1,6 +1,13 @@
 
 lib="./lib"
-.libPaths( c(lib, .libPaths()))
+.libPaths( c(lib, .libPaths(), "../library"))
+
+library(archive)
+
+zip_file_path <- "./mill.zip"
+dest_dir <- "./mill"
+archive_extract(zip_file_path, dir = dest_dir)
+
 
 library(R.matlab)
 
