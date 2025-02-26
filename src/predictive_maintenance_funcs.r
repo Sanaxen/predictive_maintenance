@@ -1654,10 +1654,10 @@ predict_forecast <- function(gfm2, h=600, rank="", train_num = 20, feature_smoot
             changepoints = NULL,
             n.changepoints = 10,#25,
 
-            #時系列データの前から##%のデータを用いて、潜在的な変化点を推測
+            #Inference of potential change points using ##% of time series data
             changepoint.range = 0.8,
 
-			#スパースな事前分布の強さを調整(過敏なトレンドに反応する場合は小さくする）
+			#Adjust the strength of the sparse prior distribution (make it smaller if it reacts to oversensitive trends)
             changepoint.prior.scale = 0.02, #0.05,
 
             yearly.seasonality = FALSE, #'auto',
@@ -3461,132 +3461,7 @@ if(T)
 	return( list(plt1, plt2, failure_time, failure_time50p, failure_time2, failure_time_str,failure_time50p_str))
 }
 
-#Data feature confirmation
 
-
-# feature_summary_visualization <- function(df0, feature_param)
-# {
-# 	colname = colnames(df0)
-# 
-# 	#df <-cbind(c(1:nrow(df0)), df0)
-# 	#colnames(df) <- c("time_index",colname)
-# 
-# 	df2 <- smooth(df, smooth_window = smooth_window)
-# 
-# 	#前半80%を正常データとして訓練
-# 	mahalanobis_train <- df2[1:(nrow(df2))*0.8,]
-# 	m_mahalanobis <<- anomaly_detection_train(mahalanobis_train[colnames(mahalanobis_train)!="time_index"])
-# 
-# 	mahalanobis_test <- anomaly_detection_test(m_mahalanobis, mahalanobis_train[colnames(mahalanobis_train)!="time_index"])
-# 	plot(mahalanobis_test[[2]], type="l")
-# 
-# 	mahalanobis_df <- data.frame(
-# 			time_index=c(1:length(mahalanobis_test[[2]])), 
-# 			Abnormality=as.vector(mahalanobis_test[[2]]))
-# 
-# 	threshold_ = max(mahalanobis_df["Abnormality"])
-# 	print(sprintf("threshold:%f", threshold_))
-# 	flush.console()
-# 
-# 	plt_abnormality <- mahalanobis_df %>% ggplot(aes(x=time_index,y=Abnormality)) + geom_line()
-# 	plt_abnormality
-# 
-# 	#特徴量生成
-# 	#後半10%から特徴量を推定
-# 	feature_train <- df2[(nrow(df2) - (nrow(df2))*0.9):nrow(df2),]
-# 	feature_df <- feature(df2, lookback=lookback)
-# 	#print(sprintf("%d/%d nrow(feature_df):%d", i, as.integer(nrow(df)/one_input),nrow(feature_df)))
-# 	print("feature_df")
-# 	print(colnames(feature_df))
-# 	write.csv(feature_df, "./feature_df.csv", row.names = F)
-# 	flush.console()
-# 
-# 	#各特徴量のmonotonicity算出
-# 	fm <- feature_monotonicity(feature_df, monotonicity_num=monotonicity_num)
-# 	fm <- rbind(fm, c(1:ncol(fm)))
-# 
-# 
-# 	#各特徴量のパラメータ並べ替え
-# 	print("fm")
-# 	print(colnames(fm))
-# 	f1 <- data.frame(matrix(colnames(fm)),ncol=1)[,1]
-# 	f2 <- cbind(f1, data.frame(as.numeric(fm[1,]),ncol=1))[,1:2]
-# 	f2 <- cbind(f2, data.frame(as.numeric(fm[2,]),ncol=1))[,1:3]
-# 	colnames(f2) <- c("feature", "monotonicity", "index")
-# 	print(f2)
-# 
-# 	#各特徴量のパラメータの初期値設定（閾値、Ymaxのパラメータセット）
-# 	feature_param <<- init_feature_param(f2, threshold, -10000, 10000)
-# 	feature_param
-# 	
-# 	for ( k in 2:nrow(feature_param) )
-# 	{
-# 		x <- c(feature_df[,feature_param[k,1]])
-# 		mu = mean(x, na.rm = TRUE)
-# 		sd = sd(x, na.rm = TRUE)
-# 		
-# 		n = length(x)
-# 		p = 1.0 - 99.99999/100
-# 		a = abs(qt((p/2),n-1))
-# 		thr = mu+a*sd/n
-# 
-# 		max = max(x, na.rm = TRUE)
-# 		if ( max*0.4 > thr )
-# 		{
-# 			thr = max*0.4
-# 		}
-# 		feature_param <<- set_threshold(feature_param[k,1], thr)
-# 	}
-# 	feature_param <<- set_threshold("mahalanobis", threshold_*0.97)
-# 
-# 	#monotonicity毎の棒グラフ
-# 	xlab=sprintf("feature [total number of features:%d]", nrow(f2)-1)
-# 	plt0 <- f2 %>% ggplot(aes(x = reorder(feature,-monotonicity), y = monotonicity, fill = feature))+ geom_bar(stat = "identity")+ theme(legend.position = 'none')+xlab(xlab)+ theme(axis.text.x = element_blank())
-# 	plt0
-# 	
-# 
-# 	#monotonicityの大きい順にソート
-# 	leave_num = 5
-# 	fm2 <- f2[order(f2$monotonicity, decreasing=T),][1:leave_num,]
-# 	print("fm2")
-# 	print(colnames(fm2))
-# 	flush.console()
-# 	
-# 	tracking_feature <<- c(1:leave_num)
-# 
-# 	fm22 <- rbind(fm2, f2[f2$feature=="mahalanobis",])
-# 	fm22[fm22$feature=="mahalanobis",]$feature = "abnormality"
-# 	#monotonicity毎の棒グラフ
-# 	plt1 <- fm22 %>% ggplot(aes(x = reorder(feature,-monotonicity), y = monotonicity, fill = feature))+ geom_bar(stat = "identity")+xlab(sprintf("feature top %d & abnormality",leave_num))+
-# 	geom_text(aes(label = ifelse(monotonicity > 0.001 ,as.integer(monotonicity*1000)/1000,monotonicity)), size = 4, hjust = 0.5, vjust = 2, position = "stack") 
-# 	
-# 	plt1
-# 	
-# 
-# 	for ( i in 1:(leave_num) )
-# 	{
-# 		tracking_feature[i] <<- colnames(feature_df)[fm2$index[i]]
-# 	}
-# 	if ( !length(which("mahalanobis" == tracking_feature)))
-# 	{
-# 		tracking_feature[leave_num] <<- "mahalanobis"
-# 	}
-# 	print(tracking_feature)
-# 	
-# 	feature_name = colnames(feature_df)[fm2$index[1]]
-# 	feature_plt <- feature_df %>% ggplot(aes(x=time_index,y=feature_name)) + geom_line()+
-# 	xlab(feature_name)
-# 	feature_plt
-# 
-# 	plt <- gridExtra::grid.arrange(plt_abnormality, feature_plt, plt0, plt1, nrow = 2)
-# 	plt
-# 	
-# 	s = "feature_summary.png"
-# 	ggsave(file = paste(putpng_path, s, sep=""), plot = plt, , dpi = 100, width = 12.5*1.2, height = 6.8*1.0)
-# 
-# 	#return(list(feature_param,tracking_feature))
-# }
-# 
 
 get_csvdata <- function( file, tracking_feature_ , timeStamp)
 {
