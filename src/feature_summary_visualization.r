@@ -910,7 +910,14 @@ feature_summary_visualization <- function( csvfile, timeStamp , summary=FALSE)
 		ggsave(filename=paste(base_name,"_tracking_feature2.png",sep=''), plt, limitsize=F, width = 16, height = 9)
 		n = find_closest_factors(length(pltlist))
 		if ( n[1] == 1 && length(pltlist) > 1) n = find_closest_factors(length(pltlist)+1)
-		gg_plotly <- plotly::subplot(pltlist, nrows = n[2])
+		
+		if ( length(pltlist) < n[2] )
+		{
+			gg_plotly <- plotly::subplot(pltlist, nrows = length(pltlist))
+		}else
+		{
+			gg_plotly <- plotly::subplot(pltlist, nrows = n[2])
+		}
 		#gg_plotly <- plotly::subplot(pltlist, nrows = length(pltlist))
 		print(gg_plotly)
 		htmlwidgets::saveWidget(as_widget(gg_plotly), paste(base_name,"_feature_summary_visualization2.html",sep=''), selfcontained = F)
