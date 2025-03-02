@@ -174,12 +174,31 @@ To run on non-Windows operating systems, OS-dependent parts must be modified.
 ---
 ### Exponential Degradation Mode
 
+$` \Large y(t) = c + exp(\alpha)\ exp(exp(\beta)\cdot b*t+ d) `$  
+
+$` y(t) = c + a \cdot \exp(b \cdot t + d)`$  
+
+for y(t) to be monotonically increasing as t increases, its derivative
+
+$` y'(t) = a \cdot b \cdot \exp(b \cdot t + d)`$  
+must always be positive. Since the exponential function $`exp(b \cdot t + d)`$  is always positive, the condition for monotonic increase is:
+
+$` a \neq 0\ and\ b \neq 0`$  
+$` a \cdot b > 0`$  
+
+In practice, it is common to assume \(a > 0\) and \(b > 0\).
+
+
 #### output file  
 wrk/[csv_file_name]feature_params.csv  
 
 |feature|	threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|unit| fit_start_time| 
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| ---| 
 |feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time| time of unit|fit_start timestamp| 
+
+
+$`a=\exp(\alpha),\quad b=\exp(\beta)`$  
+
 
 $` \Large y(t) = c + a\ exp(b*t+ d) `$  
 
@@ -193,7 +212,7 @@ $`\acute{RUL} =\Large \frac{ log(\frac{𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑 - c}{a
 
 Inverse scaling to the RUL obtained from the estimated model yields the correct RUL.  
 
-$`RUL = fit\_start\_index + \acute{RUL} *t\_scale *delta\_index`$  
+$`RUL = fit\_start\_index + \acute{RUL}  \cdot t\_scale  \cdot delta\_index`$  
 
 Since the input data is moving-average smoothed, the data interval is also expanded, and one line after moving-average smoothing is not one line of the actual input data.
 Therefore, it is necessary to apply delta_index to convert it to the number of rows for the input data.  
@@ -202,10 +221,10 @@ After this conversion process, the RUL is converted to the number of rows for th
 
 To match this to the actual time, it must be scaled to the time interval of the input data.  
 
-$`RUL = RUL*delta\_time [time\ of\ unit]`$  
+$`RUL = RUL \cdot delta\_time [time\ of\ unit]`$  
 
 If the elapsed time from **fit_start_time** is **t**, RUL can be calculated as follows  
-$`RUL = RUL*delta\_time [time\ of\ unit]  - t [time\ of\ unit]`$  
+$`RUL = RUL \cdot delta\_time [time\ of\ unit]  - t [time\ of\ unit]`$  
 
 
 ---  

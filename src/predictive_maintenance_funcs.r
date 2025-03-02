@@ -1966,8 +1966,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 							}
 							if ( kk > 50 )
 							{
-								lm_pa <- runif(1,-1,1)
-								lm_pb <- runif(1,-1,1)
+								lm_pa <- runif(5,-5,1)
+								lm_pb <- runif(5,-5,1)
 								lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
 								lm_pd <- runif(1,-1,1)
 								if ( length(a_coef) > 1 && kk < 80)
@@ -1977,9 +1977,9 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 									lm_pd <- rnorm(n =1,mean = 0, sd = sqrt(noise_varience)) - noise_varience/2
 								}
 							}
-							lm_pc = yy_org[1]- lm_pa*exp(lm_pb*xx_org[1] + lm_pd)
+							lm_pc = yy_org[1]- exp(lm_pa)*exp(exp(lm_pb)*xx_org[1] + lm_pd)
 
-							pred <- function(parS, xx) parS$c + parS$a*exp(parS$b*xx + parS$d)
+							pred <- function(parS, xx) parS$c + exp(parS$a)*exp(exp(parS$b)*xx + parS$d)
 							resid <- function(p, observed, xx) observed - pred(p,xx)
 							parStart <- list(a=lm_pa, b=lm_pb, c=lm_pc, d=lm_pd)
 							fit <- nls.lm(par=parStart, fn=resid, observed=yy, xx=xx, 
@@ -2002,8 +2002,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						if ( !is.null(fit))
 						{
 							coef = coefficients(fit)
-							if ( coef[1] < 0 || coef[2] < 0) next
-							fit_pred <-  coef[3] + coef[1]*exp(coef[2]*xx_org + coef[4])
+							#if ( coef[1] < 0 || coef[2] < 0) next
+							fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + coef[4])
 							
 							#err <- sqrt(sum((yy_org[1:length(yy_org)] - fit_pred)^2)/length(yy_org))
 							
@@ -2072,7 +2072,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			xx = xx_org
 			yy = yy_org
 			coef = coefficients(fit)
-			fit_pred <-  coef[3] + coef[1]*exp(coef[2]*xx + fit_prm_e)
+			fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + fit_prm_e)
 			a_coef <- c(a_coef, coef[1])
 			b_coef <- c(b_coef, coef[2])
 			c_coef <- c(c_coef, coef[3])
@@ -2096,18 +2096,18 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			{
 				#if ( abs(coef[1]) < 0.0001 ) coef[1] = 0.0
 
-				feature_param <<- set_param(rank, coef[1], coef[2], coef[3], fit_prm_e )
+				feature_param <<- set_param(rank, exp(coef[1]), exp(coef[2]), coef[3], fit_prm_e )
 				
 				rul = -1
 				t_scale = 0
 				if ( abs(coef[1]) > 1.0e-10 && abs(coef[2]) > 1.0e-10 )
 				{
-					tmp <- (threshold - coef[3])/coef[1]
+					tmp <- (threshold - coef[3])/exp(coef[1])
 					
 					if ( tmp > 0 )
 					{
 						t_scale = (length(yy_org) + h)
-						rul <- ((log(tmp) - fit_prm_e)/coef[2])
+						rul <- ((log(tmp) - fit_prm_e)/exp(coef[2]))
 					}
 				}
 				if ( rul > 0 )
@@ -2115,11 +2115,11 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					feature_param <<- set_RUL(rank, rul, t_scale)
 				}
 				
-				fit_pred <-  coef[3] + coef[1]*exp(coef[2]*xx + fit_prm_e)
+				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + fit_prm_e)
 				
 				coef = coefficients(fit)
-				if ( coef[1] < 0 || coef[2] < 0) next
-				fit_pred <-  coef[3] + coef[1]*exp(coef[2]*xx_org + coef[4])
+				#if ( coef[1] < 0 || coef[2] < 0) next
+				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + coef[4])
 				
 				err <- yy_org[1:length(yy_org)] - fit_pred
 				if ( is.null(residual_error))
@@ -2138,91 +2138,17 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				#x = log(x)/log(h)
 				#x = xx/(length(y)+h)
 
-				fit_pred <-  coef[3] + coef[1]*exp(coef[2]*x +fit_prm_e)
+				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*x +fit_prm_e)
 								
 				fit_pred25 <- NULL
 				fit_pred75 <- NULL
 				fit_pred05 <- NULL
 				fit_pred95 <- NULL
-				tryCatch({
-					loup <- confint(fit, level=0.5)
-					fit_pred25 <- loup[3,1] + loup[1,1]*exp(loup[2,1]*x + loup[4,1])
-					fit_pred75 <- loup[3,2] + loup[1,2]*exp(loup[2,2]*x + loup[4,2])
-					loup <- confint(fit, level=0.9)
-					#print(loup)
-					fit_pred05 <- loup[3,1] + loup[1,1]*exp(loup[2,1]*x + loup[4,1])
-					fit_pred95 <- loup[3,2] + loup[1,2]*exp(loup[2,2]*x + loup[4,2])
-					
-					#for ( jj in 1:3 )
-					#{
-					#	if ( loup[jj,1]/coef[jj] > 10 )
-					#	{
-					#		fit_pred <- NULL
-					#		fit_pred25 <- NULL
-					#		fit_pred75 <- NULL
-					#		fit_pred05 <- NULL
-					#		fit_pred95 <- NULL
-					#	}
-					#}
-					if ( !is.null(fit_pred) && threshold > fit_pred[length(fit_pred)-1])
-					{
-						if (fit_pred[length(fit_pred)] /fit_pred[length(fit_pred)-1] > 0.25*(ymax0-ymin0))
-						{
-							print(sprintf("############ %f -> %f", fit_pred[length(fit_pred)-1],fit_pred[length(fit_pred)]))
-							#fit_pred <- NULL
-							#fit_pred25 <- NULL
-							#fit_pred75 <- NULL
-							#fit_pred05 <- NULL
-							#fit_pred95 <- NULL
-						}
-					}
-					
-					#plot(x, fit_pred, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
-					#par(new=T)
-					#plot(x, fit_pred25, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
-					#par(new=T)
-					#plot(x, fit_pred75, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
-					#par(new=T)
-					#plot(x, fit_pred05, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
-					#par(new=T)
-					#plot(x, fit_pred95, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
-					
-				},error = function(e)
-				{
-						fit_pred25 <- NULL
-						fit_pred75 <- NULL
-						fit_pred05 <- NULL
-						fit_pred95 <- NULL
-						
-						fit_pred <- NULL
-					},
-					finally ={
-					},
-					silendt = T
-				)
 			}
 			err = 0
-			if (!is.null(fit_pred))
+
+			if ( T )
 			{
-				if ( sum(is.na(fit_pred)) != 0 ) err = 1
-				if ( sum(is.na(fit_pred25)) != 0 ) err = 1
-				if ( sum(is.na(fit_pred75)) != 0 ) err = 1
-				if ( sum(is.na(fit_pred05)) != 0 ) err = 1
-				if ( sum(is.na(fit_pred95)) != 0 ) err = 1
-			}else
-			{
-				err = 1
-			}
-			
-			if ( err == 1 )
-			{
-				#print("fit_pred## in NA")
-				#print(fit_pred)
-				#print(fit_pred25)
-				#print(fit_pred75)
-				#print(fit_pred05)
-				#print(fit_pred95)
-				#quit()
 				
 				fit_pred[is.na(fit_pred)] <- mean(fit_pred, na.rm = TRUE)
 				fit_pred25[is.na(fit_pred25)] <- mean(fit_pred25, na.rm = TRUE)
