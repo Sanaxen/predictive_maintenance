@@ -224,9 +224,9 @@ rul_curve_plot <- function(index_number=-1)
 		cur_rul_plt <- cur_rul_plt + labs(y = paste("RUL [ ", valid_unit, " ]", sep=""))
 		cur_rul_plt <- cur_rul_plt + geom_hline(yintercept = 0, color = "red", size = 1)
 
-		cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent5,label = percent5, color="percent5"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent50,label = percent50, color="percent50"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent95,label = percent95, color="percent95"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
+		#cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent5,label = percent5, color="percent5"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
+		#cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent50,label = percent50, color="percent50"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
+		#cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent95,label = percent95, color="percent95"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
 		
 		cur_rul_plt
 

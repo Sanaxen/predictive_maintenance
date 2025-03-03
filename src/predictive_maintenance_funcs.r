@@ -4741,8 +4741,20 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		print(tracking_feature_)
 		#trac_id <- which(paste(tracking_feature_[1],"..",sep="") == colnames(feature_df))
 		trac_id <- which(tracking_feature_[1]== colnames(past))
-		org_plt <- ggplot(data=past, aes(x=time_index, y=past[,trac_id]))
-		org_plt <- org_plt + geom_line(linewidth =0.8)+theme(axis.title.y = element_blank())
+		
+		if ( nrow(past) <= 7000 )
+		{
+			org_plt <- ggplot(data=past, aes(x=time_index, y=past[,trac_id]))
+		}else
+		{
+			data_thinned <- past %>% slice_sample(n = 7000)
+			data_thinned <- data_thinned %>% arrange(time_index)
+			
+			org_plt <- ggplot(data_thinned, aes(x = time_index, y = data_thinned[,trac_id]))
+			  geom_line()
+		}
+		
+		org_plt <- org_plt + geom_line(linewidth =0.1,alpha = 0.5)+theme(axis.title.y = element_blank())
 
 		if ( is.null(tracking_feature))
 		{
