@@ -285,6 +285,9 @@ namespace pm
                     sw.Write("radioButton1," + (radioButton1.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton2," + (radioButton2.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton3," + (radioButton3.Checked ? "TRUE" : "FALSE") + "\n");
+                    sw.Write("radioButton5," + (radioButton5.Checked ? "TRUE" : "FALSE") + "\n");
+                    sw.Write("radioButton7," + (radioButton7.Checked ? "TRUE" : "FALSE") + "\n");
+                    sw.Write("radioButton8," + (radioButton8.Checked ? "TRUE" : "FALSE") + "\n");
 
                     sw.Write("imagePictureBox1," + imagePictureBox1 + "\n");
                     sw.Write("imagePictureBox2," + imagePictureBox2 + "\n");
@@ -793,6 +796,21 @@ namespace pm
                         if (ss[0].IndexOf("radioButton3") >= 0)
                         {
                             radioButton3.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
+                            continue;
+                        }
+                        if (ss[0].IndexOf("radioButton5") >= 0)
+                        {
+                            radioButton5.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
+                            continue;
+                        }
+                        if (ss[0].IndexOf("radioButton7") >= 0)
+                        {
+                            radioButton7.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
+                            continue;
+                        }
+                        if (ss[0].IndexOf("radioButton8") >= 0)
+                        {
+                            radioButton8.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
                             continue;
                         }
 
@@ -1487,6 +1505,19 @@ namespace pm
             cmd += "\r\n";
             cmd += "timeStamp <- ''\r\n";
             cmd += "time_out <- 60*2\r\n";
+            cmd += "\r\n";
+            if (radioButton8.Checked)
+            {
+                cmd += "fitting_solver <- 'auto'\r\n";
+            }
+            if (radioButton7.Checked)
+            {
+                cmd += "fitting_solver <- 'exp'\r\n";
+            }
+            if (radioButton5.Checked)
+            {
+                cmd += "fitting_solver <- 'Gompertz'\r\n";
+            }
             cmd += "save.image('./predictive_maintenance.RData')\r\n";
 
             string file = base_dir+"\\" +base_name0 + "_parameters.r";

@@ -161,6 +161,7 @@ namespace pm
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitter8 = new System.Windows.Forms.Splitter();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
@@ -173,7 +174,10 @@ namespace pm
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButton7 = new System.Windows.Forms.RadioButton();
+            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.panel18.SuspendLayout();
             this.panel19.SuspendLayout();
@@ -210,6 +214,7 @@ namespace pm
             this.panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -1040,6 +1045,7 @@ namespace pm
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Controls.Add(this.label24);
             this.tabPage3.Controls.Add(this.comboBox5);
@@ -1174,6 +1180,12 @@ namespace pm
             resources.ApplyResources(this.panel8, "panel8");
             this.panel8.Name = "panel8";
             // 
+            // checkBox6
+            // 
+            resources.ApplyResources(this.checkBox6, "checkBox6");
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.UseVisualStyleBackColor = true;
+            // 
             // button11
             // 
             resources.ApplyResources(this.button11, "button11");
@@ -1251,11 +1263,34 @@ namespace pm
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // checkBox6
+            // groupBox2
             // 
-            resources.ApplyResources(this.checkBox6, "checkBox6");
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.UseVisualStyleBackColor = true;
+            this.groupBox2.Controls.Add(this.radioButton5);
+            this.groupBox2.Controls.Add(this.radioButton7);
+            this.groupBox2.Controls.Add(this.radioButton8);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
+            // radioButton7
+            // 
+            resources.ApplyResources(this.radioButton7, "radioButton7");
+            this.radioButton7.Name = "radioButton7";
+            this.radioButton7.UseVisualStyleBackColor = true;
+            // 
+            // radioButton8
+            // 
+            resources.ApplyResources(this.radioButton8, "radioButton8");
+            this.radioButton8.Checked = true;
+            this.radioButton8.Name = "radioButton8";
+            this.radioButton8.TabStop = true;
+            this.radioButton8.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            resources.ApplyResources(this.radioButton5, "radioButton5");
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1316,6 +1351,8 @@ namespace pm
             this.panel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1465,6 +1502,10 @@ namespace pm
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton radioButton7;
+        private System.Windows.Forms.RadioButton radioButton8;
+        private System.Windows.Forms.RadioButton radioButton5;
     }
 }
 

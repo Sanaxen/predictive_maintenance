@@ -122,10 +122,14 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button19.Location" type="System.Drawing.Point, System.Drawing">
-    <value>510, 79</value>
+    <value>680, 99</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="button19.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button19.Size" type="System.Drawing.Size, System.Drawing">
-    <value>129, 37</value>
+    <value>172, 46</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="button19.TabIndex" type="System.Int32, mscorlib">
@@ -149,15 +153,17 @@
   <data name="checkBox5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checkBox5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="checkBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>109, 21</value>
+    <value>145, 26</value>
+  </data>
+  <data name="checkBox5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="checkBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 16</value>
+    <value>172, 19</value>
   </data>
   <data name="checkBox5.TabIndex" type="System.Int32, mscorlib">
     <value>84</value>
@@ -181,13 +187,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>250, 3</value>
+    <value>333, 4</value>
   </data>
   <data name="button2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 34</value>
+    <value>213, 42</value>
   </data>
   <data name="button2.TabIndex" type="System.Int32, mscorlib">
     <value>80</value>
@@ -214,13 +220,13 @@
     <value>-</value>
   </data>
   <data name="comboBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>40, 10</value>
+    <value>53, 12</value>
   </data>
   <data name="comboBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="comboBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 20</value>
+    <value>69, 23</value>
   </data>
   <data name="comboBox3.TabIndex" type="System.Int32, mscorlib">
     <value>78</value>
@@ -250,13 +256,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>637, 3</value>
+    <value>849, 4</value>
   </data>
   <data name="button5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 34</value>
+    <value>133, 42</value>
   </data>
   <data name="button5.TabIndex" type="System.Int32, mscorlib">
     <value>83</value>
@@ -283,10 +289,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 14</value>
+    <value>7, 18</value>
+  </data>
+  <data name="label2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 12</value>
+    <value>40, 15</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>79</value>
@@ -313,13 +322,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>531, 3</value>
+    <value>708, 4</value>
   </data>
   <data name="button4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>101, 34</value>
+    <value>135, 42</value>
   </data>
   <data name="button4.TabIndex" type="System.Int32, mscorlib">
     <value>82</value>
@@ -343,13 +352,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>422, 3</value>
+    <value>563, 4</value>
   </data>
   <data name="button3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 34</value>
+    <value>137, 42</value>
   </data>
   <data name="button3.TabIndex" type="System.Int32, mscorlib">
     <value>81</value>
@@ -373,13 +382,13 @@
     <value>Top</value>
   </data>
   <data name="panel18.Location" type="System.Drawing.Point, System.Drawing">
-    <value>503, 0</value>
+    <value>671, 0</value>
   </data>
   <data name="panel18.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel18.Size" type="System.Drawing.Size, System.Drawing">
-    <value>748, 44</value>
+    <value>997, 55</value>
   </data>
   <data name="panel18.TabIndex" type="System.Int32, mscorlib">
     <value>85</value>
@@ -397,13 +406,13 @@
     <value>1</value>
   </data>
   <data name="splitter13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>501, 0</value>
+    <value>668, 0</value>
   </data>
   <data name="splitter13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>2, 131</value>
+    <value>3, 164</value>
   </data>
   <data name="splitter13.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -430,13 +439,13 @@
     <value>NoControl</value>
   </data>
   <data name="button20.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 40</value>
+    <value>7, 50</value>
   </data>
   <data name="button20.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button20.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 23</value>
+    <value>287, 29</value>
   </data>
   <data name="button20.TabIndex" type="System.Int32, mscorlib">
     <value>51</value>
@@ -467,13 +476,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 4</value>
+    <value>7, 5</value>
   </data>
   <data name="button15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 23</value>
+    <value>125, 29</value>
   </data>
   <data name="button15.TabIndex" type="System.Int32, mscorlib">
     <value>49</value>
@@ -503,13 +512,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button16.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 4</value>
+    <value>136, 5</value>
   </data>
   <data name="button16.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button16.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 23</value>
+    <value>120, 29</value>
   </data>
   <data name="button16.TabIndex" type="System.Int32, mscorlib">
     <value>50</value>
@@ -539,10 +548,10 @@
     <value>0, 0</value>
   </data>
   <data name="pictureBox6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="pictureBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 67</value>
+    <value>200, 84</value>
   </data>
   <data name="pictureBox6.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -566,13 +575,13 @@
     <value>Right</value>
   </data>
   <data name="panel21.Location" type="System.Drawing.Point, System.Drawing">
-    <value>351, 0</value>
+    <value>468, 0</value>
   </data>
   <data name="panel21.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel21.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 67</value>
+    <value>200, 84</value>
   </data>
   <data name="panel21.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -593,13 +602,13 @@
     <value>Fill</value>
   </data>
   <data name="panel20.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 64</value>
+    <value>0, 80</value>
   </data>
   <data name="panel20.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel20.Size" type="System.Drawing.Size, System.Drawing">
-    <value>501, 67</value>
+    <value>668, 84</value>
   </data>
   <data name="panel20.TabIndex" type="System.Int32, mscorlib">
     <value>86</value>
@@ -620,13 +629,13 @@
     <value>Top</value>
   </data>
   <data name="splitter14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 62</value>
+    <value>0, 78</value>
   </data>
   <data name="splitter14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>501, 2</value>
+    <value>668, 2</value>
   </data>
   <data name="splitter14.TabIndex" type="System.Int32, mscorlib">
     <value>85</value>
@@ -650,10 +659,13 @@
     <value>ja-JP</value>
   </data>
   <data name="comboBox6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>428, 33</value>
+    <value>571, 41</value>
+  </data>
+  <data name="comboBox6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="comboBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 20</value>
+    <value>89, 23</value>
   </data>
   <data name="comboBox6.TabIndex" type="System.Int32, mscorlib">
     <value>87</value>
@@ -677,13 +689,13 @@
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 26</value>
+    <value>15, 32</value>
   </data>
   <data name="button1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 26</value>
+    <value>99, 32</value>
   </data>
   <data name="button1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -714,10 +726,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="textBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>501, 19</value>
+    <value>668, 22</value>
   </data>
   <data name="textBox1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -744,10 +756,13 @@ All csv in that data directory will be targeted.</value>
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 35</value>
+    <value>120, 44</value>
+  </data>
+  <data name="label6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
   </data>
   <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 12</value>
+    <value>72, 15</value>
   </data>
   <data name="label6.TabIndex" type="System.Int32, mscorlib">
     <value>75</value>
@@ -774,10 +789,13 @@ All csv in that data directory will be targeted.</value>
     <value>utf-8</value>
   </data>
   <data name="comboBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>150, 34</value>
+    <value>200, 42</value>
+  </data>
+  <data name="comboBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="comboBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 20</value>
+    <value>105, 23</value>
   </data>
   <data name="comboBox1.TabIndex" type="System.Int32, mscorlib">
     <value>74</value>
@@ -798,13 +816,13 @@ All csv in that data directory will be targeted.</value>
     <value>4</value>
   </data>
   <data name="comboBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>279, 34</value>
+    <value>372, 42</value>
   </data>
   <data name="comboBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="comboBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 20</value>
+    <value>121, 23</value>
   </data>
   <data name="comboBox2.TabIndex" type="System.Int32, mscorlib">
     <value>76</value>
@@ -831,10 +849,13 @@ All csv in that data directory will be targeted.</value>
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>245, 36</value>
+    <value>327, 45</value>
+  </data>
+  <data name="label1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 12</value>
+    <value>38, 15</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>77</value>
@@ -864,10 +885,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="panel17.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel17.Size" type="System.Drawing.Size, System.Drawing">
-    <value>501, 62</value>
+    <value>668, 78</value>
   </data>
   <data name="panel17.TabIndex" type="System.Int32, mscorlib">
     <value>84</value>
@@ -891,10 +912,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="panel19.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel19.Size" type="System.Drawing.Size, System.Drawing">
-    <value>501, 131</value>
+    <value>668, 164</value>
   </data>
   <data name="panel19.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -918,10 +939,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="panel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1251, 131</value>
+    <value>1668, 164</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -942,13 +963,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 131</value>
+    <value>0, 164</value>
   </data>
   <data name="splitter1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1251, 2</value>
+    <value>1668, 2</value>
   </data>
   <data name="splitter1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -969,16 +990,16 @@ All csv in that data directory will be targeted.</value>
     <value>Fill</value>
   </data>
   <data name="listBox1.ItemHeight" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>15</value>
   </data>
   <data name="listBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 59</value>
+    <value>0, 73</value>
   </data>
   <data name="listBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="listBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 309</value>
+    <value>245, 387</value>
   </data>
   <data name="listBox1.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -999,13 +1020,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 57</value>
+    <value>0, 71</value>
   </data>
   <data name="splitter5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 2</value>
+    <value>245, 2</value>
   </data>
   <data name="splitter5.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -1026,13 +1047,10 @@ All csv in that data directory will be targeted.</value>
     <value>True</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="label3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>4, 4</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 12</value>
+    <value>113, 15</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1059,10 +1077,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="panel5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 57</value>
+    <value>245, 71</value>
   </data>
   <data name="panel5.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -1083,13 +1101,13 @@ All csv in that data directory will be targeted.</value>
     <value>Left</value>
   </data>
   <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 133</value>
+    <value>0, 166</value>
   </data>
   <data name="panel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 368</value>
+    <value>245, 460</value>
   </data>
   <data name="panel2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1107,13 +1125,13 @@ All csv in that data directory will be targeted.</value>
     <value>6</value>
   </data>
   <data name="splitter2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>184, 133</value>
+    <value>245, 166</value>
   </data>
   <data name="splitter2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 368</value>
+    <value>8, 460</value>
   </data>
   <data name="splitter2.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -1134,16 +1152,16 @@ All csv in that data directory will be targeted.</value>
     <value>Fill</value>
   </data>
   <data name="listBox2.ItemHeight" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>15</value>
   </data>
   <data name="listBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 59</value>
+    <value>0, 73</value>
   </data>
   <data name="listBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="listBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 309</value>
+    <value>255, 387</value>
   </data>
   <data name="listBox2.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -1164,13 +1182,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 57</value>
+    <value>0, 71</value>
   </data>
   <data name="splitter6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 2</value>
+    <value>255, 2</value>
   </data>
   <data name="splitter6.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -1188,13 +1206,13 @@ All csv in that data directory will be targeted.</value>
     <value>1</value>
   </data>
   <data name="button13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>123, 32</value>
+    <value>164, 40</value>
   </data>
   <data name="button13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 20</value>
+    <value>85, 25</value>
   </data>
   <data name="button13.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1218,13 +1236,10 @@ All csv in that data directory will be targeted.</value>
     <value>True</value>
   </data>
   <data name="label23.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 3</value>
-  </data>
-  <data name="label23.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>5, 4</value>
   </data>
   <data name="label23.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 12</value>
+    <value>186, 15</value>
   </data>
   <data name="label23.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1251,10 +1266,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="panel6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 57</value>
+    <value>255, 71</value>
   </data>
   <data name="panel6.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1275,13 +1290,13 @@ All csv in that data directory will be targeted.</value>
     <value>Left</value>
   </data>
   <data name="panel3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>190, 133</value>
+    <value>253, 166</value>
   </data>
   <data name="panel3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 368</value>
+    <value>255, 460</value>
   </data>
   <data name="panel3.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -1299,13 +1314,13 @@ All csv in that data directory will be targeted.</value>
     <value>4</value>
   </data>
   <data name="splitter3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>381, 133</value>
+    <value>508, 166</value>
   </data>
   <data name="splitter3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 368</value>
+    <value>8, 460</value>
   </data>
   <data name="splitter3.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -1326,16 +1341,16 @@ All csv in that data directory will be targeted.</value>
     <value>Fill</value>
   </data>
   <data name="listBox3.ItemHeight" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>15</value>
   </data>
   <data name="listBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 59</value>
+    <value>0, 73</value>
   </data>
   <data name="listBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="listBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 309</value>
+    <value>251, 387</value>
   </data>
   <data name="listBox3.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -1356,13 +1371,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 57</value>
+    <value>0, 71</value>
   </data>
   <data name="splitter7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 2</value>
+    <value>251, 2</value>
   </data>
   <data name="splitter7.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -1380,13 +1395,13 @@ All csv in that data directory will be targeted.</value>
     <value>1</value>
   </data>
   <data name="button17.Location" type="System.Drawing.Point, System.Drawing">
-    <value>118, 31</value>
+    <value>157, 39</value>
   </data>
   <data name="button17.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button17.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 20</value>
+    <value>85, 25</value>
   </data>
   <data name="button17.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1413,10 +1428,10 @@ All csv in that data directory will be targeted.</value>
     <value>0, 0</value>
   </data>
   <data name="panel7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 57</value>
+    <value>251, 71</value>
   </data>
   <data name="panel7.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1437,13 +1452,13 @@ All csv in that data directory will be targeted.</value>
     <value>Left</value>
   </data>
   <data name="panel4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>387, 133</value>
+    <value>516, 166</value>
   </data>
   <data name="panel4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 368</value>
+    <value>251, 460</value>
   </data>
   <data name="panel4.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -1461,13 +1476,13 @@ All csv in that data directory will be targeted.</value>
     <value>2</value>
   </data>
   <data name="splitter4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>575, 133</value>
+    <value>767, 166</value>
   </data>
   <data name="splitter4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>8, 368</value>
+    <value>11, 460</value>
   </data>
   <data name="splitter4.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -1493,8 +1508,11 @@ All csv in that data directory will be targeted.</value>
   <data name="pictureBox5.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="pictureBox5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="pictureBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>382, 115</value>
+    <value>511, 147</value>
   </data>
   <data name="pictureBox5.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -1518,10 +1536,13 @@ All csv in that data directory will be targeted.</value>
     <value>Fill</value>
   </data>
   <data name="panel16.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 165</value>
+    <value>0, 206</value>
+  </data>
+  <data name="panel16.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="panel16.Size" type="System.Drawing.Size, System.Drawing">
-    <value>382, 115</value>
+    <value>511, 147</value>
   </data>
   <data name="panel16.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1542,10 +1563,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 162</value>
+    <value>0, 202</value>
+  </data>
+  <data name="splitter12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="splitter12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>382, 3</value>
+    <value>511, 4</value>
   </data>
   <data name="splitter12.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1568,8 +1592,11 @@ All csv in that data directory will be targeted.</value>
   <data name="pictureBox3.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="pictureBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="pictureBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>382, 162</value>
+    <value>511, 202</value>
   </data>
   <data name="pictureBox3.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -1595,8 +1622,11 @@ All csv in that data directory will be targeted.</value>
   <data name="panel15.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="panel15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="panel15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>382, 162</value>
+    <value>511, 202</value>
   </data>
   <data name="panel15.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1617,10 +1647,13 @@ All csv in that data directory will be targeted.</value>
     <value>Fill</value>
   </data>
   <data name="panel12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>278, 62</value>
+    <value>371, 78</value>
+  </data>
+  <data name="panel12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="panel12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>382, 280</value>
+    <value>511, 353</value>
   </data>
   <data name="panel12.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -1638,10 +1671,13 @@ All csv in that data directory will be targeted.</value>
     <value>0</value>
   </data>
   <data name="splitter10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>275, 62</value>
+    <value>367, 78</value>
+  </data>
+  <data name="splitter10.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="splitter10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>3, 280</value>
+    <value>4, 353</value>
   </data>
   <data name="splitter10.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -1664,8 +1700,11 @@ All csv in that data directory will be targeted.</value>
   <data name="pictureBox4.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="pictureBox4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="pictureBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 115</value>
+    <value>367, 147</value>
   </data>
   <data name="pictureBox4.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -1689,10 +1728,13 @@ All csv in that data directory will be targeted.</value>
     <value>Fill</value>
   </data>
   <data name="panel14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 165</value>
+    <value>0, 206</value>
+  </data>
+  <data name="panel14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="panel14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 115</value>
+    <value>367, 147</value>
   </data>
   <data name="panel14.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1713,10 +1755,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 162</value>
+    <value>0, 202</value>
+  </data>
+  <data name="splitter11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="splitter11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 3</value>
+    <value>367, 4</value>
   </data>
   <data name="splitter11.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1739,8 +1784,11 @@ All csv in that data directory will be targeted.</value>
   <data name="pictureBox2.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="pictureBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 162</value>
+    <value>367, 202</value>
   </data>
   <data name="pictureBox2.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -1766,8 +1814,11 @@ All csv in that data directory will be targeted.</value>
   <data name="panel13.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="panel13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="panel13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 162</value>
+    <value>367, 202</value>
   </data>
   <data name="panel13.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1788,10 +1839,13 @@ All csv in that data directory will be targeted.</value>
     <value>Left</value>
   </data>
   <data name="panel11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 62</value>
+    <value>0, 78</value>
+  </data>
+  <data name="panel11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="panel11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 280</value>
+    <value>367, 353</value>
   </data>
   <data name="panel11.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1812,10 +1866,13 @@ All csv in that data directory will be targeted.</value>
     <value>Top</value>
   </data>
   <data name="splitter9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 59</value>
+    <value>0, 74</value>
+  </data>
+  <data name="splitter9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="splitter9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 3</value>
+    <value>882, 4</value>
   </data>
   <data name="splitter9.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1836,10 +1893,13 @@ All csv in that data directory will be targeted.</value>
     <value>MS UI Gothic, 8.25pt, style=Bold</value>
   </data>
   <data name="button21.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 37</value>
+    <value>4, 46</value>
+  </data>
+  <data name="button21.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button21.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 19</value>
+    <value>151, 24</value>
   </data>
   <data name="button21.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1860,10 +1920,13 @@ All csv in that data directory will be targeted.</value>
     <value>0</value>
   </data>
   <data name="button18.Location" type="System.Drawing.Point, System.Drawing">
-    <value>122, 3</value>
+    <value>163, 4</value>
+  </data>
+  <data name="button18.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button18.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 35</value>
+    <value>151, 44</value>
   </data>
   <data name="button18.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1884,10 +1947,13 @@ All csv in that data directory will be targeted.</value>
     <value>1</value>
   </data>
   <data name="button14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>4, 4</value>
+  </data>
+  <data name="button14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 35</value>
+    <value>151, 44</value>
   </data>
   <data name="button14.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1913,8 +1979,11 @@ All csv in that data directory will be targeted.</value>
   <data name="panel10.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="panel10.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="panel10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 59</value>
+    <value>882, 74</value>
   </data>
   <data name="panel10.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1932,13 +2001,13 @@ All csv in that data directory will be targeted.</value>
     <value>4</value>
   </data>
   <data name="tabPage5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>4, 25</value>
   </data>
   <data name="tabPage5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 342</value>
+    <value>882, 431</value>
   </data>
   <data name="tabPage5.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -1959,13 +2028,13 @@ All csv in that data directory will be targeted.</value>
     <value>0</value>
   </data>
   <data name="textBox8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>358, 91</value>
+    <value>477, 114</value>
   </data>
   <data name="textBox8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox8.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
@@ -1994,13 +2063,10 @@ the oldest data will be discarded and the maximum retention amount will be used.
     <value>True</value>
   </data>
   <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>233, 94</value>
-  </data>
-  <data name="label12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>311, 118</value>
   </data>
   <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>125, 12</value>
+    <value>151, 15</value>
   </data>
   <data name="label12.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -2026,13 +2092,13 @@ the oldest data will be discarded and the maximum retention amount will be used.
     <value>1</value>
   </data>
   <data name="textBox7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>99, 91</value>
+    <value>132, 114</value>
   </data>
   <data name="textBox7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox7.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -2059,13 +2125,10 @@ the oldest data will be discarded and the maximum retention amount will be used.
     <value>True</value>
   </data>
   <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 94</value>
-  </data>
-  <data name="label11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>8, 118</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 12</value>
+    <value>113, 15</value>
   </data>
   <data name="label11.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -2092,13 +2155,13 @@ the oldest data will be discarded and the maximum retention amount will be used.
     <value>True</value>
   </data>
   <data name="checkBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 138</value>
+    <value>11, 172</value>
   </data>
   <data name="checkBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="checkBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 16</value>
+    <value>110, 19</value>
   </data>
   <data name="checkBox2.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -2122,13 +2185,13 @@ the oldest data will be discarded and the maximum retention amount will be used.
     <value>4</value>
   </data>
   <data name="textBox6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>376, 156</value>
+    <value>501, 195</value>
   </data>
   <data name="textBox6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox6.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -2154,13 +2217,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>5</value>
   </data>
   <data name="textBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>104, 156</value>
+    <value>139, 195</value>
   </data>
   <data name="textBox5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox5.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -2189,13 +2252,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>242, 158</value>
-  </data>
-  <data name="label10.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>323, 198</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 12</value>
+    <value>157, 15</value>
   </data>
   <data name="label10.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -2224,13 +2284,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 158</value>
-  </data>
-  <data name="label9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>8, 198</value>
   </data>
   <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>96, 12</value>
+    <value>118, 15</value>
   </data>
   <data name="label9.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -2256,13 +2313,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>8</value>
   </data>
   <data name="textBox4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 60</value>
+    <value>109, 75</value>
   </data>
   <data name="textBox4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 19</value>
+    <value>185, 22</value>
   </data>
   <data name="textBox4.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -2289,13 +2346,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 62</value>
-  </data>
-  <data name="label8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>5, 78</value>
   </data>
   <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 12</value>
+    <value>76, 15</value>
   </data>
   <data name="label8.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -2319,13 +2373,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>10</value>
   </data>
   <data name="textBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>152, 183</value>
+    <value>203, 229</value>
   </data>
   <data name="textBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox3.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -2349,13 +2403,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 186</value>
-  </data>
-  <data name="label7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>8, 232</value>
   </data>
   <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 12</value>
+    <value>177, 15</value>
   </data>
   <data name="label7.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -2376,13 +2427,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>12</value>
   </data>
   <data name="textBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>338, 24</value>
+    <value>451, 30</value>
   </data>
   <data name="textBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 19</value>
+    <value>191, 22</value>
   </data>
   <data name="textBox2.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -2409,13 +2460,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>237, 26</value>
-  </data>
-  <data name="label5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>316, 32</value>
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 12</value>
+    <value>109, 15</value>
   </data>
   <data name="label5.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -2442,13 +2490,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 27</value>
-  </data>
-  <data name="label4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>5, 34</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>76, 12</value>
+    <value>93, 15</value>
   </data>
   <data name="label4.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -2490,13 +2535,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>month</value>
   </data>
   <data name="comboBox4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 25</value>
+    <value>109, 31</value>
   </data>
   <data name="comboBox4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="comboBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 20</value>
+    <value>185, 23</value>
   </data>
   <data name="comboBox4.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -2523,13 +2568,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="checkBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>100, 138</value>
+    <value>133, 172</value>
   </data>
   <data name="checkBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="checkBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 16</value>
+    <value>103, 19</value>
   </data>
   <data name="checkBox1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -2558,16 +2603,16 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>4, 25</value>
   </data>
   <data name="tabPage1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 342</value>
+    <value>883, 431</value>
   </data>
   <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -2591,10 +2636,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label28.Location" type="System.Drawing.Point, System.Drawing">
-    <value>196, 267</value>
+    <value>261, 334</value>
+  </data>
+  <data name="label28.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
   </data>
   <data name="label28.Size" type="System.Drawing.Size, System.Drawing">
-    <value>77, 12</value>
+    <value>90, 15</value>
   </data>
   <data name="label28.TabIndex" type="System.Int32, mscorlib">
     <value>58</value>
@@ -2615,13 +2663,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>0</value>
   </data>
   <data name="textBox21.Location" type="System.Drawing.Point, System.Drawing">
-    <value>71, 301</value>
+    <value>95, 376</value>
   </data>
   <data name="textBox21.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox21.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox21.TabIndex" type="System.Int32, mscorlib">
     <value>57</value>
@@ -2642,13 +2690,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label27.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 303</value>
-  </data>
-  <data name="label27.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>9, 379</value>
   </data>
   <data name="label27.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 12</value>
+    <value>75, 15</value>
   </data>
   <data name="label27.TabIndex" type="System.Int32, mscorlib">
     <value>56</value>
@@ -2669,13 +2714,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>2</value>
   </data>
   <data name="textBox20.Location" type="System.Drawing.Point, System.Drawing">
-    <value>108, 126</value>
+    <value>144, 158</value>
   </data>
   <data name="textBox20.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox20.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 19</value>
+    <value>109, 22</value>
   </data>
   <data name="textBox20.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
@@ -2699,13 +2744,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label26.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 129</value>
-  </data>
-  <data name="label26.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>15, 161</value>
   </data>
   <data name="label26.Size" type="System.Drawing.Size, System.Drawing">
-    <value>93, 12</value>
+    <value>114, 15</value>
   </data>
   <data name="label26.TabIndex" type="System.Int32, mscorlib">
     <value>54</value>
@@ -2726,13 +2768,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>4</value>
   </data>
   <data name="textBox19.Location" type="System.Drawing.Point, System.Drawing">
-    <value>100, 153</value>
+    <value>133, 191</value>
   </data>
   <data name="textBox19.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox19.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 19</value>
+    <value>109, 22</value>
   </data>
   <data name="textBox19.TabIndex" type="System.Int32, mscorlib">
     <value>53</value>
@@ -2756,13 +2798,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label25.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 156</value>
-  </data>
-  <data name="label25.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>15, 195</value>
   </data>
   <data name="label25.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 12</value>
+    <value>78, 15</value>
   </data>
   <data name="label25.TabIndex" type="System.Int32, mscorlib">
     <value>52</value>
@@ -2786,13 +2825,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="checkBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 94</value>
+    <value>16, 118</value>
   </data>
   <data name="checkBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="checkBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 16</value>
+    <value>110, 19</value>
   </data>
   <data name="checkBox3.TabIndex" type="System.Int32, mscorlib">
     <value>51</value>
@@ -2819,13 +2858,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="checkBox4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>107, 94</value>
+    <value>143, 118</value>
   </data>
   <data name="checkBox4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="checkBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 16</value>
+    <value>103, 19</value>
   </data>
   <data name="checkBox4.TabIndex" type="System.Int32, mscorlib">
     <value>50</value>
@@ -2851,13 +2890,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>8</value>
   </data>
   <data name="textBox16.Location" type="System.Drawing.Point, System.Drawing">
-    <value>69, 265</value>
+    <value>92, 331</value>
   </data>
   <data name="textBox16.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox16.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox16.TabIndex" type="System.Int32, mscorlib">
     <value>49</value>
@@ -2881,13 +2920,10 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>True</value>
   </data>
   <data name="label20.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 267</value>
-  </data>
-  <data name="label20.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>7, 334</value>
   </data>
   <data name="label20.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 12</value>
+    <value>75, 15</value>
   </data>
   <data name="label20.TabIndex" type="System.Int32, mscorlib">
     <value>48</value>
@@ -2908,13 +2944,13 @@ Specify use_spline to fit a spline curve and smooth it.</value>
     <value>10</value>
   </data>
   <data name="textBox15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>115, 232</value>
+    <value>153, 290</value>
   </data>
   <data name="textBox15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox15.TabIndex" type="System.Int32, mscorlib">
     <value>47</value>
@@ -2943,13 +2979,10 @@ but it has the meaning of informing that the amount of data needs to be larger t
     <value>True</value>
   </data>
   <data name="label19.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 234</value>
-  </data>
-  <data name="label19.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>7, 292</value>
   </data>
   <data name="label19.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 12</value>
+    <value>137, 15</value>
   </data>
   <data name="label19.TabIndex" type="System.Int32, mscorlib">
     <value>46</value>
@@ -2975,13 +3008,13 @@ Negative values ​​use all past data.
     <value>12</value>
   </data>
   <data name="textBox14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>71, 201</value>
+    <value>95, 251</value>
   </data>
   <data name="textBox14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox14.TabIndex" type="System.Int32, mscorlib">
     <value>45</value>
@@ -3014,13 +3047,10 @@ but it has the meaning of informing that the amount of data needs to be larger t
     <value>True</value>
   </data>
   <data name="label18.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 204</value>
-  </data>
-  <data name="label18.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>7, 255</value>
   </data>
   <data name="label18.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 12</value>
+    <value>76, 15</value>
   </data>
   <data name="label18.TabIndex" type="System.Int32, mscorlib">
     <value>44</value>
@@ -3046,13 +3076,13 @@ Negative values use all past data.
     <value>14</value>
   </data>
   <data name="textBox12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>383, 64</value>
+    <value>511, 80</value>
   </data>
   <data name="textBox12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox12.TabIndex" type="System.Int32, mscorlib">
     <value>43</value>
@@ -3076,13 +3106,13 @@ Negative values use all past data.
     <value>15</value>
   </data>
   <data name="textBox13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>115, 63</value>
+    <value>153, 79</value>
   </data>
   <data name="textBox13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox13.TabIndex" type="System.Int32, mscorlib">
     <value>42</value>
@@ -3106,13 +3136,10 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="label16.Location" type="System.Drawing.Point, System.Drawing">
-    <value>245, 66</value>
-  </data>
-  <data name="label16.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>327, 82</value>
   </data>
   <data name="label16.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 12</value>
+    <value>166, 15</value>
   </data>
   <data name="label16.TabIndex" type="System.Int32, mscorlib">
     <value>41</value>
@@ -3139,13 +3166,10 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="label17.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 66</value>
-  </data>
-  <data name="label17.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>12, 82</value>
   </data>
   <data name="label17.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 12</value>
+    <value>127, 15</value>
   </data>
   <data name="label17.TabIndex" type="System.Int32, mscorlib">
     <value>40</value>
@@ -3166,13 +3190,13 @@ Negative values use all past data.
     <value>18</value>
   </data>
   <data name="textBox11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>323, 37</value>
+    <value>431, 46</value>
   </data>
   <data name="textBox11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox11.TabIndex" type="System.Int32, mscorlib">
     <value>39</value>
@@ -3196,13 +3220,10 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>226, 40</value>
-  </data>
-  <data name="label15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>301, 50</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 12</value>
+    <value>109, 15</value>
   </data>
   <data name="label15.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
@@ -3223,13 +3244,13 @@ Negative values use all past data.
     <value>20</value>
   </data>
   <data name="textBox10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>79, 34</value>
+    <value>105, 42</value>
   </data>
   <data name="textBox10.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox10.TabIndex" type="System.Int32, mscorlib">
     <value>37</value>
@@ -3256,13 +3277,10 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 37</value>
-  </data>
-  <data name="label14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>12, 46</value>
   </data>
   <data name="label14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 12</value>
+    <value>70, 15</value>
   </data>
   <data name="label14.TabIndex" type="System.Int32, mscorlib">
     <value>36</value>
@@ -3286,13 +3304,13 @@ Negative values use all past data.
     <value>22</value>
   </data>
   <data name="textBox9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>100, 9</value>
+    <value>133, 11</value>
   </data>
   <data name="textBox9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox9.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
@@ -3319,13 +3337,10 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 13</value>
-  </data>
-  <data name="label13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>15, 16</value>
   </data>
   <data name="label13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 12</value>
+    <value>104, 15</value>
   </data>
   <data name="label13.TabIndex" type="System.Int32, mscorlib">
     <value>34</value>
@@ -3352,16 +3367,16 @@ Negative values use all past data.
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>4, 25</value>
   </data>
   <data name="tabPage2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 342</value>
+    <value>883, 431</value>
   </data>
   <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -3381,17 +3396,146 @@ Negative values use all past data.
   <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="radioButton5.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioButton5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioButton5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>324, 21</value>
+  </data>
+  <data name="radioButton5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="radioButton5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>189, 19</value>
+  </data>
+  <data name="radioButton5.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="radioButton5.Text" xml:space="preserve">
+    <value>Gompertz Degradation</value>
+  </data>
+  <data name="&gt;&gt;radioButton5.Name" xml:space="preserve">
+    <value>radioButton5</value>
+  </data>
+  <data name="&gt;&gt;radioButton5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioButton5.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;radioButton5.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="radioButton7.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioButton7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioButton7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 21</value>
+  </data>
+  <data name="radioButton7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="radioButton7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 19</value>
+  </data>
+  <data name="radioButton7.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="radioButton7.Text" xml:space="preserve">
+    <value>Exponential Degradation</value>
+  </data>
+  <data name="&gt;&gt;radioButton7.Name" xml:space="preserve">
+    <value>radioButton7</value>
+  </data>
+  <data name="&gt;&gt;radioButton7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioButton7.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;radioButton7.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="radioButton8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioButton8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioButton8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 21</value>
+  </data>
+  <data name="radioButton8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="radioButton8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 19</value>
+  </data>
+  <data name="radioButton8.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="radioButton8.Text" xml:space="preserve">
+    <value>auto</value>
+  </data>
+  <data name="&gt;&gt;radioButton8.Name" xml:space="preserve">
+    <value>radioButton8</value>
+  </data>
+  <data name="&gt;&gt;radioButton8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioButton8.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;radioButton8.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="groupBox2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 79</value>
+  </data>
+  <data name="groupBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="groupBox2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="groupBox2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>542, 58</value>
+  </data>
+  <data name="groupBox2.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>prediction  model</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.Name" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.Parent" xml:space="preserve">
+    <value>tabPage3</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="radioButton4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="radioButton4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>274, 17</value>
+    <value>365, 21</value>
   </data>
   <data name="radioButton4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="radioButton4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>93, 16</value>
+    <value>113, 19</value>
   </data>
   <data name="radioButton4.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -3415,13 +3559,13 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="radioButton3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>200, 17</value>
+    <value>267, 21</value>
   </data>
   <data name="radioButton3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="radioButton3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 16</value>
+    <value>83, 19</value>
   </data>
   <data name="radioButton3.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -3445,13 +3589,13 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="radioButton2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>118, 17</value>
+    <value>157, 21</value>
   </data>
   <data name="radioButton2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="radioButton2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 16</value>
+    <value>98, 19</value>
   </data>
   <data name="radioButton2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -3475,13 +3619,13 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="radioButton1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 17</value>
+    <value>8, 21</value>
   </data>
   <data name="radioButton1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="radioButton1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 16</value>
+    <value>136, 19</value>
   </data>
   <data name="radioButton1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -3502,22 +3646,22 @@ Negative values use all past data.
     <value>3</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 78</value>
+    <value>18, 141</value>
   </data>
   <data name="groupBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="groupBox1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>407, 46</value>
+    <value>543, 58</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
   </data>
   <data name="groupBox1.Text" xml:space="preserve">
-    <value>prediction model</value>
+    <value>prediction sub model</value>
   </data>
   <data name="&gt;&gt;groupBox1.Name" xml:space="preserve">
     <value>groupBox1</value>
@@ -3529,19 +3673,16 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="label24.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label24.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 42</value>
-  </data>
-  <data name="label24.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>15, 52</value>
   </data>
   <data name="label24.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 12</value>
+    <value>139, 15</value>
   </data>
   <data name="label24.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -3559,7 +3700,7 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;label24.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="comboBox5.Items" xml:space="preserve">
     <value>ms</value>
@@ -3580,13 +3721,13 @@ Negative values use all past data.
     <value>month</value>
   </data>
   <data name="comboBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>130, 39</value>
+    <value>173, 49</value>
   </data>
   <data name="comboBox5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="comboBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 20</value>
+    <value>185, 23</value>
   </data>
   <data name="comboBox5.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -3604,16 +3745,16 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;comboBox5.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="textBox18.Location" type="System.Drawing.Point, System.Drawing">
-    <value>124, 176</value>
+    <value>165, 220</value>
   </data>
   <data name="textBox18.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox18.Size" type="System.Drawing.Size, System.Drawing">
-    <value>286, 19</value>
+    <value>380, 22</value>
   </data>
   <data name="textBox18.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
@@ -3631,19 +3772,16 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;textBox18.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label22.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label22.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 178</value>
-  </data>
-  <data name="label22.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>16, 222</value>
   </data>
   <data name="label22.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 12</value>
+    <value>119, 15</value>
   </data>
   <data name="label22.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -3661,16 +3799,16 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;label22.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="textBox17.Location" type="System.Drawing.Point, System.Drawing">
-    <value>146, 7</value>
+    <value>195, 9</value>
   </data>
   <data name="textBox17.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="textBox17.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>164, 22</value>
   </data>
   <data name="textBox17.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
@@ -3691,19 +3829,16 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;textBox17.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="label21.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label21.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 10</value>
-  </data>
-  <data name="label21.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
+    <value>15, 12</value>
   </data>
   <data name="label21.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 12</value>
+    <value>164, 15</value>
   </data>
   <data name="label21.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -3724,16 +3859,16 @@ Negative values use all past data.
     <value>tabPage3</value>
   </data>
   <data name="&gt;&gt;label21.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="tabPage3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>4, 25</value>
   </data>
   <data name="tabPage3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 342</value>
+    <value>882, 431</value>
   </data>
   <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -3760,10 +3895,10 @@ Negative values use all past data.
     <value>0, 0</value>
   </data>
   <data name="pictureBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 223</value>
+    <value>883, 283</value>
   </data>
   <data name="pictureBox1.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -3787,13 +3922,13 @@ Negative values use all past data.
     <value>Fill</value>
   </data>
   <data name="panel9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 119</value>
+    <value>0, 148</value>
   </data>
   <data name="panel9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 223</value>
+    <value>883, 283</value>
   </data>
   <data name="panel9.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -3814,13 +3949,13 @@ Negative values use all past data.
     <value>Top</value>
   </data>
   <data name="splitter8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 117</value>
+    <value>0, 146</value>
   </data>
   <data name="splitter8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="splitter8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 2</value>
+    <value>883, 2</value>
   </data>
   <data name="splitter8.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -3841,10 +3976,13 @@ Negative values use all past data.
     <value>True</value>
   </data>
   <data name="checkBox6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>186, 9</value>
+    <value>248, 11</value>
+  </data>
+  <data name="checkBox6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="checkBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>189, 16</value>
+    <value>226, 19</value>
   </data>
   <data name="checkBox6.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -3868,10 +4006,13 @@ Negative values use all past data.
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>393, 46</value>
+    <value>524, 58</value>
+  </data>
+  <data name="button11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 31</value>
+    <value>100, 39</value>
   </data>
   <data name="button11.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -3895,10 +4036,13 @@ Negative values use all past data.
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="button12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>393, 5</value>
+    <value>524, 6</value>
+  </data>
+  <data name="button12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 34</value>
+    <value>100, 42</value>
   </data>
   <data name="button12.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -3922,10 +4066,13 @@ Negative values use all past data.
     <value>MS UI Gothic, 12pt, style=Bold</value>
   </data>
   <data name="button9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>103, 39</value>
+    <value>137, 49</value>
+  </data>
+  <data name="button9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 27</value>
+    <value>56, 34</value>
   </data>
   <data name="button9.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -3949,10 +4096,13 @@ Negative values use all past data.
     <value>MS UI Gothic, 12pt, style=Bold</value>
   </data>
   <data name="button10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>55, 38</value>
+    <value>73, 48</value>
+  </data>
+  <data name="button10.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="button10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 28</value>
+    <value>56, 35</value>
   </data>
   <data name="button10.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -3973,13 +4123,13 @@ Negative values use all past data.
     <value>4</value>
   </data>
   <data name="button8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>158, 39</value>
+    <value>211, 49</value>
   </data>
   <data name="button8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 27</value>
+    <value>75, 34</value>
   </data>
   <data name="button8.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -4000,13 +4150,13 @@ Negative values use all past data.
     <value>5</value>
   </data>
   <data name="button7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 38</value>
+    <value>1, 48</value>
   </data>
   <data name="button7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>49, 28</value>
+    <value>65, 35</value>
   </data>
   <data name="button7.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -4027,13 +4177,13 @@ Negative values use all past data.
     <value>6</value>
   </data>
   <data name="numericUpDown1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>473, 5</value>
+    <value>631, 6</value>
   </data>
   <data name="numericUpDown1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="numericUpDown1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>76, 19</value>
+    <value>101, 22</value>
   </data>
   <data name="numericUpDown1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -4054,13 +4204,13 @@ Negative values use all past data.
     <value>Bottom</value>
   </data>
   <data name="trackBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 72</value>
+    <value>0, 90</value>
   </data>
   <data name="trackBar1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="trackBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 45</value>
+    <value>883, 56</value>
   </data>
   <data name="trackBar1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -4078,13 +4228,13 @@ Negative values use all past data.
     <value>8</value>
   </data>
   <data name="button6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 2</value>
+    <value>3, 2</value>
   </data>
   <data name="button6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="button6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 30</value>
+    <value>219, 38</value>
   </data>
   <data name="button6.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -4111,10 +4261,10 @@ Negative values use all past data.
     <value>0, 0</value>
   </data>
   <data name="panel8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="panel8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 117</value>
+    <value>883, 146</value>
   </data>
   <data name="panel8.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -4132,13 +4282,13 @@ Negative values use all past data.
     <value>2</value>
   </data>
   <data name="tabPage4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>4, 25</value>
   </data>
   <data name="tabPage4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabPage4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 342</value>
+    <value>883, 431</value>
   </data>
   <data name="tabPage4.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -4159,10 +4309,13 @@ Negative values use all past data.
     <value>4</value>
   </data>
   <data name="tabPage6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>4, 25</value>
+  </data>
+  <data name="tabPage6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="tabPage6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>660, 342</value>
+    <value>883, 431</value>
   </data>
   <data name="tabPage6.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -4189,13 +4342,13 @@ Negative values use all past data.
     <value>MS UI Gothic, 9pt, style=Bold</value>
   </data>
   <data name="tabControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>583, 133</value>
+    <value>778, 166</value>
   </data>
   <data name="tabControl1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>668, 368</value>
+    <value>890, 460</value>
   </data>
   <data name="tabControl1.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -4219,13 +4372,13 @@ Negative values use all past data.
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 12</value>
+    <value>8, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1251, 501</value>
+    <value>1668, 626</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>pm</value>

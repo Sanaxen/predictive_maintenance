@@ -174,7 +174,7 @@ To run on non-Windows operating systems, OS-dependent parts must be modified.
 ---
 ### Exponential Degradation Mode
 
-$` \Large y(t) = c + exp(\alpha)\ exp(exp(\beta)\cdot b*t+ d) `$  
+$` \Large y(t) = c + exp(\alpha)\ exp(exp(\beta)\cdot t+ d) `$  
 
 $` y(t) = c + a \cdot \exp(b \cdot t + d)`$  
 
@@ -188,16 +188,27 @@ $` a \cdot b > 0`$
 
 In practice, it is common to assume \(a > 0\) and \(b > 0\).
 
+### Gompertz Degradation Mode  
 
+$` \Large y(t) = c + exp(\delta) \cdot exp(\frac{exp(\alpha)}{exp(\beta)}\ (1-exp(-exp(\beta)\cdot t)) )`$  
+
+$`  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )`$  
+
+$` a > 0 \ and\  b > 0 \ and\  d > 0`$  
 #### output file  
 wrk/[csv_file_name]feature_params.csv  
 
-|feature|	threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|unit| fit_start_time| 
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| ---| 
-|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time| time of unit|fit_start timestamp| 
+|feature|	threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|unit| fit_start_time| model |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| ---| ---|
+|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time| time of unit|fit_start timestamp| "exp" or "Gompertz"|
 
+The model is dynamically selected.
+Which model is adopted is determined by comparing 
+AICs and adopting the model with the smaller AIC.  
+**AIC:Akaike's Information Criterion**
 
-$`a=\exp(\alpha),\quad b=\exp(\beta)`$  
+#### Exponential Degradation Mode
+$`a=\exp(\alpha),\quad b=\exp(\beta)`$    
 
 
 $` \Large y(t) = c + a\ exp(b*t+ d) `$  
@@ -210,6 +221,15 @@ $`t\_scale =  (n + h)`$
 
 $`\acute{RUL} =\Large \frac{ log(\frac{𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑 - c}{a})}{b} - d `$ 
 
+#### Gompertz Degradation Mode  
+$`a=\exp(\alpha),\quad b=\exp(\beta) \quad d=\exp(\delta)`$    
+$` \Large  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )`$  
+
+$`  \acute{RUL} =  \Large \frac{-log(\frac{\frac{log(𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑)-c)}{d})}{\frac{a}{b}}-1 ) }{b}`$  
+
+$`  1 > \frac{\frac{log(𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑)-c)}{d})}{\frac{a}{b}}-1  > 0`$  
+
+---
 Inverse scaling to the RUL obtained from the estimated model yields the correct RUL.  
 
 $`RUL = fit\_start\_index + \acute{RUL}  \cdot t\_scale  \cdot delta\_index`$  

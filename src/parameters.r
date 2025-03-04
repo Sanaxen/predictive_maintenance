@@ -107,4 +107,7 @@ index_number <- 0
 time_Index <- 1
 
 timeStamp <- ""
+
+fitting_solver <- ""
+
 save.image("./predictive_maintenance.RData")
