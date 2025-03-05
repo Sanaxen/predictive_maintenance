@@ -1909,6 +1909,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		err_min_stpnt2 <- 999999.0
 		best_fit2 <- NULL
 		
+		exp_domain_max <- 30
+		
 		#for ( kk in lockback_max:lockback_min)
 		for ( kk in lockback_max:lockback_max)
 		{
@@ -2000,8 +2002,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						}
 						if ( kk > 50 )
 						{
-							lm_pa <- runif(5,-5,1)
-							lm_pb <- runif(5,-5,1)
+							lm_pa <- runif(1,-1,1)
+							lm_pb <- runif(1,-1,1)
 							lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
 							lm_pd <- runif(1,-1,1)
 							if ( length(a_coef) > 1 && kk < 80)
@@ -2011,9 +2013,9 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 								lm_pd <- rnorm(n =1,mean = 0, sd = sqrt(noise_varience)) - noise_varience/2
 							}
 						}
-						lm_pc = yy_org[1]- exp(lm_pa)*exp(exp(lm_pb)*xx_org[1] + lm_pd)
+						lm_pc = yy_org[1]- exp(lm_pa)*exp(exp(lm_pb)*xx_org[1] + exp_domain_max*tanh(lm_pd))
 
-						pred <- function(parS, xx) parS$c + exp(parS$a)*exp(exp(parS$b)*xx + parS$d)
+						pred <- function(parS, xx) parS$c + exp(parS$a)*exp(exp(parS$b)*xx + exp_domain_max*tanh(parS$d))
 						resid <- function(p, observed, xx) observed - pred(p,xx)
 						parStart <- list(a=lm_pa, b=lm_pb, c=lm_pc, d=lm_pd)
 						
@@ -2043,8 +2045,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						}
 						if ( kk > 50 )
 						{
-							lm_pa <- runif(5,-5,1)
-							lm_pb <- runif(5,-5,1)
+							lm_pa <- runif(1,-1,1)
+							lm_pb <- runif(1,-1,1)
 							lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
 							lm_pd <- runif(1,-1,1)
 							if ( length(a_coef2) > 1 && kk < 80)
@@ -2076,7 +2078,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					if ( !is.null(fit))
 					{
 						coef = coefficients(fit)
-						fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + coef[4])
+						fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + exp_domain_max*tanh(coef[4]))
+						
 												
 						w <- c(1:length(yy_org))/length(yy_org)
 						w <- ifelse( x < 0.001, 0.001, x)
@@ -2084,24 +2087,27 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						w <- ( w - min(w))/(max(w) - min(w))
 						err <- sqrt(sum(((yy_org[1:length(yy_org)] - fit_pred)*w)^2)/length(yy_org))
 						
-						if ( err_min_stpnt > abs(yy_org[1] - fit_pred[1]))
+						if ( sum(!is.finite(fit_pred))== 0 )
 						{
-							err_min_stpnt = abs(yy_org[1] - fit_pred[1])
-						}
-						if ( err_min > err )
-						{
-							best_fit <- fit
-							err_min = err
-
-							fit_prm_e = e
-							if ( use_nls.lm )
+							if ( err_min_stpnt > abs(yy_org[1] - fit_pred[1]))
 							{
-								fit_prm_e = coef[4]
+								err_min_stpnt = abs(yy_org[1] - fit_pred[1])
 							}
-							fit_prm_sd = sd
+							if ( err_min > err )
+							{
+								best_fit <- fit
+								err_min = err
 
-							fit_prm_be = b_
-							fit_prm_th = a_
+								fit_prm_e = e
+								if ( use_nls.lm )
+								{
+									fit_prm_e = coef[4]
+								}
+								fit_prm_sd = sd
+
+								fit_prm_be = b_
+								fit_prm_th = a_
+							}
 						}
 					}
 					if ( !is.null(fit2))
@@ -2115,14 +2121,17 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						w <- ( w - min(w))/(max(w) - min(w))
 						err <- sqrt(sum(((yy_org[1:length(yy_org)] - fit_pred2)*w)^2)/length(yy_org))
 						
-						if ( err_min_stpnt2 > abs(yy_org[1] - fit_pred2[1]))
+						if ( sum(!is.finite(fit_pred2))==0 )
 						{
-							err_min_stpnt2 = abs(yy_org[1] - fit_pred2[1])
-						}
-						if ( err_min2 > err )
-						{
-							best_fit2 <- fit2
-							err_min2 = err
+							if ( err_min_stpnt2 > abs(yy_org[1] - fit_pred2[1]))
+							{
+								err_min_stpnt2 = abs(yy_org[1] - fit_pred2[1])
+							}
+							if ( err_min2 > err )
+							{
+								best_fit2 <- fit2
+								err_min2 = err
+							}
 						}
 					}
 				 }
@@ -2151,16 +2160,17 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			model = "Gompertz"
 		}
 		
+		print("========================================================")
 		print("best_fit")
 		print(best_fit)
 		print("")
 		print(best_fit2)
-		print("======")
+		print("========================================================")
 		
 		if ( !is.null(best_fit)&&!is.null(best_fit2))
 		{
 			coef = coefficients(best_fit)
-			fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + coef[4])
+			fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + exp_domain_max*tanh(coef[4]))
 			err1 <- yy_org[1:length(yy_org)] - fit_pred
 			err1 <- sqrt(sum(err1^2)/length(yy_org))			
 			
@@ -2169,8 +2179,15 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			err2 <- yy_org[1:length(yy_org)] - fit_pred2
 			err2 <- sqrt(sum(err2^2)/length(yy_org))			
 			
-			
-				
+			err3 <- 1.0e16
+			aic3 <- 1.0e16
+			if (!is.null(lm.fit))
+			{
+				coef = coefficients(lm.fit)
+				fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
+				err3 <- yy_org[1:length(yy_org)] - fit_pred3
+				err3 <- sqrt(sum(err3^2)/length(yy_org))			
+			}	
 			#aic1 = AIC(best_fit)
 			#aic2 = AIC(best_fit2)
 			#print(aic1)
@@ -2178,9 +2195,14 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 
 			aic1 = aic_manual(yy_org, fit_pred, best_fit)
 			aic2 = aic_manual(yy_org, fit_pred2, best_fit2)
+			if (!is.null(lm.fit))
+			{
+				aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
+			}
 			print("AIC")
 			print(aic1)
 			print(aic2)
+			print(aic3)
 			flush.console()
 			
 			aic_r = -1
@@ -2195,40 +2217,109 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			cat("AICr:")
 			print(aic_r)
 			
-			if ( aic_r > 0 && aic_r > 0.9 )
+			if ( min(aic1, aic2, aic3) == aic3 && min(err1, err2, err3) == err3 )
 			{
-				if ( err2 < err1 )
-				{
-					model = "Gompertz"
-					best_fit = best_fit2
-				}else
-				{
-					model = "exp"
-					best_fit = best_fit
-				}
+				model = "lm"
 			}else
 			{
-				if ( aic2 < aic1 )
+				if ( aic_r > 0 && aic_r > 0.9 )
 				{
-					model = "Gompertz"
-					best_fit = best_fit2
+					if ( err2 < err1 )
+					{
+						model = "Gompertz"
+						best_fit = best_fit2
+					}else
+					{
+						model = "exp"
+						best_fit = best_fit
+					}
 				}else
 				{
-					model = "exp"
-					best_fit = best_fit
+					if ( aic2 < aic1 )
+					{
+						model = "Gompertz"
+						best_fit = best_fit2
+					}else
+					{
+						model = "exp"
+						best_fit = best_fit
+					}
 				}
 			}
 		}else
 		{
 			if ( !is.null(fit2))
 			{
-				model = "Gompertz"
-				best_fit = best_fit2
+				coef = coefficients(best_fit2)
+				fit_pred2 <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx_org)))
+				err2 <- yy_org[1:length(yy_org)] - fit_pred2
+				err2 <- sqrt(sum(err2^2)/length(yy_org))			
+				
+				err3 <- 1.0e16
+				aic3 <- 1.0e16
+				if (!is.null(lm.fit))
+				{
+					coef = coefficients(lm.fit)
+					fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
+					err3 <- yy_org[1:length(yy_org)] - fit_pred3
+					err3 <- sqrt(sum(err3^2)/length(yy_org))			
+				}
+								
+				aic2 = aic_manual(yy_org, fit_pred2, best_fit2)
+				if (!is.null(lm.fit))
+				{
+					aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
+				}
+				print("AIC")
+				print(aic2)
+				print(aic3)
+				
+				if ( aic2 < aic3 )
+				{
+					model = "Gompertz"
+					best_fit = best_fit2
+				}else
+				{
+					model = "lm"
+					best_fit = NULL
+				}
 			}
 			if ( !is.null(fit))
 			{
-				model = "exp"
-				best_fit = best_fit
+				coef = coefficients(best_fit)
+				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + exp_domain_max*tanh(coef[4]))
+				err1 <- yy_org[1:length(yy_org)] - fit_pred
+				err1 <- sqrt(sum(err1^2)/length(yy_org))			
+			
+				
+				err3 <- 1.0e16
+				aic3 <- 1.0e16
+				if (!is.null(lm.fit))
+				{
+					coef = coefficients(lm.fit)
+					fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
+					err3 <- yy_org[1:length(yy_org)] - fit_pred3
+					err3 <- sqrt(sum(err3^2)/length(yy_org))			
+				}
+				
+				aic1 = aic_manual(yy_org, fit_pred, best_fit)
+				if (!is.null(lm.fit))
+				{
+					aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
+				}
+				print("AIC")
+				print(aic1)
+				print(aic3)
+			
+				if ( aic1 < aic3 )
+				{
+					model = "exp"
+					best_fit = best_fit
+				}else
+				{
+					model = "lm"
+					best_fit = NULL
+				}
 			}
 		}
 		
@@ -2261,14 +2352,15 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			
 			if ( model == "exp" )
 			{
-				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + coef[4])
+				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + exp_domain_max*tanh(coef[4]))
 				a_coef <- c(a_coef, coef[1])
 				b_coef <- c(b_coef, coef[2])
 				c_coef <- c(c_coef, coef[3])
 				d_coef <- c(d_coef, coef[4])
 				
 				noise_varience <- var(yy_org[1:length(yy_org)] - fit_pred)
-			}else
+			}
+			if ( model == "Gompertz" )
 			{
 				fit_pred <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx_org)))
 				a_coef2 <- c(a_coef2, coef[1])
@@ -2279,9 +2371,9 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				noise_varience2 <- var(yy_org[1:length(yy_org)] - fit_pred)
 			}
 			
-			plot(xx, yy, xlab = 'time', ylab = 'org')
-			par(new=T)
-			plot(xx, fit_pred, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
+			#plot(xx, yy, xlab = 'time', ylab = 'org')
+			#par(new=T)
+			#plot(xx, fit_pred, type = "l", xlab = 'time', ylab = 'fit', col = 'orange')
 		}
 		
 		if ( !is.null(fit))
@@ -2297,7 +2389,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 
 				if ( model == "exp" )
 				{
-					feature_param <<- set_param(rank, exp(coef[1]), exp(coef[2]), coef[3], coef[4], model )
+					feature_param <<- set_param(rank, exp(coef[1]), exp(coef[2]), coef[3], exp_domain_max*tanh(coef[4]), model )
 				}else
 				{
 					feature_param <<- set_param(rank, exp(coef[1]), exp(coef[2]), coef[3], exp(coef[4]), model )
@@ -2343,7 +2435,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				
 				if ( model == "exp" )
 				{
-					fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + coef[4])
+					fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + exp_domain_max*tanh(coef[4]))
 					err <- yy_org[1:length(yy_org)] - fit_pred
 					if ( is.null(residual_error))
 					{
@@ -2376,41 +2468,23 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 
 				if ( model == "exp" )
 				{
-					fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*x + coef[4])
+					fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*x + exp_domain_max*tanh(coef[4]))
 				}else
 				{
 					fit_pred <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*x)))
 				}									
-				fit_pred25 <- NULL
-				fit_pred75 <- NULL
-				fit_pred05 <- NULL
-				fit_pred95 <- NULL
+				fit_pred25 <- fit_pred
+				fit_pred75 <- fit_pred
+				fit_pred05 <- fit_pred
+				fit_pred95 <- fit_pred
 			}
 			err = 0
 
-			if ( T )
-			{
-				
-				fit_pred[is.na(fit_pred)] <- mean(fit_pred, na.rm = TRUE)
-				fit_pred25[is.na(fit_pred25)] <- mean(fit_pred25, na.rm = TRUE)
-				fit_pred75[is.na(fit_pred75)] <- mean(fit_pred75, na.rm = TRUE)
-				fit_pred05[is.na(fit_pred05)] <- mean(fit_pred05, na.rm = TRUE)
-				fit_pred95[is.na(fit_pred95)] <- mean(fit_pred95, na.rm = TRUE)
-
-				fit_pred[!is.finite(fit_pred)] <- 0
-				fit_pred25[!is.finite(fit_pred25)] <- 0
-				fit_pred75[!is.finite(fit_pred75)] <- 0
-				fit_pred05[!is.finite(fit_pred05)] <- 0
-				fit_pred95[!is.finite(fit_pred95)] <- 0
-
-				err = 0
-			}
 			if ( coef[1] < 0 )
 			{
 				#print(sprintf("coef[1]:%f < 0", coef[1]))
 				#err = 1
 			}
-			#if ( er > 0.1 ) err = 1
 			
 			if ( !is.null(reference) )
 			{
@@ -2427,64 +2501,15 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			}
 			print(sprintf("fit er:%f", er))
 			print(sprintf("fit err:%d", err))
-			#print("fit")
-			#print(err)
-			#print(head(fit_pred))
-			#print(head(fit_pred25))
-			#print(head(fit_pred75))
-			#print(head(fit_pred05))
-			#print(head(fit_pred95))
 			if ( err == 0 )
 			{
-				h1 = length(fit_pred25)
-				h2 = length(fit_pred75)
-				h3 = length(fit_pred05)
-				h4 = length(fit_pred95)
-				if ( h1 == 0 && h2 == 0 && h3 == 0 && h4 == 0 )
-				{
-					if (use_nls.lm)
-					{
-						fit_pred25 <- fit_pred
-						fit_pred75 <- fit_pred
-						fit_pred05 <- fit_pred
-						fit_pred95 <- fit_pred
-						h1 = length(fit_pred25)
-						h2 = length(fit_pred75)
-						h3 = length(fit_pred05)
-						h4 = length(fit_pred95)
-					}
-				}
-			}else
-			{
-				h1 = 0
-				h2 = 0
-				h3 = 0
-				h4 = 0
-			}
-			if ( !(length(x) == h1 && length(x) == h2 && length(x) == h3 && length(x) == h4 )|| err == 1)
-			{
-				fit = NULL
-				fit_pred25 <- NULL
-				fit_pred75 <- NULL
-				fit_pred05 <- NULL
-				fit_pred95 <- NULL
-				
-				fit_pred <- NULL
-			}else
-			{
+
 				fit_mode = model
 			}
 		}
 		
-		#x = c(1:length(y))
-		#plot(x=x, y=y, type="l", col=1)
-		#par(new=T)
-		#x = c((length(y)+1):(length(y)+h))
-		#fit_pred <-  coef[3] + coef[1]*exp(offset_c**coef[2]*x + fit_prm_e )
-		#plot(x=x, y=fit_pred, type="l", col=2)
-		#fit_pred
 		
-		if ( !is.null(lm.fit) && is.null(fit) )
+		if ( (!is.null(lm.fit) && is.null(fit)))
 		{
 			print(lm.fit)
 			print("lm.fit -------------------------")
@@ -2510,40 +2535,18 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				loup <- confint(lm.fit, level=0.5)
 				fit_pred25 <- loup[1,1] + loup[2,1]*x
 				fit_pred75 <- loup[1,2] + loup[2,2]*x
+				
 				loup <- confint(lm.fit, level=0.9)
-				#print(loup)
 				fit_pred05 <- loup[1,1] + loup[2,1]*x
 				fit_pred95 <- loup[1,2] + loup[2,2]*x
 				
-			
-				#xx = c(1:length(y))
-				#conf.interval <- predict(lm.fit, newdata = data.frame(x=xx), interval = 'confidence', level = 0.95)
-				#lm2.fit <- lm(conf.interval[,2] ~ xx)
-				#coef2 = coefficients(lm2.fit)
-
-				#fit_pred05 <- coef2[2]*x + coef2[1]
-				
-				#lm2.fit <- lm(conf.interval[,3] ~ xx)
-				#coef2 = coefficients(lm2.fit)
-				#fit_pred95 <- coef2[2]*x + coef2[1]
-
-				#conf.interval <- predict(lm.fit, newdata = data.frame(x=xx), interval = 'confidence', level = 0.5)
-				#lm2.fit <- lm(conf.interval[,2] ~ xx)
-				#coef2 = coefficients(lm2.fit)
-				#fit_pred25 <- coef2[2]*x + coef2[1]
-				
-				#lm2.fit <- lm(conf.interval[,3] ~ xx)
-				#coef2 = coefficients(lm2.fit)
-				#fit_pred75 <- coef2[2]*x + coef2[1]
 			},error = function(e)
 				{
 					print(e)
-					fit_pred25 <- NULL
-					fit_pred75 <- NULL
-					fit_pred05 <- NULL
-					fit_pred95 <- NULL
-					
-					fit_pred <- NULL
+					fit_pred25 <- fit_pred
+					fit_pred75 <- fit_pred
+					fit_pred05 <- fit_pred
+					fit_pred95 <- fit_pred
 				},
 				finally ={
 				},
@@ -2551,11 +2554,11 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			)
 
 			err = 0
-			if ( sum(is.na(fit_pred)) != 0 ) err = 1
-			if ( sum(is.na(fit_pred25)) != 0 ) err = 1
-			if ( sum(is.na(fit_pred75)) != 0 ) err = 1
-			if ( sum(is.na(fit_pred05)) != 0 ) err = 1
-			if ( sum(is.na(fit_pred95)) != 0 ) err = 1
+			if ( sum(!is.finite(fit_pred)) != 0 ) err = 1
+			if ( sum(!is.finite(fit_pred25)) != 0 ) err = 1
+			if ( sum(!is.finite(fit_pred75)) != 0 ) err = 1
+			if ( sum(!is.finite(fit_pred05)) != 0 ) err = 1
+			if ( sum(!is.finite(fit_pred95)) != 0 ) err = 1
 
 
 			if ( err == 0 && abs(err1[1]) > (ymax - ymin)*0.05 )
@@ -2568,18 +2571,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			{
 				print("lm.fit fit_pred## in NA")
 			}
-			#if ( coef[2] < 0 )
-			#{
-			#	print(sprintf("coef[1]:%f < 0", coef[2]))
-			#	err = 1
-			#}
 			
 			print(sprintf("lm.fit err:%d", err))
-			#print(length(fit_pred))
-			#print(length(fit_pred25))
-			#print(length(fit_pred75))
-			#print(length(fit_pred05))
-			#print(length(fit_pred95))
 			h1 = length(fit_pred25)
 			h2 = length(fit_pred75)
 			h3 = length(fit_pred05)
@@ -2596,11 +2589,26 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				fit_pred <- NULL
 			}else
 			{
-#				fit_mode = "lm"
-#				if ( null_model2 )
-#				{
-#					fit_mode = "lm_"
-#				}
+				feature_param <<- set_param(rank, coef[1], coef[2], 0, 0, "lm" )
+				rul = -1
+				t_scale = 0
+				if ( abs(coef[2]) > 1.0e-10 )
+				{
+					tmp <- (threshold - coef[1])/coef[2]
+					
+					if ( tmp > 0 )
+					{
+						t_scale = (length(yy_org) + h)
+						rul <- tmp
+					}
+				}
+
+				if ( rul > 0 )
+				{
+					feature_param <<- set_RUL(rank, rul, t_scale)
+				}
+							
+				fit_mode = "lm"
 			}
 		}
 		if ( !is.null(fit_pred) && length(x) == length(fit_pred))
@@ -2622,19 +2630,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 	{
 		residual_error = residual_error2
 	}
-	
-#	if ( down >= 4 )
-#	{
-#		if ( null_model1 || fit_mode == "exp")
-#		{
-#			fit_mode = "exp_"
-#		}
-#		if ( null_model2 || fit_mode == "lm")
-#		{
-#			fit_mode = "lm_"
-#		}
-#	}
-	
+		
 	print(sprintf("%d/%d %.3f", fit_success, fit_tray_count, fit_success/fit_tray_count))
 	return( list(fit_pred, fit_mode, residual_error))
 }

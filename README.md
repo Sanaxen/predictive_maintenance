@@ -172,67 +172,83 @@ Parts such as creating file lists from directories, processing files, and using 
 To run on non-Windows operating systems, OS-dependent parts must be modified.  
 
 ---
-### Exponential Degradation Mode
+### Exponential Degradation Model
 
-$` \Large y(t) = c + exp(\alpha)\ exp(exp(\beta)\cdot t+ d) `$  
+$ \Large y(t) = c + exp(\alpha)\ exp(exp(\beta)\cdot t+ s \cdot tanh(\delta)) $  
+s = Upper limit of exponential function domain that can be evaluated numerically  
 
-$` y(t) = c + a \cdot \exp(b \cdot t + d)`$  
+$a=\exp(\alpha),\quad b=\exp(\beta)\quad  d=s\cdot tanh(\delta)$    
+s = Upper limit of exponential function domain that can be evaluated numerically  
+  
+$ y(t) = c + a \cdot \exp(b \cdot t + d)$  
 
 for y(t) to be monotonically increasing as t increases, its derivative
 
-$` y'(t) = a \cdot b \cdot \exp(b \cdot t + d)`$  
-must always be positive. Since the exponential function $`exp(b \cdot t + d)`$  is always positive, the condition for monotonic increase is:
+$ y'(t) = a \cdot b \cdot \exp(b \cdot t + d)$  
+must always be positive. Since the exponential function $exp(b \cdot t + d)$  is always positive, the condition for monotonic increase is:
 
-$` a \neq 0\ and\ b \neq 0`$  
-$` a \cdot b > 0`$  
+$ a \neq 0\ and\ b \neq 0$  
+$ a \cdot b > 0$  
 
 In practice, it is common to assume \(a > 0\) and \(b > 0\).
 
-### Gompertz Degradation Mode  
+### Gompertz Degradation Model  
 
-$` \Large y(t) = c + exp(\delta) \cdot exp(\frac{exp(\alpha)}{exp(\beta)}\ (1-exp(-exp(\beta)\cdot t)) )`$  
+$ \Large y(t) = c + exp(\delta) \cdot exp(\frac{exp(\alpha)}{exp(\beta)}\ (1-exp(-exp(\beta)\cdot t)) )$  
 
-$`  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )`$  
+$a=\exp(\alpha),\quad b=\exp(\beta) \quad d=\exp(\delta)$   
 
-$` a > 0 \ and\  b > 0 \ and\  d > 0`$  
+$  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )$  
+
+$ a > 0 \ and\  b > 0 \ and\  d > 0$  
+
+### linear Degradation Model  
+$ \Large y(t) = a + b\cdot t $
+
 #### output file  
 wrk/[csv_file_name]feature_params.csv  
 
 |feature|	threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|unit| fit_start_time| model |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| ---| ---|
-|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time| time of unit|fit_start timestamp| "exp" or "Gompertz"|
+|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time| time of unit|fit_start timestamp| "exp" or "Gompertz" or "lm"|
 
-The model is dynamically selected.
+**fitting_solver** = "auto" model is dynamically selected.
 Which model is adopted is determined by comparing 
 AICs and adopting the model with the smaller AIC.  
 **AIC:Akaike's Information Criterion**
 
+**fitting_solver**="auto" or "exp" or "Gompertz"  
+
+Even if **fitting_solver** is not set to automatic, the linear model is automatically and dynamically selected if the linear model is a better fit.
+Therefore, a linear model cannot be specified for **fitting_solver**  
+
+---
 #### Exponential Degradation Mode
-$`a=\exp(\alpha),\quad b=\exp(\beta)`$    
 
 
-$` \Large y(t) = c + a\ exp(b*t+ d) `$  
+$ \Large y(t) = c + a\ exp(b\cdot t+ d) $  
 
 Scaling time axis and undetermined coefficientsEstimating a,b,c,d  
-$`y ={y_{1}, y_{2}, \cdots y_{n}}`$  
-$`t ={1, 2, \cdots n}`$  
-$`\acute{t} = t / (n + h)`$   
-$`t\_scale =  (n + h)`$ 
+$y ={y_{1}, y_{2}, \cdots y_{n}}$  
+$t ={1, 2, \cdots n}$  
+$\acute{t} = t / (n + h)$   
+$t\_scale =  (n + h)$ 
 
-$`\acute{RUL} =\Large \frac{ log(\frac{𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑 - c}{a})}{b} - d `$ 
+$\acute{RUL} =\Large \frac{ log(\frac{threshold - c}{a})}{b} - d $  
+$ threshold > c$ 
 
 #### Gompertz Degradation Mode  
-$`a=\exp(\alpha),\quad b=\exp(\beta) \quad d=\exp(\delta)`$    
-$` \Large  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )`$  
+ 
+$ \Large  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )$  
 
-$`  \acute{RUL} =  \Large \frac{-log(\frac{\frac{log(𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑)-c)}{d})}{\frac{a}{b}}-1 ) }{b}`$  
+$  \acute{RUL} =  \Large \frac{-log(\frac{\frac{log(threshold)-c)}{d})}{\frac{a}{b}}-1 ) }{b}$  
 
-$`  1 > \frac{\frac{log(𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑)-c)}{d})}{\frac{a}{b}}-1  > 0`$  
+$  1 > \frac{\frac{log(threshold)-c)}{d})}{\frac{a}{b}}-1  > 0$  
 
 ---
 Inverse scaling to the RUL obtained from the estimated model yields the correct RUL.  
 
-$`RUL = fit\_start\_index + \acute{RUL}  \cdot t\_scale  \cdot delta\_index`$  
+$RUL = fit\_start\_index + \acute{RUL}  \cdot t\_scale  \cdot delta\_index$  
 
 Since the input data is moving-average smoothed, the data interval is also expanded, and one line after moving-average smoothing is not one line of the actual input data.
 Therefore, it is necessary to apply delta_index to convert it to the number of rows for the input data.  
@@ -241,10 +257,10 @@ After this conversion process, the RUL is converted to the number of rows for th
 
 To match this to the actual time, it must be scaled to the time interval of the input data.  
 
-$`RUL = RUL \cdot delta\_time [time\ of\ unit]`$  
+$RUL = RUL \cdot delta\_time [time\ of\ unit]$  
 
 If the elapsed time from **fit_start_time** is **t**, RUL can be calculated as follows  
-$`RUL = RUL \cdot delta\_time [time\ of\ unit]  - t [time\ of\ unit]`$  
+$RUL = RUL \cdot delta\_time [time\ of\ unit]  - t [time\ of\ unit]$  
 
 
 ---  
