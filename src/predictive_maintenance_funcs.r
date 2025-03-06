@@ -2220,6 +2220,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			if ( min(aic1, aic2, aic3) == aic3 && min(err1, err2, err3) == err3 )
 			{
 				model = "lm"
+				best_fit = NULL
 			}else
 			{
 				if ( aic_r > 0 && aic_r > 0.9 )
