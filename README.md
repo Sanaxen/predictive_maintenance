@@ -245,6 +245,13 @@ $`  \acute{RUL} =  \Large \frac{-log(\frac{\frac{log(threshold)-c)}{d})}{\frac{a
 
 $`  1 > \frac{\frac{log(threshold)-c)}{d})}{\frac{a}{b}}-1  > 0`$  
 
+#### linear Degradation Model  
+$` \Large y(t) = a + b\cdot t `$   
+
+$`  \acute{RUL} =  \Large \frac{threshold-a}{b}`$  
+
+$` threshold > a \ and\  b > 0`$  
+
 ---
 Inverse scaling to the RUL obtained from the estimated model yields the correct RUL.  
 

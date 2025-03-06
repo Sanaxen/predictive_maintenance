@@ -74,8 +74,7 @@ rul_curve_plot <- function(index_number=-1)
 	#files_sorted
 
 	rul_csv <- paste("../", base_name,"_RUL.csv", sep="")
-	sink(rul_csv, split = TRUE)
-	cat("cycle, timestmp, unit, percent5, percent50, percent95\n")
+	cat("cycle, timestmp, unit, percent5, percent50, percent95\n", file=rul_csv)
 	# Process each file
 	
 	valid_unit <- ""
@@ -139,9 +138,8 @@ rul_curve_plot <- function(index_number=-1)
 				p95 <- split_result2[[1]][6]
 			}
 		}
-		cat(sprintf("%s,%s,%s,%s,%s,%s\n", cycle, timestmp, unit, p05, p50, p95))
+		cat(sprintf("%s,%s,%s,%s,%s,%s\n", cycle, timestmp, unit, p05, p50, p95), file=rul_csv, append = TRUE)
 	}
-	sink()
 
 	cur_rul_df <- read.csv(rul_csv, header = TRUE, stringsAsFactors = FALSE)
 	cur_rul_df$timestmp <- as.POSIXct(cur_rul_df$timestmp, tz="UTC", origin="2024-01-01")
@@ -166,7 +164,7 @@ rul_curve_plot <- function(index_number=-1)
 	cur_rul_df[cols_to_fill] <- lapply(cur_rul_df[cols_to_fill], function(x) {
 	  na.approx(x, na.rm = FALSE)
 	})
-	print(cur_rul_df)
+	#print(cur_rul_df)
 
 	cur_rul_df$percent5_timestmp <- cur_rul_df$timestmp
 	cur_rul_df$percent50_timestmp <- cur_rul_df$timestmp

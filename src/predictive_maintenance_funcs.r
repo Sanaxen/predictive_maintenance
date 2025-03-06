@@ -28,26 +28,27 @@ library(ggridges)
 
 library(crayon)
 #library(crayons)
+options(crayon.enabled = TRUE)
 
 freeram <- function(...) invisible(gc(...))
 
 warning1_text <- function( t )
 {
-	cat( white$bgGreen(t, "\r\n"))
+	cat( white$bgGreen(t, reset(),"\n"))
 }
 warning2_text <- function( t )
 {
-	cat( white$bgYellow(t, "\r\n"))
+	cat( white$bgYellow(t, reset(), "\n"))
 }
 
 yellow_text <- function( t )
 {
 	
-	cat( yellow(t, "\r\n"))
+	cat( yellow(t, reset(), "\n"))
 }
 green_text <- function( t )
 {
-	cat( green(t, "\r\n"))
+	cat( green(t, reset(), "\n"))
 }
 
 time_data_length <- function(length, length_unit="")
@@ -1768,26 +1769,7 @@ predict_plot <- function(predict, rank="")
 	return(plt)
 }
 
-rlnorm2 <- function(n, mean=1, sd=1) {
-  sdlog <- sqrt(log((sd/mean)^2 + 1))
-  meanlog <- log(mean) - (sdlog^2) / 2
-  rlnorm(n, meanlog = meanlog, sdlog = sdlog)
-}
-#data <- rlnorm2(10000, mean=5, sd=2)
-#hist(data)
-
-aic_manual <- function(y_obs, y_pred, fit)
-{
-	n <- length(y_obs) 
-	k <- length(coef(fit))
-	rss <- sum((y_obs - y_pred)^2)
-	sigma2_hat <- rss/n
-
-	logL <- - (n/2) * log(2 * pi * sigma2_hat) - (rss/(2 * sigma2_hat))
-	aic <- 2*k - 2*logL
-	
-	return(aic)
-} 
+source("../src/fitting_util.r")
 
 fit_tray_count <- 0
 fit_success <- 0
@@ -1809,6 +1791,10 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 	fited2 <- NULL
 	fit_pred2 <- NULL
 	
+	residual_error3 = NULL
+	fited3 <- NULL
+	fit_pred3 <- NULL
+
 	down = 0
 	for ( i in length(y):2)
 	{
@@ -1921,9 +1907,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 	   			break
 	   		}
 			
-	   		#if ( length(y) <= kk ) break
 			xx = c((lockback_max-kk+1):length(y))
-			#xx = log(xx)/log(h)
 			xx = c(1:length(xx))/(length(xx) + h)
 
 			yy = y[(lockback_max-kk+1):length(y)]
@@ -1987,105 +1971,25 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						}
 					}
 				
-					if ( use_nls.lm )
+					fit <- NULL
+					fit2 <- NULL
+					if ( fitting_solver == "auto" || fitting_solver == "exp" )
 					{
-						lm_pa <- runif(1,-0.001,1)
-						lm_pb <- runif(1,-0.001,1)
-						lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
-						lm_pd <- runif(1,-0.001,1)
-												
-						if ( length(a_coef) > 1 )
-						{
-							lm_pa <- rlnorm2(1, mean = mean(a_coef), sd = sd(a_coef))
-							lm_pb <- rnorm(n =1,mean = mean(b_coef), sd = sd(b_coef))
-							lm_pd <- rnorm(n =1,mean = 0, sd = sqrt(noise_varience)) - noise_varience/2
-						}
-						if ( kk > 50 )
-						{
-							lm_pa <- runif(1,-1,1)
-							lm_pb <- runif(1,-1,1)
-							lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
-							lm_pd <- runif(1,-1,1)
-							if ( length(a_coef) > 1 && kk < 80)
-							{
-								lm_pa <- rlnorm2(1, mean = mean(a_coef), sd = sd(a_coef))
-								lm_pb <- rnorm(n =1,mean = mean(b_coef), sd = sd(b_coef))
-								lm_pd <- rnorm(n =1,mean = 0, sd = sqrt(noise_varience)) - noise_varience/2
-							}
-						}
-						lm_pc = yy_org[1]- exp(lm_pa)*exp(exp(lm_pb)*xx_org[1] + exp_domain_max*tanh(lm_pd))
-
-						pred <- function(parS, xx) parS$c + exp(parS$a)*exp(exp(parS$b)*xx + exp_domain_max*tanh(parS$d))
-						resid <- function(p, observed, xx) observed - pred(p,xx)
-						parStart <- list(a=lm_pa, b=lm_pb, c=lm_pc, d=lm_pd)
-						
-						fit <- NULL
-						if ( fitting_solver == "auto" || fitting_solver == "exp" )
-						{
-							options(show.error.messages = FALSE)
-							fit <- try(nls.lm(par=parStart, fn=resid, observed=yy, xx=xx, 
-										control=nls.lm.control(maxiter=1024,maxfev=1000,nprint=0)), silent = FALSE)
-							if (class(fit)[1] == "try-error"||class(fit)[1] == "NULL")
-							{
-								fit = NULL
-							}
-							options(show.error.messages = T)
-						}
-						
-						lm_pa <- runif(1,-0.001,1)
-						lm_pb <- runif(1,-0.001,1)
-						lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
-						lm_pd <- runif(1,-0.001,1)
-
-						if ( length(a_coef2) > 1 )
-						{
-							lm_pa <- rlnorm2(1, mean = mean(a_coef2), sd = sd(a_coef2))
-							lm_pb <- rnorm(n =1,mean = mean(b_coef2), sd = sd(b_coef2))
-							lm_pd <- rnorm(n =1,mean = 0, sd = sqrt(noise_varience2)) - noise_varience2/2
-						}
-						if ( kk > 50 )
-						{
-							lm_pa <- runif(1,-1,1)
-							lm_pb <- runif(1,-1,1)
-							lm_pc <- yy[1] + runif(1,-0.0001,0.0001)
-							lm_pd <- runif(1,-1,1)
-							if ( length(a_coef2) > 1 && kk < 80)
-							{
-								lm_pa <- rlnorm2(1, mean = mean(a_coef2), sd = sd(a_coef2))
-								lm_pb <- rnorm(n =1,mean = mean(b_coef2), sd = sd(b_coef2))
-								lm_pd <- rnorm(n =1,mean = 0, sd = sqrt(noise_varience2)) - noise_varience2/2
-							}
-						}
-						lm_pc = yy_org[1]- exp(lm_pd)*exp(exp(lm_pa)/exp(lm_pb)*(1 - exp(-exp(lm_pb)*xx_org[1])))
-
-						pred <- function(parS, xx) parS$c + exp(parS$d)*exp(exp(parS$a)/exp(parS$b)*( 1- exp(-exp(parS$b)*xx)))
-						resid <- function(p, observed, xx) observed - pred(p,xx)
-						parStart <- list(a=lm_pa, b=lm_pb, c=lm_pc, d=lm_pd)
-						
-						fit2 <- NULL
-						if ( fitting_solver == "auto" || fitting_solver == "Gompertz" )
-						{
-							options(show.error.messages = FALSE)
-							fit2 <- try(nls.lm(par=parStart, fn=resid, observed=yy, xx=xx, 
-										control=nls.lm.control(maxiter=1024,maxfev=1000,nprint=0)), silent = FALSE)
-							if (class(fit2)[1] == "try-error"||class(fit2)[1] == "NULL")
-							{
-								fit2 = NULL
-							}
-							options(show.error.messages = T)
-						}
+						prm <- fitting_initial_valuse(kk, yy, a_coef, b_coef, c_coef, d_coef, noise_varience)
+						fit <- ExponentialDegradationModel(prm, xx,yy, xx_org[1], yy_org[1], exp_domain_max)
 					}
+					if ( fitting_solver == "auto" || fitting_solver == "Gompertz" )
+					{
+						prm <- fitting_initial_valuse(kk, yy, a_coef2, b_coef2, c_coef2, d_coef2, noise_varience2)
+						fit2 <- GompertzDegradationModel(prm, xx,yy, xx_org[1], yy_org[1])
+					}
+
+
 					if ( !is.null(fit))
 					{
-						coef = coefficients(fit)
-						fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + exp_domain_max*tanh(coef[4]))
+						fit_pred <-  evalExponentialDegradationModel(fit,xx_org, exp_domain_max)
 						
-												
-						w <- c(1:length(yy_org))/length(yy_org)
-						w <- ifelse( x < 0.001, 0.001, x)
-						w <- log(w)
-						w <- ( w - min(w))/(max(w) - min(w))
-						err <- sqrt(sum(((yy_org[1:length(yy_org)] - fit_pred)*w)^2)/length(yy_org))
+						err <- WeightedErrorEvaluation(yy_org, fit_pred, x)
 						
 						if ( sum(!is.finite(fit_pred))== 0 )
 						{
@@ -2097,30 +2001,14 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 							{
 								best_fit <- fit
 								err_min = err
-
-								fit_prm_e = e
-								if ( use_nls.lm )
-								{
-									fit_prm_e = coef[4]
-								}
-								fit_prm_sd = sd
-
-								fit_prm_be = b_
-								fit_prm_th = a_
 							}
 						}
 					}
 					if ( !is.null(fit2))
 					{
-						coef = coefficients(fit2)
-						fit_pred2 <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx_org)))
-						
-						w <- c(1:length(yy_org))/length(yy_org)
-						w <- ifelse( x < 0.001, 0.001, x)
-						w <- log(w)
-						w <- ( w - min(w))/(max(w) - min(w))
-						err <- sqrt(sum(((yy_org[1:length(yy_org)] - fit_pred2)*w)^2)/length(yy_org))
-						
+						fit_pred2 <-  evalGompertzDegradationModel(fit2, xx_org)
+						err <- WeightedErrorEvaluation(yy_org, fit_pred2, x)
+
 						if ( sum(!is.finite(fit_pred2))==0 )
 						{
 							if ( err_min_stpnt2 > abs(yy_org[1] - fit_pred2[1]))
@@ -2163,35 +2051,27 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		print("========================================================")
 		print("best_fit")
 		print(best_fit)
-		print("")
+		print("best_fit2")
 		print(best_fit2)
 		print("========================================================")
 		
 		if ( !is.null(best_fit)&&!is.null(best_fit2))
 		{
-			coef = coefficients(best_fit)
-			fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + exp_domain_max*tanh(coef[4]))
-			err1 <- yy_org[1:length(yy_org)] - fit_pred
-			err1 <- sqrt(sum(err1^2)/length(yy_org))			
+			fit_pred <- evalExponentialDegradationModel(fit, xx_org,exp_domain_max)
+			err1 <- ErrorEvaluation(yy_org, fit_pred)
 			
-			coef = coefficients(best_fit2)
-			fit_pred2 <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx_org)))
-			err2 <- yy_org[1:length(yy_org)] - fit_pred2
-			err2 <- sqrt(sum(err2^2)/length(yy_org))			
+			fit_pred2 <- evalGompertzDegradationModel(fit2, xx_org)
+			err2 <- ErrorEvaluation(yy_org, fit_pred2)
+
 			
 			err3 <- 1.0e16
 			aic3 <- 1.0e16
 			if (!is.null(lm.fit))
 			{
-				coef = coefficients(lm.fit)
 				fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
 				err3 <- yy_org[1:length(yy_org)] - fit_pred3
 				err3 <- sqrt(sum(err3^2)/length(yy_org))			
 			}	
-			#aic1 = AIC(best_fit)
-			#aic2 = AIC(best_fit2)
-			#print(aic1)
-			#print(aic2)
 
 			aic1 = aic_manual(yy_org, fit_pred, best_fit)
 			aic2 = aic_manual(yy_org, fit_pred2, best_fit2)
@@ -2199,10 +2079,11 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			{
 				aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
 			}
-			print("AIC")
-			print(aic1)
-			print(aic2)
-			print(aic3)
+
+			print("AIC & err")
+			print(sprintf("exp     :aic1:%f err1:%f", aic1, err1))
+			print(sprintf("Gompertz:aic2:%f err2:%f", aic2, err2))
+			print(sprintf("lm      :aic3:%f err3:%f", aic3, err3))
 			flush.console()
 			
 			aic_r = -1
@@ -2223,12 +2104,13 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				best_fit = NULL
 			}else
 			{
-				if ( aic_r > 0 && aic_r > 0.9 )
+				if ( aic_r > 0.9 )
 				{
 					if ( err2 < err1 )
 					{
 						model = "Gompertz"
 						best_fit = best_fit2
+						err_min = err_min2
 					}else
 					{
 						model = "exp"
@@ -2240,6 +2122,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					{
 						model = "Gompertz"
 						best_fit = best_fit2
+						err_min = err_min2
 					}else
 					{
 						model = "exp"
@@ -2251,19 +2134,15 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		{
 			if ( !is.null(fit2))
 			{
-				coef = coefficients(best_fit2)
-				fit_pred2 <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx_org)))
-				err2 <- yy_org[1:length(yy_org)] - fit_pred2
-				err2 <- sqrt(sum(err2^2)/length(yy_org))			
+				fit_pred2 <- evalGompertzDegradationModel(fit2, xx_org)
+				err2 <- ErrorEvaluation(yy_org, fit_pred2)
 				
 				err3 <- 1.0e16
 				aic3 <- 1.0e16
 				if (!is.null(lm.fit))
 				{
-					coef = coefficients(lm.fit)
 					fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
-					err3 <- yy_org[1:length(yy_org)] - fit_pred3
-					err3 <- sqrt(sum(err3^2)/length(yy_org))			
+					err3 <- ErrorEvaluation(yy_org, fit_pred3)
 				}
 								
 				aic2 = aic_manual(yy_org, fit_pred2, best_fit2)
@@ -2271,36 +2150,60 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				{
 					aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
 				}
-				print("AIC")
-				print(aic2)
-				print(aic3)
-				
-				if ( aic2 < aic3 )
+				print("AIC & err")
+				print(sprintf("Gompertz:aic2:%f err2:%f", aic2, err2))
+				print(sprintf("lm      :aic3:%f err3:%f", aic3, err3))
+
+				aic_r = -1
+				if ( aic2 < 0 && aic3 < 0 )
 				{
-					model = "Gompertz"
-					best_fit = best_fit2
+					aic_r = max(aic2,aic3)/min(aic2,aic3)
+				}
+				if ( aic2 > 0 && aic3 > 0 )
+				{
+					aic_r = min(aic2,aic3)/max(aic2,aic3)
+				}
+				cat("AICr:")
+				print(aic_r)
+
+				if ( aic_r > 0.9 )
+				{
+					if ( err2 < err3 )
+					{
+						model = "Gompertz"
+						best_fit = best_fit2
+						err_min = err_min2
+					}else
+					{
+						model = "lm"
+						best_fit = NULL
+					}
 				}else
 				{
-					model = "lm"
-					best_fit = NULL
+					if ( aic2 < aic3 )
+					{
+						model = "Gompertz"
+						best_fit = best_fit2
+						err_min = err_min2
+					}else
+					{
+						model = "lm"
+						best_fit = NULL
+					}
 				}
 			}
 			if ( !is.null(fit))
 			{
-				coef = coefficients(best_fit)
-				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx_org + exp_domain_max*tanh(coef[4]))
-				err1 <- yy_org[1:length(yy_org)] - fit_pred
-				err1 <- sqrt(sum(err1^2)/length(yy_org))			
+				fit_pred <- evalExponentialDegradationModel(fit, xx_org,exp_domain_max)
+				err1 <- ErrorEvaluation(yy_org, fit_pred)
 			
 				
 				err3 <- 1.0e16
 				aic3 <- 1.0e16
 				if (!is.null(lm.fit))
 				{
-					coef = coefficients(lm.fit)
 					fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
-					err3 <- yy_org[1:length(yy_org)] - fit_pred3
-					err3 <- sqrt(sum(err3^2)/length(yy_org))			
+					err3 <- ErrorEvaluation(yy_org, fit_pred3)
 				}
 				
 				aic1 = aic_manual(yy_org, fit_pred, best_fit)
@@ -2308,18 +2211,46 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				{
 					aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
 				}
-				print("AIC")
-				print(aic1)
-				print(aic3)
+				print("AIC & err")
+				print(sprintf("exp:aic1:%f err1:%f", aic1, err1))
+				print(sprintf("lm :aic3:%f err3:%f", aic3, err3))
 			
-				if ( aic1 < aic3 )
+				aic_r = -1
+				if ( aic1 < 0 && aic3 < 0 )
 				{
-					model = "exp"
-					best_fit = best_fit
+					aic_r = max(aic1,aic3)/min(aic1,aic3)
+				}
+				if ( aic1 > 0 && aic3 > 0 )
+				{
+					aic_r = min(aic1,aic3)/max(aic1,aic3)
+				}
+				cat("AICr:")
+				print(aic_r)
+
+				if ( aic_r > 0.9 )
+				{
+					if ( err1 < err3 )
+					{
+						model = "exp"
+						best_fit = best_fit
+						err_min = err_min
+					}else
+					{
+						model = "lm"
+						best_fit = NULL
+					}
 				}else
 				{
-					model = "lm"
-					best_fit = NULL
+					if ( aic1 < aic3 )
+					{
+						model = "exp"
+						best_fit = best_fit
+						err_min = err_min
+					}else
+					{
+						model = "lm"
+						best_fit = NULL
+					}
 				}
 			}
 		}
@@ -2334,7 +2265,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		
 		if ( is.null(fit))
 		{
-			print("fit error")
+			print("fit error or fit cancel")
 			#newx <- data.frame(x=x)
 			#conf.interval <- predict(lm.fit, newdata = newx, interval = 'confidence', level = 0.95)
 			
@@ -2353,7 +2284,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			
 			if ( model == "exp" )
 			{
-				fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + exp_domain_max*tanh(coef[4]))
+				fit_pred <- evalExponentialDegradationModel(fit, xx,exp_domain_max)
 				a_coef <- c(a_coef, coef[1])
 				b_coef <- c(b_coef, coef[2])
 				c_coef <- c(c_coef, coef[3])
@@ -2363,7 +2294,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			}
 			if ( model == "Gompertz" )
 			{
-				fit_pred <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx_org)))
+				fit_pred <- evalGompertzDegradationModel(fit, xx)
 				a_coef2 <- c(a_coef2, coef[1])
 				b_coef2 <- c(b_coef2, coef[2])
 				c_coef2 <- c(c_coef2, coef[3])
@@ -2436,7 +2367,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				
 				if ( model == "exp" )
 				{
-					fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*xx + exp_domain_max*tanh(coef[4]))
+					fit_pred <- evalExponentialDegradationModel(fit, xx,exp_domain_max)
 					err <- yy_org[1:length(yy_org)] - fit_pred
 					if ( is.null(residual_error))
 					{
@@ -2447,7 +2378,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					}
 				}else
 				{
-					fit_pred <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*xx)))
+					fit_pred <- evalGompertzDegradationModel(fit, xx)
 					err <- yy_org[1:length(yy_org)] - fit_pred
 					if ( is.null(residual_error2))
 					{
@@ -2461,18 +2392,14 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				er <- sqrt(sum(err^2)/length(yy_org))
 				print(sprintf("er:%f", er))
 				
-				#x = c(0:(h-1))/length(xx) + 1
-				#x = c((length(xx)+1):(length(xx)+h))/(length(xx) + h)
 				x = c(1:(length(xx)+h))/(length(xx) + h)
-				#x = log(x)/log(h)
-				#x = xx/(length(y)+h)
 
 				if ( model == "exp" )
 				{
-					fit_pred <-  coef[3] + exp(coef[1])*exp(exp(coef[2])*x + exp_domain_max*tanh(coef[4]))
+					fit_pred <- evalExponentialDegradationModel(fit, x,exp_domain_max)
 				}else
 				{
-					fit_pred <-  coef[3] + exp(coef[4])*exp(exp(coef[1])/exp(coef[2])*(1 - exp(-exp(coef[2])*x)))
+					fit_pred <- evalGompertzDegradationModel(fit, x)
 				}									
 				fit_pred25 <- fit_pred
 				fit_pred75 <- fit_pred
@@ -2515,17 +2442,16 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			print(lm.fit)
 			print("lm.fit -------------------------")
 			coef = coefficients(lm.fit)
-			#x = c((length(y)+1):(length(y)+h))
 			x = c(1:(length(y)))
 			
 			fit_pred <- coef[2]*x + coef[1]
-			err1 <- y[1:length(y)] - fit_pred
-			if ( is.null(residual_error))
+			err1 <- ErrorEvaluation(y, fit_pred)
+			if ( is.null(residual_error3))
 			{
-				residual_error = c(err1)
+				residual_error3 = c(err1)
 			}else
 			{
-				residual_error = c(residual_error, err1)
+				residual_error3 = c(residual_error3, err1)
 			}
 
 			x = c(1:(length(y)+h))
@@ -2620,6 +2546,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						 l05=c(fit_pred05),
 						 u95=c(fit_pred95)
 						 )
+			print("fit_pred")
+			print(head(fit_pred))
 		}else
 		{
 			fit_pred <- NULL
@@ -2630,6 +2558,10 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 	if ( fit_mode == "Gompertz" )
 	{
 		residual_error = residual_error2
+	}
+	if ( fit_mode == "lm" )
+	{
+		residual_error = residual_error3
 	}
 		
 	print(sprintf("%d/%d %.3f", fit_success, fit_tray_count, fit_success/fit_tray_count))
@@ -4702,21 +4634,20 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			}
 		}
 		rul_info = sprintf("rul_info-%06d.txt", index_number)
-		sink(file = paste(putpng_path, rul_info, sep=""))
+		rul_info_file = paste(putpng_path, rul_info, sep="")
 
-		cat(sprintf("%d,%s\n", index_number,as.character(current_time)))
+		cat(sprintf("%d,%s\n", index_number,as.character(current_time)),file = rul_info_file)
 		if ( failure_time_set )
 		{
-			cat(failure_time_str_s[2])
-			cat("\n")
-			cat(failure_time50p_str_s[2])
-			cat("\n")
+			cat(failure_time_str_s[2],file = rul_info_file, append = TRUE)
+			cat("\n",file = rul_info_file, append = TRUE)
+			cat(failure_time50p_str_s[2],file = rul_info_file, append = TRUE)
+			cat("\n",file = rul_info_file, append = TRUE)
 		}else
 		{
-			cat("------------------------\n")
-			cat("------------------------\n")
+			cat("------------------------\n",file = rul_info_file, append = TRUE)
+			cat("------------------------\n",file = rul_info_file, append = TRUE)
 		}
-		sink()
 		if ( !exists("rul_curve_plot", mode = "function") )
 		{
 			curdir = getwd()

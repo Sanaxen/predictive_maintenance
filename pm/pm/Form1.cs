@@ -1272,6 +1272,14 @@ namespace pm
             listBox2.Items.Add("spectral_std");
             listBox2.Items.Add("spectral_skewness");
             listBox2.Items.Add("spectral_kurtosis");
+
+            listBox2.Items.Add("principal_component1");
+            listBox2.Items.Add("principal_component2");
+            listBox2.Items.Add("SKMean");
+            listBox2.Items.Add("SKStd");
+            listBox2.Items.Add("SKSkewness");
+            listBox2.Items.Add("SKKurtosis");
+            //
             listBox2.Items.Add("mahalanobis");
 
         }
