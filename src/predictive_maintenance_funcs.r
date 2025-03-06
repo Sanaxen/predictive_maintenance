@@ -2098,43 +2098,36 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			cat("AICr:")
 			print(aic_r)
 			
-			if ( min(aic1, aic2, aic3) == aic3 && min(err1, err2, err3) == err3 )
+			if ( aic_r > 0.9 )
 			{
-				model = "lm"
-				best_fit = NULL
-			}else
-			{
-				if ( aic_r > 0.9 )
+				if ( err2 < err1 )
 				{
-					if ( err2 < err1 )
-					{
-						model = "Gompertz"
-						best_fit = best_fit2
-						err_min = err_min2
-					}else
-					{
-						model = "exp"
-						best_fit = best_fit
-					}
+					model = "Gompertz"
+					best_fit = best_fit2
+					err_min = err_min2
 				}else
 				{
-					if ( aic2 < aic1 )
-					{
-						model = "Gompertz"
-						best_fit = best_fit2
-						err_min = err_min2
-					}else
-					{
-						model = "exp"
-						best_fit = best_fit
-					}
+					model = "exp"
+					best_fit = best_fit
+				}
+			}else
+			{
+				if ( aic2 < aic1 )
+				{
+					model = "Gompertz"
+					best_fit = best_fit2
+					err_min = err_min2
+				}else
+				{
+					model = "exp"
+					best_fit = best_fit
 				}
 			}
 		}else
 		{
-			if ( !is.null(fit2))
+			if ( !is.null(best_fit2))
 			{
-				fit_pred2 <- evalGompertzDegradationModel(fit2, xx_org)
+				fit_pred2 <- evalGompertzDegradationModel(best_fit2, xx_org)
 				err2 <- ErrorEvaluation(yy_org, fit_pred2)
 				
 				err3 <- 1.0e16
@@ -2166,35 +2159,13 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				cat("AICr:")
 				print(aic_r)
 
-				if ( aic_r > 0.9 )
-				{
-					if ( err2 < err3 )
-					{
-						model = "Gompertz"
-						best_fit = best_fit2
-						err_min = err_min2
-					}else
-					{
-						model = "lm"
-						best_fit = NULL
-					}
-				}else
-				{
-					if ( aic2 < aic3 )
-					{
-						model = "Gompertz"
-						best_fit = best_fit2
-						err_min = err_min2
-					}else
-					{
-						model = "lm"
-						best_fit = NULL
-					}
-				}
+				model = "Gompertz"
+				best_fit = best_fit2
+				err_min = err_min2
 			}
-			if ( !is.null(fit))
+			if ( !is.null(best_fit))
 			{
-				fit_pred <- evalExponentialDegradationModel(fit, xx_org,exp_domain_max)
+				fit_pred <- evalExponentialDegradationModel(best_fit, xx_org,exp_domain_max)
 				err1 <- ErrorEvaluation(yy_org, fit_pred)
 			
 				
@@ -2227,31 +2198,10 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				cat("AICr:")
 				print(aic_r)
 
-				if ( aic_r > 0.9 )
-				{
-					if ( err1 < err3 )
-					{
-						model = "exp"
-						best_fit = best_fit
-						err_min = err_min
-					}else
-					{
-						model = "lm"
-						best_fit = NULL
-					}
-				}else
-				{
-					if ( aic1 < aic3 )
-					{
-						model = "exp"
-						best_fit = best_fit
-						err_min = err_min
-					}else
-					{
-						model = "lm"
-						best_fit = NULL
-					}
-				}
+
+				model = "exp"
+				best_fit = best_fit
+				err_min = err_min
 			}
 		}
 		
