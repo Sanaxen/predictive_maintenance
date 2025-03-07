@@ -1,4 +1,7 @@
 # predictive_maintenance  
+
+C# Windows GUI application  
+---
 <div align="center">
 <img src="./md/images/logo.png" width="80%">
 </div>  
@@ -226,6 +229,33 @@ Since time-series forecasting models such as arima are always calculated at the 
 for reference purposes, there is no need to specify the application of time-series forecasting models.  
 Therefore, a linear model cannot be specified for fitting_solver.  
 
+#### note  
+arima, auto.arima, prophet, and ets can be selected for time series forecasting, 
+but currently the selection is ignored and ets (Exponential Smoothing State Space Model (ETS)) is applied.  
+
+$` \Large *`$  Currently, “arima” is displayed on the graph.  
+
+initial_pm <- function(sigin_arg)  
+''
+
+	#Predictive Model Selection
+	use_auto_arima <<- F
+	use_arima <<- F
+	use_ets <<- F
+	use_plophet <<- F  
+''  
+
+You need to comment out this part to make it work.
+However, it is not clear if it will work correctly as it has not been fully tested.  
+
+''
+
+	#Predictive Model Selection
+	#use_auto_arima <<- F
+	#use_arima <<- F
+	#use_ets <<- F
+	#use_plophet <<- F  
+''
 ---
 #### Exponential Degradation Mode
 
