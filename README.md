@@ -219,8 +219,12 @@ AICs and adopting the model with the smaller AIC.
 
 **fitting_solver**="auto" or "exp" or "Gompertz"  
 
-Even if **fitting_solver** is not set to automatic, the linear model is automatically and dynamically selected if the linear model is a better fit.
-Therefore, a linear model cannot be specified for **fitting_solver**  
+If the specified model cannot be applied, a linear model is automatically and dynamically selected,
+ but if b < 0, no linear model is selected.   
+ In that case, only a time series forecasting model such as arima is applied.  
+Since time-series forecasting models such as arima are always calculated at the same time 
+for reference purposes, there is no need to specify the application of time-series forecasting models.  
+Therefore, a linear model cannot be specified for fitting_solver.  
 
 ---
 #### Exponential Degradation Mode

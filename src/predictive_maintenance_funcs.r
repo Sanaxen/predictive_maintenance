@@ -2443,10 +2443,14 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				print(sprintf("abs(err1[1]):%f (ymax - ymin)*0.05:%f  ymax:%f ymin:%f", abs(err1[1]), (ymax - ymin)*0.05, ymax, ymin))
 				null_model2 = TRUE
 			}
-			print("lm.fit")
 			if ( err == 1 )
 			{
 				print("lm.fit fit_pred## in NA")
+			}
+			if ( coef[2] < 0 )
+			{
+				print(sprintf("grad[%f] < 0", coef[2]))
+				err = 1
 			}
 			
 			print(sprintf("lm.fit err:%d", err))
