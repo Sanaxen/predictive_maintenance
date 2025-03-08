@@ -1492,7 +1492,7 @@ namespace pm
             cmd += "use_auto_arima = " + (radioButton1.Checked ? "TRUE" : "FALSE") + "\r\n";
             cmd += "use_arima = " + (radioButton2.Checked ? "TRUE" : "FALSE") + "\r\n";
             cmd += "use_ets = " + (radioButton3.Checked ? "TRUE" : "FALSE") + "\r\n";
-            cmd += "use_plophet = " + (radioButton4.Checked ? "TRUE" : "FALSE") + "\r\n";
+            cmd += "use_prophet = " + (radioButton4.Checked ? "TRUE" : "FALSE") + "\r\n";
             cmd += "\r\n";
             cmd += "\r\n";
             cmd += "#When data including anomalies can be input=TRUE\r\n";
@@ -2610,6 +2610,17 @@ namespace pm
                 imagePictureBox6 = base_name0 + "_input.png";
                 htmlPictureBox6 = base_name0 + "_input.html";
             }
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            button6.Text = "!Monitor!";
+            timer1.Enabled = false;
+            timer1.Stop();
+
+            button6.Text = "Monitor stop";
+            timer1.Enabled = true;
+            timer1.Start();
         }
     }
 }
