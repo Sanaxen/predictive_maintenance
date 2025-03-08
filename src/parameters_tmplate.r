@@ -87,7 +87,7 @@ past = NULL
 use_auto_arima = F
 use_arima = T
 use_ets = F
-use_plophet = F
+use_prophet = F
 
 
 #If data containing anomalies can be input = TRUE

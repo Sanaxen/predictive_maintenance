@@ -1633,7 +1633,7 @@ predict_forecast <- function(gfm2, h=600, rank="", train_num = 20, feature_smoot
 	threshold = get_threshold(rank)
 	ymax = get_ymax(rank)
 	
-	if ( use_plophet )
+	if ( use_prophet )
 	{
 		
 		library(prophet)
@@ -1674,30 +1674,55 @@ predict_forecast <- function(gfm2, h=600, rank="", train_num = 20, feature_smoot
             interval.width = 0.80,
             uncertainty.samples = 1000,
 			#fit=FALSE
-		)
+		), silent = FALSE)
+		#print(class(model))
+		if (class(model)[1] == "try-error") 
+		{
+			model <- NULL
+		}
 		#model <-fit.prophet(model, pf)
 
-		future = make_future_dataframe(model,h, freq ="day")
-		future$cap <- threshold*1.25
-		future$floor <- 0
+		#print(model)
+		if (!is.null(model))
+		{
+			future = make_future_dataframe(model,h, freq ="day")
+			future$cap <- threshold*1.25
+			future$floor <- 0
 
-		forecast = predict(model, future, growth = growth)
-		
-		
-		#offst =  pf[,"y"][length(pf$y)] - forecast[,"yhat"][length(pf$y)]
+			forecast = predict(model, future, growth = growth)
+			#print(forecast)
+			
+			
+			#offst =  pf[,"y"][length(pf$y)] - forecast[,"yhat"][length(pf$y)]
 
-		#forecast[,"yhat"] = forecast[,"yhat"] + offst
-		#forecast[,"yhat_lower"] = forecast[,"yhat_lower"] +  offst
-		#forecast[,"yhat_upper"] = forecast[,"yhat_upper"] +  offst
-		#plot(model, forecast)
+			#forecast[,"yhat"] = forecast[,"yhat"] + offst
+			#forecast[,"yhat_lower"] = forecast[,"yhat_lower"] +  offst
+			#forecast[,"yhat_upper"] = forecast[,"yhat_upper"] +  offst
+			#plot(model, forecast)
+			
+			fcst_model = "prophet"
+		}else
+		{
+			print("prophet model error.")
+		}
 	}
 	if ( use_auto_arima )
 	{
-		model <- auto.arima(xt,ic="aic",trace=T,stepwise=T, 
+		model <- try(auto.arima(xt,ic="aic",trace=T,stepwise=T, 
 						approximation=F,allowmean=F,allowdrift=F, 
 						parallel=F, num.cores = 1,
 						max.p=3,max.q=3,max.order=5,max.d=2,max.D=1,
-						start.p = 2,start.q = 2,start.P = 1,start.Q = 1,seasonal=F)
+						start.p = 2,start.q = 2,start.P = 1,start.Q = 1,seasonal=F), silent = FALSE)
+		if (class(model)[1] == "try-error") 
+		{
+			model <- NULL
+			print("auto.arima error.")
+		}
+		
+		if (!is.null(model))
+		{
+			fcst_model = "auto.arima"
+		}
 						
 	}
 	if (use_arima )
@@ -1707,18 +1732,27 @@ predict_forecast <- function(gfm2, h=600, rank="", train_num = 20, feature_smoot
 				model <- arima(xt, order=c(min(15,abs(train_num)-1),0,1))
 			} , error = function(e) {
 				model = NULL
+				print("arima error.")
 			}
 		)		
+		if (!is.null(model))
+		{
+			fcst_model = "arima"
+		}
 	}
 	if ( use_ets || is.null(model))
 	{
 		model <- ets(xt, ic='aic', damped=T, allow.multiplicative.trend=T)					
+		if (!is.null(model))
+		{
+			fcst_model = "ets"
+		}
 	}
 	#print("model")
 	#print(model)
 	
 	predict_ <- NULL
-	if ( use_plophet )
+	if ( use_prophet && fcst_model=="prophet")
 	{
 		#predict <- data.frame(forecast=forecast$trend, h95=forecast$yhat_upper, l95=forecast$yhat_lower)
 		predict <- data.frame(forecast=forecast$yhat, h95=forecast$yhat_upper, l95=forecast$yhat_lower)
@@ -1746,7 +1780,7 @@ predict_plot <- function(predict, rank="")
 	threshold = get_threshold(rank)
 	ymax = get_ymax(rank)
 
-	if ( use_plophet )
+	if ( use_prophet )
 	{
 		plt <- ggplot(predict) +
 		  geom_line(mapping = aes_string(x = "time_index", y = "forecast")) +
@@ -3453,6 +3487,19 @@ if(T)
 		#feature_param
 	}
 	
+	#cat("pred:")
+	#print(str(pred))
+	if (is.null(pred$l75)||use_prophet)
+	{
+		pred$l75 <- pred$l95
+		pred$l50 <- pred$l95
+		pred$l25 <- pred$l95
+		pred$l05 <- pred$l95
+		pred$h75 <- pred$h95
+		pred$h50 <- pred$h95
+		pred$h25 <- pred$h95
+		pred$h05 <- pred$h95
+	}
 	pred$forecast <- ifelse(pred$forecast> threshold+abs(ymax-ymin)*0.01,threshold+abs(ymax-ymin)*0.01,pred$forecast)
 	pred$l95 <- ifelse(pred$l95> threshold+abs(ymax-ymin)*0.01,threshold+abs(ymax-ymin)*0.01,pred$l95)
 	pred$l75 <- ifelse(pred$l75> threshold+abs(ymax-ymin)*0.01,threshold+abs(ymax-ymin)*0.01,pred$l75)
@@ -3490,7 +3537,7 @@ if(T)
 		fill_col <- c("#6875B1","#A0A5C7", "#CBCCD9", "#E0E0E1")
 	}
 	
-	if (!use_plophet )
+	if (!use_prophet )
 	{
 		plt2 <- plt2 +
 		geom_line(data=pred_tmp, mapping = aes_string(x = "time_index", y = "forecast")) +
@@ -3644,7 +3691,7 @@ initial_pm <- function(sigin_arg)
 	use_auto_arima <<- F
 	use_arima <<- F
 	use_ets <<- F
-	use_plophet <<- F
+	use_prophet <<- F
 
 	#Features to be tracked
 	tracking_feature <<- c()
