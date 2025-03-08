@@ -6,7 +6,21 @@ C# Windows GUI application
 <img src="./md/images/logo.png" width="80%">
 </div>  
 
-# milling cutter(tool wear (flank wear).)  
+## exsamples  
+
+-  milling cutter(tool wear (flank wear))  
+	- milling cutter(tool wear (flank wear)) 1 
+	- milling cutter(tool wear (flank wear)) 2  
+-  Battery Research Data 
+-  NASA Turbofan Jet Engine Data Set  
+	-  NASA_Turbofan_Jet_Engine_Data_train_FD001_Uint1  
+	-  NASA_Turbofan_Jet_Engine_Data_train_FD004_Uint1 
+-  WindTurbineHighSpeedBearingPrognosis-Data  
+
+
+---  
+
+# milling cutter(tool wear (flank wear))  
 
 <div align="center"> 
 <img src="./dataset/miiling-cutter.png" width="55%">  
@@ -34,7 +48,7 @@ Therefore, the simulation of the RUL estimation below may be unrelated to the cu
 
 - Time stamp items added as appropriate  
 
-## milling cutter(tool wear (flank wear).) 1
+## milling cutter(tool wear (flank wear)) 1
 <img src="./dataset/miiling/image.gif">  
 
 ### remaining useful life (RUL)  
@@ -51,7 +65,7 @@ Although the simulation of RUL estimation predicts tool wear conditions,
   in the same way as when this data set was created.  
 Therefore, the following example shows a RUL estimation simulation without tool wear values (column VB).  
 
-## milling cutter(tool wear (flank wear).) 2 
+## milling cutter(tool wear (flank wear)) 2 
 <img src="./dataset/miiling2/image.gif">  
 
 ### remaining useful life (RUL)  
