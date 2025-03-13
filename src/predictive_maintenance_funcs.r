@@ -3855,7 +3855,10 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		print(sprintf("%d current_time:%s dt:%f %s", i, current_time, time_diff, unit_of_time))
 
 		delta_time <<- time_diff <- difftime(current_time , df2[(nrow(df2)-1), timeStamp])
-		
+		if (delta_time == 0 )
+		{
+			delta_time <<- time_diff <- difftime(df2[(nrow(df2)-1), timeStamp] , df2[(nrow(df2)-2), timeStamp])
+		}
 		#
 		#if ( startup_data_frame )
 		if ( FALSE )
