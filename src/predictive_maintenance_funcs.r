@@ -1651,7 +1651,7 @@ predict_forecast <- function(gfm2, h=600, rank="", train_num = 20, feature_smoot
 		growth = "logistic"
 		#growth="linear"	
 		
-		model <- prophet(
+		model <- try(prophet(
 			pf,
             growth = growth,
             changepoints = NULL,
@@ -1672,8 +1672,7 @@ predict_forecast <- function(gfm2, h=600, rank="", train_num = 20, feature_smoot
             holidays.prior.scale = 10,
             mcmc.samples = 0,
             interval.width = 0.80,
-            uncertainty.samples = 1000,
-			#fit=FALSE
+            uncertainty.samples = 1000
 		), silent = FALSE)
 		#print(class(model))
 		if (class(model)[1] == "try-error") 
