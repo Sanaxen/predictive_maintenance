@@ -65,6 +65,9 @@ checkBox4,FALSE
 radioButton1,FALSE
 radioButton2,TRUE
 radioButton3,FALSE
+radioButton5,FALSE
+radioButton7,TRUE
+radioButton8,FALSE
 imagePictureBox1,
 imagePictureBox2,
 imagePictureBox3,

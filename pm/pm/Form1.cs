@@ -286,8 +286,10 @@ namespace pm
                     sw.Write("radioButton2," + (radioButton2.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton3," + (radioButton3.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton5," + (radioButton5.Checked ? "TRUE" : "FALSE") + "\n");
+                    sw.Write("radioButton6," + (radioButton6.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton7," + (radioButton7.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton8," + (radioButton8.Checked ? "TRUE" : "FALSE") + "\n");
+                    sw.Write("radioButton9," + (radioButton9.Checked ? "TRUE" : "FALSE") + "\n");
 
                     sw.Write("imagePictureBox1," + imagePictureBox1 + "\n");
                     sw.Write("imagePictureBox2," + imagePictureBox2 + "\n");
@@ -803,6 +805,11 @@ namespace pm
                             radioButton5.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
                             continue;
                         }
+                        if (ss[0].IndexOf("radioButton6") >= 0)
+                        {
+                            radioButton6.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
+                            continue;
+                        }
                         if (ss[0].IndexOf("radioButton7") >= 0)
                         {
                             radioButton7.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
@@ -811,6 +818,11 @@ namespace pm
                         if (ss[0].IndexOf("radioButton8") >= 0)
                         {
                             radioButton8.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
+                            continue;
+                        }
+                        if (ss[0].IndexOf("radioButton9") >= 0)
+                        {
+                            radioButton9.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
                             continue;
                         }
 
@@ -1813,11 +1825,13 @@ namespace pm
             cmd += "cd %~dp0\r\n";
             cmd += "\r\n";
             cmd += "mkdir images\\RUL\r\n";
+            cmd += "mkdir images\\Detect\r\n";
             cmd += "del /Q images\\*.txt\r\n";
             cmd += "del /Q images\\*.png\r\n";
             cmd += "del /Q images\\*.r\r\n";
             cmd += "del /Q images\\debug\\*.png\r\n";
             cmd += "del /Q images\\RUL\\*.png\r\n";
+            cmd += "del /Q images\\Detect\\*.png\r\n";
             cmd += "\r\n";
             cmd += "\"%R_INSTALL_PATH%\\bin\\x64\\Rscript.exe\" --vanilla %test% "
                     + " " + "args.csv"  + "\r\n";
@@ -1911,7 +1925,18 @@ namespace pm
         }
         public void GetImages_()
         {
-            if ( checkBox6.Checked)
+            if (radioButton9.Checked)
+            {
+                imageFiles = Directory
+                  .GetFiles(work_dir + "\\..\\images\\Detect", "*.png", SearchOption.TopDirectoryOnly)
+                  .Where(filePath => Path.GetFileName(filePath) != ".DS_Store")
+                  .OrderBy(filePath => File.GetLastWriteTime(filePath).Date)
+                  .ThenBy(filePath => File.GetLastWriteTime(filePath).TimeOfDay)
+                  .ToList();
+
+                return;
+            }
+            if (radioButton6.Checked)
             {
                 imageFiles = Directory
                   .GetFiles(work_dir + "\\..\\images\\RUL", "*.png", SearchOption.TopDirectoryOnly)
@@ -2613,6 +2638,26 @@ namespace pm
         }
 
         private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        {
+            button6.Text = "!Monitor!";
+            timer1.Enabled = false;
+            timer1.Stop();
+
+            button6.Text = "Monitor stop";
+            timer1.Enabled = true;
+            timer1.Start();
+        }
+
+        private void radioButton9_CheckedChanged(object sender, EventArgs e)
         {
             button6.Text = "!Monitor!";
             timer1.Enabled = false;

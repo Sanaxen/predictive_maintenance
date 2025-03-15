@@ -388,8 +388,8 @@ Detection_precursor_phenomena_train <- function(df, corr_threshold=0.6, scorTopN
 		initial_data$maintenance <- NULL
 	}
 	initial_data$time_index <- NULL
-	cat("initial_data")
-	print(str(initial_data))
+	#cat("initial_data")
+	#print(str(initial_data))
 
 	selected_pairs <- NULL
 	mean_base <- NULL
@@ -421,9 +421,9 @@ Detection_precursor_phenomena_train <- function(df, corr_threshold=0.6, scorTopN
 	prm = c(mean_base,sd_base,median_base,mad_base)
 	#print(prm)
 	
-	cat("ncol(sensor_data)")
-	print(ncol(sensor_data))
-	if ( ncol(sensor_data)> 1)
+	#cat("ncol(initial_data)")
+	#print(ncol(initial_data))
+	if ( ncol(initial_data)> 1)
 	{
 		high_corr_pairs_lst <- get_high_corr_pairs(initial_data, corr_threshold, method)
 		high_corr_pairs <- high_corr_pairs_lst[[1]]
@@ -549,6 +549,7 @@ Detection_precursor_phenomena_test <- function(df, dpp_model, percent=0.9, metho
 	
 
 	plots <- list()
+	num_plt <- 0
 	if ( !is.null(selected_pairs) && nrow(selected_pairs) >= 1 )
 	{
 
@@ -681,6 +682,7 @@ Detection_precursor_phenomena_test <- function(df, dpp_model, percent=0.9, metho
 				  theme_minimal()
 			}
 			plots[[i]] <- plt
+			num_plt <- num_plt + 1
 		}
 
 							
@@ -766,18 +768,30 @@ Detection_precursor_phenomena_test <- function(df, dpp_model, percent=0.9, metho
 		  theme_minimal()
 		  
 		plt <- gridExtra::grid.arrange(grobs=list(plt), nrow=nrow(1))
+		num_plt <- num_plt + 1
 		#plt
 		  
 	}
 	print("====== Detection_precursor_phenomena_test end =======")
 	
-	return( list(plt, plots) )
+	return( list(plt, plots, num_plt) )
 }
 
 Detection_precursor_phenomena <- function(df, dpp_model=NULL,
 			corr_threshold=0.6, scorTopN=4, percent=c(0.75, 0.9), method="spearman")
 {
 	#print(method)
+	nrow_limit_max <- 1000000
+	
+	n <- nrow(df)
+	if ( n > nrow_limit_max )
+	{
+		interval <- floor(n / nrow_limit_max)
+		sampled_data <- df[seq(1, n, by = interval), ]
+		sampled_data <- sampled_data[1:nrow_limit_max, ]
+		df <- sampled_data
+	}
+	
 	if (is.null(dpp_model))
 	{
 		dpp_model <- Detection_precursor_phenomena_train(df, corr_threshold, scorTopN, method)
@@ -860,6 +874,7 @@ TestFuc <- function(dataset, timestamp, index_number=0)
 
 			plt <- dpp[[1]]
 			dpp_model <- dpp[[2]]
+			num_plt <- dpp[[1]][[3]]
 
 			plt[[1]]
 			
@@ -869,7 +884,7 @@ TestFuc <- function(dataset, timestamp, index_number=0)
 			#print(detect_putpng_path)
 			index_number = index_number
 			detect_png <- sprintf("detection_%06d.png", index_number)
-			ggsave(file = paste(detect_putpng_path, detect_png, sep=""), plot = plt[[1]], dpi = 130, width = 10, height = scorTopN*1.4)
+			ggsave(file = paste(detect_putpng_path, detect_png, sep=""), plot = plt[[1]], dpi = 130, width = 10, height = num_plt*1.5)
 			
 		}
 	}

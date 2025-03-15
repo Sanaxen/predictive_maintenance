@@ -1,4 +1,4 @@
-# predictive_maintenance  
+# predictive_maintenance & Detection precursor phenomena
 
 C# Windows GUI application  
 ---
@@ -156,6 +156,29 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 ### remaining useful life (RUL)
 <img src="./md/images/01st-day-vibration-2013_03_07 01_57_46.000_RUL.png" width="100%">  
 <img src="./md/images/rul.gif" >
+
+---  
+
+---
+
+# Detection precursor phenomena
+<img src="./dataset/detection_000002.png">  
+
+Train for a period of time while reading the data.
+Test the **Spearman correlation** between each data and select pairs with constant correlation.
+
+For the (x,y) pairs, fit $`y=f(x)`$ and $`x=f(y)`$ with **lightgbm** (Light Gradient Boosting Machine ), and use the model with the highest accuracy in the **SMAPE** accuracy index as the training model.
+
+$`SMAPE = \frac{1}{n}\sum_{t=1}^{n} \frac{2 \, |F_t - A_t|}{|F_t| + |A_t|} \times 100 `$  
+
+$` F_t `$ is the forecast (predicted value) at time $`( t ),  `$   
+$` A_t `$ is the actual (observed) value at time $`( t ),`$  
+$`( n ) `$ is the total number of data points. 
+
+
+After the learning period, the state of deviation from the predictions made by this model is taken as an indication of abnormality.
+The density at the threshold (p_threshold) position is calculated using the density function of the normally distributed prediction error distribution, and the top score is calculated as the probability of abnormality.  
+$`probability = -log(p_threshold)`$
 
 ---
 ## requirements  

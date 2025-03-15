@@ -27,7 +27,7 @@ install.packages("crayon", repos = "http://cran.us.r-project.org",lib=install_li
 install.packages("energy", repos = "http://cran.us.r-project.org",lib=install_libpath, type = "binary")
 install.packages("minerva", repos = "http://cran.us.r-project.org",lib=install_libpath, type = "binary")
 #install.packages("rightgbm", repos = "http://cran.us.r-project.org",lib=install_libpath, type = "binary")
-install.packages("lightgbm", repos = "https://cran.r-project.org",lib=install_libpath, type = "binary"))
+install.packages("lightgbm", repos = "https://cran.r-project.org",lib=install_libpath, type = "binary")
 
 .libPaths( org_libpath)
 

@@ -1305,7 +1305,7 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 	i <- which(col_name == colnames_df2)
 	
 	maintenance_index = which("maintenance" == colnames_df2)
-	mahalanobis_index = which("mahalanobis_dist" == colnames_df2)
+	mahalanobis_index = which("mahalanobis" == colnames_df2)
 
 	fff <- NULL
 	d <- df2[,i]
@@ -1335,7 +1335,6 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 		rowN = rowN + 1
 	}
 	if ( i == time_index || i == maintenance_index || i == mahalanobis_index)
-	#if ( i == time_index )
 	{
 		fff <- as.data.frame(matrix(nrow=rowN, ncol=1))
 	}else
@@ -3889,8 +3888,13 @@ eval_detection_precursor_phenomena <- function(df2)
 			scorTopN=scorTopN, percent=percent, method=method)
 
 		plt <- dpp[[1]][[1]]
+		num_plt <- dpp[[1]][[3]]
 		detection_precursor_phenomena_model <<- dpp[[2]]
-		if ( nrow(df2) < 100000 || dynamic_threshold)
+		
+		saveRDS(detection_precursor_phenomena_model, file="Detection_precursor_phenomena_Model.rds")
+		detection_precursor_phenomena_model <<- readRDS("Detection_precursor_phenomena_Model.rds")
+		
+		if ( dynamic_threshold)
 		{
 			detection_precursor_phenomena_model <<- NULL
 		}
@@ -3899,7 +3903,7 @@ eval_detection_precursor_phenomena <- function(df2)
 		{
 			detect_png <- sprintf("Detect/detection_%06d.png", index_number)
 			print(paste(putpng_path, detect_png, sep=""))
-			ggsave(file = paste(putpng_path, detect_png, sep=""), plot = plt, dpi = 130, width = 10, height = scorTopN*1.4)
+			ggsave(file = paste(putpng_path, detect_png, sep=""), plot = plt, dpi = 130, width = 10, height = num_plt*1.5)
 		}
 		#print("************************************************************")
 	}
@@ -4160,16 +4164,6 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		pre_org <<- df2_org
 		print(sprintf("-> nrow(df2):%d", nrow(df2)))
 
-		detection_precursor_phenomena_plt <- NULL
-		if ( T )
-		{
-			#print("delta_time")
-			#print(delta_time)
-			#print("current_time")
-			#print(current_time)
-			
-			detection_precursor_phenomena_plt <- eval_detection_precursor_phenomena(df2)
-		}
 		
 		n <- window_moving_size(nrow(df2), smooth_window, smooth_window_slide)
 		print(n)
@@ -4218,6 +4212,39 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			df2_tmp <- df2
 		}
 		
+		detection_precursor_phenomena_plt <- NULL
+		if ( T )
+		{
+			#print("delta_time")
+			#print(delta_time)
+			#print("current_time")
+			#print(current_time)
+			
+			detection_precursor_phenomena_plt <- eval_detection_precursor_phenomena(df2_tmp)
+		}
+		
+		#Creation of anomaly calculation model
+		if ( dynamic_threshold )
+		{
+			mahalanobis_train <- df2_tmp[1:min(100000,(nrow(df2_tmp))*0.8),]
+			print(sprintf("mahalanobis_train:%d", nrow(mahalanobis_train)))
+			flush.console()
+			m_mahalanobis <<- anomaly_detection_train(mahalanobis_train)
+		
+			saveRDS(m_mahalanobis, file="m_mahalanobis.rds")
+			m_mahalanobis <<- readRDS("m_mahalanobis.rds")
+		
+			#print("m_mahalanobis end")
+			#print(m_mahalanobis)
+			flush.console()
+		}
+		
+		#Feature Generation
+		print("create feature start")
+		mahalanobis_dist <- anomaly_detection_test(m_mahalanobis, df2_tmp)
+		df2_tmp$mahalanobis <- mahalanobis_dist[[2]]
+		#print(str(df2_tmp))
+		
 		#if (F)
 		if ( length(tracking_feature_) > 0 )
 		{
@@ -4228,11 +4255,11 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			if ( length(maintenance_flag_idx) > 0 )
 			{
 				df2_tmp <- as.data.frame(df2_tmp[,c(tracking_feature_, "time_index", "maintenance")])
-				colnames(df2_tmp) <- c(tracking_feature_, "time_index", "maintenance")
+				colnames(df2_tmp) <- c(tracking_feature_, "time_index", "maintenance", "mahalanobis")
 			}else
 			{
-				df2_tmp <- as.data.frame(df2_tmp[,c("time_index", tracking_feature_)])
-				colnames(df2_tmp) <- c("time_index", tracking_feature_)
+				df2_tmp <- as.data.frame(df2_tmp[,c("time_index", tracking_feature_, "mahalanobis")])
+				colnames(df2_tmp) <- c("time_index", tracking_feature_, "mahalanobis")
 			}
 		}	
 		print(sprintf("sampling nrow(df2_tmp):%d", nrow(df2_tmp)))
@@ -4281,24 +4308,6 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		print(str(df2_tmp))
 		flush.console()
 		
-		#Creation of anomaly calculation model
-		if ( dynamic_threshold )
-		{
-			mahalanobis_train <- df2_tmp[1:min(100000,(nrow(df2_tmp))*0.8),]
-			print(sprintf("mahalanobis_train:%d", nrow(mahalanobis_train)))
-			flush.console()
-			m_mahalanobis <<- anomaly_detection_train(mahalanobis_train)
-		
-			#print("m_mahalanobis end")
-			#print(m_mahalanobis)
-			flush.console()
-		}
-		
-		#Feature Generation
-		print("create feature start")
-		mahalanobis_dist <- anomaly_detection_test(m_mahalanobis, df2_tmp)
-		df2_tmp$mahalanobis_dist <- mahalanobis_dist[[2]]
-		#print(str(df2_tmp))
 		
 		
 		df2 <- NULL
@@ -4476,6 +4485,9 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				{
 					ymin0 = 10000
 				}
+				cat("tracking_feature_tmp[k] ")
+				print(k)
+				print(tracking_feature_tmp[k])
 				
 				x <- c(feature_df[,tracking_feature_tmp[k]])
 				n <- length(x)
