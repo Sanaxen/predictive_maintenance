@@ -1097,6 +1097,9 @@ smooth <- function(x, smooth_window = 10, smooth_window_slide = 1)
 # unsupervised anomaly detection
 anomaly_detection_train <- function( df )
 {
+	#print("========== anomaly_detection_train start ===============")
+	#print( colnames(df))
+
 	if ( length(which("maintenance" == colnames(df))) > 0 )
 	{
 		df[,"maintenance"] <- NULL
@@ -1109,6 +1112,29 @@ anomaly_detection_train <- function( df )
 	{
 		df[,timeStamp] <- NULL
 	}
+
+	total_length <- nrow(df)
+	df <- df[, sapply(df, function(x) is.numeric(x) != 0), drop=FALSE]
+	#print(str(df))
+	df <- df[, sapply(df, function(x) sd(x, na.rm = TRUE) != 0), drop=FALSE]
+	#print(str(df))
+	df <- df[, sapply(df, function(x) length(unique(x)) > total_length/200), drop=FALSE]
+	#print(str(df))
+	
+	# Exclude index columns (integer columns increasing consecutively by 1)
+	is_index_col <- function(x) {
+	  all(diff(x) == 1) && is.integer(x)
+	}
+
+	# Detect and exclude index-like columns
+	df <- df[, !sapply(df, function(x) is_index_col(x)), drop=FALSE]
+	#print(str(df))
+	
+	
+	df_colnames <- colnames(df)
+	#print("anomaly_detection_train")
+	#print( colnames(df))
+	
 
 	df[is.na(df)] <- 0
 	mu <- apply(df,2,mean)
@@ -1143,7 +1169,7 @@ anomaly_detection_train <- function( df )
 	},
 	error = function(e) {
 	    #message(e)
-	    print(e)
+	    #print(e)
 	    print("Substitute in general inverse for singular matrix")
 	},	
 	finally   = {
@@ -1151,11 +1177,15 @@ anomaly_detection_train <- function( df )
 	},
 	silent = TRUE
 	)
-	return (list(X, mu, sd, Sigma, invSigma))
+	#print("========== anomaly_detection_train end ===============")
+	return (list(X, mu, sd, Sigma, invSigma, df_colnames))
 }
 
 anomaly_detection_test <- function( model, df, method="mahalanobis", threshold=0)
 {
+	#print("========== anomaly_detection_test start ===============")
+	#print( colnames(df))
+
 	if ( length(which("maintenance" == colnames(df))) > 0 )
 	{
 		df[,"maintenance"] <- NULL
@@ -1169,6 +1199,24 @@ anomaly_detection_test <- function( model, df, method="mahalanobis", threshold=0
 		df[,timeStamp] <- NULL
 	}
 
+	df_colnames <- model[[6]]
+	df_colnames_in <- colnames(df)
+	#print( "df_colnames")
+	#print( df_colnames)
+	#print( "df_colnames_in")
+	#print( df_colnames_in)
+	for ( i in 1:length(df_colnames_in))
+	{
+		if ( length(which(df_colnames == df_colnames_in[i])) <= 0 )
+		{
+			df[,df_colnames_in[i]] <- NULL
+		}
+	}
+	#print("anomaly_detection_test")
+	#print( colnames(df))
+	
+	
+options(warn = -1)	
 	df[is.na(df)] <- 0
 	mu = model[[2]]
 	sd = model[[3]]
@@ -1222,6 +1270,7 @@ anomaly_detection_test <- function( model, df, method="mahalanobis", threshold=0
 		silent = TRUE
 		)
 	}
+options(warn = 0)
 	#print(am)
 	
 	#png("anomaly_detection_test.png", width = 640*3, height = 480)
@@ -1229,6 +1278,7 @@ anomaly_detection_test <- function( model, df, method="mahalanobis", threshold=0
 	#segments(0, threshold, nrow(df), threshold, col='red', lty=3, lwd=3)
 	#dev.off()
 	
+	#print("========== anomaly_detection_test end ===============")
 	return(list(X,am, threshold))
 }
 
@@ -1246,18 +1296,26 @@ feature_names <- c( ".", "mean", "sd", "var",
 
 feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1)
 {
+	cat("feature_sub")
+	print(col_name)
+	
 	colnames_df2 <- colnames(df2)
 
 	time_index = which("time_index" == colnames_df2)
 	i <- which(col_name == colnames_df2)
 	
 	maintenance_index = which("maintenance" == colnames_df2)
+	mahalanobis_index = which("mahalanobis_dist" == colnames_df2)
 
 	fff <- NULL
 	d <- df2[,i]
 	if ( length(maintenance_index) < 1 )
 	{
 		maintenance_index = 0
+	}
+	if ( length(mahalanobis_index) < 1 )
+	{
+		mahalanobis_index = 0
 	}
 	if ( i == maintenance_index )
 	{
@@ -1276,7 +1334,7 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 		j <- j + slide_window
 		rowN = rowN + 1
 	}
-	if ( i == time_index || i == maintenance_index)
+	if ( i == time_index || i == maintenance_index || i == mahalanobis_index)
 	#if ( i == time_index )
 	{
 		fff <- as.data.frame(matrix(nrow=rowN, ncol=1))
@@ -1359,11 +1417,14 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 		    SKKurtosis <- sigin*kurtosis(sk$spectral_kurtosis, type=2)
 	    }
     
-    	if ( i == time_index || i == maintenance_index)
+    	if ( i == time_index || i == maintenance_index || i == mahalanobis_index)
     	{
 			f <- data.frame(matrix(c(dd[length(dd)]),nrow=1))
 			#f <- data.frame(c(dd[lookback]),nrow=1)
-			
+			if ( i == mahalanobis_index )
+			{
+				f <- data.frame(matrix(c(mean),nrow=1))
+			}
 			if ( i == maintenance_index )
 			{
 				f <- data.frame(matrix(c(0),nrow=1))
@@ -1424,12 +1485,16 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 	diff <- as.numeric(difftime(end, start, units = "sec"))
 
 	
-	if ( i == time_index || i == maintenance_index)
+	if ( i == time_index || i == maintenance_index || i == mahalanobis_index)
 	{
 		colnames(fff) <- c("time_index")
 		if ( i == maintenance_index )
 		{
 			colnames(fff) <- c("maintenance")
+		}
+		if ( i == mahalanobis_index )
+		{
+			colnames(fff) <- c("mahalanobis")
 		}
 	}else
 	{
@@ -1456,11 +1521,18 @@ feature_sub <- function(col_name, df2, ff = NULL, lookback=100, slide_window = 1
 		ff <- cbind(ff, fff)
 	}
 	
+	#print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	#print(str(ff))
+	
 	return(ff)
 }
 
 feature <- function(df2, lookback=100, slide_window=1)
 {
+	print("=========== feature ===============")
+	print(colnames(df2))
+	print(str(df2))
+	
 	start <- Sys.time()
 
 	colnames_df2 <- colnames(df2)
@@ -1499,32 +1571,36 @@ feature <- function(df2, lookback=100, slide_window=1)
 	#print(head(ff))
 	flush.console()
 	
-	for ( i in 1:ncol(ff) )
-	{
-		if ( colnames_ff[i]!= "maintenance" && colnames_ff[i]!= "time_index" && length( which(colnames_ff[i]==paste(colnames(df2),"..",sep=""))) == 0 )
-		{
-			#print(colnames_ff[i])
-			next
-		}
-		if ( is.null(df3))
-		{
-			df3 <- ff[,i]
-		}else
-		{
-			df3 <- cbind(df3, ff[,i])
-		}
-	}
+#	for ( i in 1:ncol(ff) )
+#	{
+#		if ( colnames_ff[i]!= "maintenance" && colnames_ff[i]!= "time_index" && length( which(colnames_ff[i]==paste(colnames(df2),"..",sep=""))) == 0 )
+#		{
+#			#print(colnames_ff[i])
+#			next
+#		}
+#		if ( is.null(df3))
+#		{
+#			df3 <- ff[,i]
+#		}else
+#		{
+#			df3 <- cbind(df3, ff[,i])
+#		}
+#	}
+	#print("colnames(df3)")
+	#print(colnames(df3))
+	#print("colnames(df2)")
+	#print(colnames(df2))
 	
 	
-	colnames(df3) <- colnames(df2)
-	df3 <- as.data.frame(df3)
+	#colnames(df3) <- colnames(df2)
+	#df3 <- as.data.frame(df3)
 	#cat("df3")
 	#print(str(df3))
 	#flush.console()
 	
-	mahalanobis1 <- anomaly_detection_test(m_mahalanobis, df3)
+	#mahalanobis1 <- anomaly_detection_test(m_mahalanobis, df3)
 	
-	ff <- cbind(ff, data.frame(mahalanobis=mahalanobis1[[2]]))
+	#ff <- cbind(ff, data.frame(mahalanobis=mahalanobis1[[2]]))
 	
 	end <- Sys.time()
 	diff <- as.numeric(difftime(end, start, units = "sec"))
@@ -1532,6 +1608,7 @@ feature <- function(df2, lookback=100, slide_window=1)
 	print(sprintf("feature_sub:%f sec( %f min)( %f hour)", diff, diff/60, diff/(60*60)))
 	flush.console()
 
+	#print("=========== feature end ===============")
 	return (ff)
 }
 
@@ -3588,15 +3665,18 @@ get_csvdata <- function( file, tracking_feature_ , timeStamp)
 	print(colnames(df0))
 	#print(df0[,tracking_feature_])
 
-	maintenance_flag_idx = which("maintenance" == colnames(df0))
-	if ( length(maintenance_flag_idx) > 0 )
+	if (F)
 	{
-		df0 <- as.data.frame(df0[,c(timeStamp,tracking_feature_, "maintenance")])
-		colnames(df0) <- c(timeStamp,tracking_feature_, "maintenance")
-	}else
-	{
-		df0 <- as.data.frame(df0[,c(timeStamp,tracking_feature_)])
-		colnames(df0) <- c(timeStamp,tracking_feature_)
+		maintenance_flag_idx = which("maintenance" == colnames(df0))
+		if ( length(maintenance_flag_idx) > 0 )
+		{
+			df0 <- as.data.frame(df0[,c(timeStamp,tracking_feature_, "maintenance")])
+			colnames(df0) <- c(timeStamp,tracking_feature_, "maintenance")
+		}else
+		{
+			df0 <- as.data.frame(df0[,c(timeStamp,tracking_feature_)])
+			colnames(df0) <- c(timeStamp,tracking_feature_)
+		}
 	}
 	colname = colnames(df0)
 
@@ -3766,10 +3846,65 @@ RUL_hist_pre <<- NULL
 RUL <- NULL
 sigin = 1
 max_prediction_length_org = 0
-current_time <- NULL
-current_time_index <- 0
-delta_time <- NULL
+current_time <<- NULL
+current_time_index <<- 0
+delta_time <<- NULL
 startup_data_frame <- TRUE
+
+detection_precursor_phenomena_model <<- NULL
+
+eval_detection_precursor_phenomena <- function(df2)
+{
+	#print("************************************************************")
+	if ( !exists("Detection_precursor_phenomena", mode = "function"))
+	{
+		source("../src/Detection_precursor_phenomena.r")
+	}
+	#print("************************************************************")
+	plt <- NULL
+	
+	#print("delta_time")
+	#print(delta_time)
+	#print("current_time")
+	#print(current_time)
+	
+	corr_threshold <- 0.39
+	scorTopN <- 6
+	percent= c(0.90, 0.95, 0.99)
+	window_size=30
+	method="spearman"
+	#method="dcor"
+	#method="MIC"
+	if ( nrow(df2) > window_size*200 )
+	{
+		#cat("str(df2)")
+		#print(str(df2))
+		df_tmp <- moving_mean_smooth(df2, window_size)
+		
+		#cat("str(df_tmp)")
+		#print(str(df_tmp))
+
+		dpp <- Detection_precursor_phenomena(df_tmp,detection_precursor_phenomena_model,
+			corr_threshold=corr_threshold,
+			scorTopN=scorTopN, percent=percent, method=method)
+
+		plt <- dpp[[1]][[1]]
+		detection_precursor_phenomena_model <<- dpp[[2]]
+		if ( nrow(df2) < 100000 || dynamic_threshold)
+		{
+			detection_precursor_phenomena_model <<- NULL
+		}
+
+		if ( !is.null(plt))
+		{
+			detect_png <- sprintf("Detect/detection_%06d.png", index_number)
+			print(paste(putpng_path, detect_png, sep=""))
+			ggsave(file = paste(putpng_path, detect_png, sep=""), plot = plt, dpi = 130, width = 10, height = scorTopN*1.4)
+		}
+		#print("************************************************************")
+	}
+	return( plt )
+}
 
 predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 {
@@ -4025,7 +4160,17 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		pre_org <<- df2_org
 		print(sprintf("-> nrow(df2):%d", nrow(df2)))
 
-
+		detection_precursor_phenomena_plt <- NULL
+		if ( T )
+		{
+			#print("delta_time")
+			#print(delta_time)
+			#print("current_time")
+			#print(current_time)
+			
+			detection_precursor_phenomena_plt <- eval_detection_precursor_phenomena(df2)
+		}
+		
 		n <- window_moving_size(nrow(df2), smooth_window, smooth_window_slide)
 		print(n)
 		n <- window_moving_size(n, lookback, lookback_slide)
@@ -4072,12 +4217,27 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		{
 			df2_tmp <- df2
 		}
+		
+		#if (F)
+		if ( length(tracking_feature_) > 0 )
+		{
+			#print("tracking_feature_")
+			#print(tracking_feature_)
+			#print(str(df2_tmp))
+			maintenance_flag_idx = which("maintenance" == colnames(df2_tmp))
+			if ( length(maintenance_flag_idx) > 0 )
+			{
+				df2_tmp <- as.data.frame(df2_tmp[,c(tracking_feature_, "time_index", "maintenance")])
+				colnames(df2_tmp) <- c(tracking_feature_, "time_index", "maintenance")
+			}else
+			{
+				df2_tmp <- as.data.frame(df2_tmp[,c("time_index", tracking_feature_)])
+				colnames(df2_tmp) <- c("time_index", tracking_feature_)
+			}
+		}	
 		print(sprintf("sampling nrow(df2_tmp):%d", nrow(df2_tmp)))
 
 
-		df2 <- NULL
-		rm(df2)
-		freeram()
 
 		#print(sprintf("lookback*3:%d > df2_tmp:%d", lookback*3, nrow(df2_tmp)))
 		#print(sprintf("smooth_window*3:%d > df2_tmp:%d", smooth_window*3, nrow(df2_tmp)))
@@ -4122,17 +4282,29 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		flush.console()
 		
 		#Creation of anomaly calculation model
-		mahalanobis_train <- past[1:min(100000,(nrow(past))*0.8),]
-		print(sprintf("mahalanobis_train:%d", nrow(mahalanobis_train)))
-		flush.console()
-		m_mahalanobis <<- anomaly_detection_train(mahalanobis_train)
+		if ( dynamic_threshold )
+		{
+			mahalanobis_train <- df2_tmp[1:min(100000,(nrow(df2_tmp))*0.8),]
+			print(sprintf("mahalanobis_train:%d", nrow(mahalanobis_train)))
+			flush.console()
+			m_mahalanobis <<- anomaly_detection_train(mahalanobis_train)
 		
-		print("m_mahalanobis end")
-		#print(m_mahalanobis)
-		flush.console()
+			#print("m_mahalanobis end")
+			#print(m_mahalanobis)
+			flush.console()
+		}
 		
 		#Feature Generation
 		print("create feature start")
+		mahalanobis_dist <- anomaly_detection_test(m_mahalanobis, df2_tmp)
+		df2_tmp$mahalanobis_dist <- mahalanobis_dist[[2]]
+		#print(str(df2_tmp))
+		
+		
+		df2 <- NULL
+		rm(df2)
+		freeram()
+
 		feature_df <- try(
 			feature(df2_tmp, lookback=lookback, slide_window = lookback_slide))
 		if ( class(feature_df) == "try-error" )

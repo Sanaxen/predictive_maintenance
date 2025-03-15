@@ -1,3 +1,4 @@
+options(encoding = "utf-8")
 options(digits.secs=3)
 #args <- "args.csv"
 ########################### program start
