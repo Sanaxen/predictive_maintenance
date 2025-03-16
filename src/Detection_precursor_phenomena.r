@@ -27,10 +27,11 @@ detection_precursor_phenomena_train_sample_max <- 2500
 # install.packages("zoo")
 library(zoo)
 
-moving_mean_smooth <- function(df, window_size) 
+moving_mean_smooth <- function(df, timeStamp, window_size) 
 {
 	print("========== moving_mean_smooth start ===============")
 	print(str(df))
+	print(timeStamp)
 	time_index_sv <- df$time_index
 	timestamp_sv <- NULL
 	maintenance_sv <- NULL
@@ -55,6 +56,14 @@ moving_mean_smooth <- function(df, window_size)
 			}else
 			{
 				rollapply(col, width = window_size, FUN = mean, fill = NA, align = "right")
+				#rollapply(col, width = window_size, FUN = function(x) weighted.mean(x, w = seq_along(x)), fill = NA, align = "right")
+				
+				#lambda <- 0.1
+				#rollapply(col, width = window_size, FUN = function(x) {
+                #               weights <- exp(lambda * seq_along(x))
+                #               weighted.mean(x, w = weights)
+                #             }, fill = NA, align = "right")
+
 			}
 		} else {
 			rollapply(col, width = window_size, FUN = function(x) tail(x, 1), fill = NA, align = "right")
@@ -91,7 +100,7 @@ moving_mean_smooth <- function(df, window_size)
 	}
 
 	smoothed_df <- smoothed_df[(window_size+1):nrow(smoothed_df),]
-	print(str(df))
+	print(str(smoothed_df))
 	print("========== moving_mean_smooth end ===============")
 	return(smoothed_df)
 }
@@ -362,7 +371,7 @@ Detection_precursor_phenomena_train <- function(df, corr_threshold=0.6, scorTopN
 	#cat("total_length")
 	#print(total_length)
 
-	rate = 0.85
+	rate = 0.6
 	if ( total_length * rate > 100 )
 	{
 		# rate% of the first half of the data is used as reference data
@@ -540,7 +549,7 @@ Detection_precursor_phenomena_test <- function(df, dpp_model, percent=0.9, metho
 		sensor_data$maintenance <- maintenance_sv
 	}
 	sensor_data$time_index <- time_index_sv
-	sigma <- qnorm( (1 + percent) / 2 )
+	sigma <- qnorm( 1 - (1 - percent) / 2 )
 	cat("sigma:")
 	print(sigma)
 
@@ -693,7 +702,7 @@ Detection_precursor_phenomena_test <- function(df, dpp_model, percent=0.9, metho
 		{
 			return (NULL)
 		}
-		print("Modified Z-score")
+		print("Z-score")
 		# Z-score
 		#z_scores <- (sensor_data[,1] - mean_base) / sd_base
 
@@ -782,7 +791,6 @@ Detection_precursor_phenomena <- function(df, dpp_model=NULL,
 {
 	#print(method)
 	nrow_limit_max <- 1000000
-	
 	n <- nrow(df)
 	if ( n > nrow_limit_max )
 	{
@@ -866,7 +874,7 @@ TestFuc <- function(dataset, timestamp, index_number=0)
 			sensor_data$time_index <- c(1:nrow(sensor_data))
 			df <- sensor_data
 
-			df <- moving_mean_smooth(df, window_size)
+			df <- moving_mean_smooth(df, timeStamp, window_size)
 
 			dpp <- Detection_precursor_phenomena(df,dpp_model,
 				corr_threshold=corr_threshold,

@@ -3878,7 +3878,7 @@ eval_detection_precursor_phenomena <- function(df2)
 	{
 		#cat("str(df2)")
 		#print(str(df2))
-		df_tmp <- moving_mean_smooth(df2, window_size)
+		df_tmp <- moving_mean_smooth(df2, timeStamp, window_size)
 		
 		#cat("str(df_tmp)")
 		#print(str(df_tmp))

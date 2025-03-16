@@ -22,6 +22,11 @@ if (exists("current_time"))
 {
 	current_time = ""
 }
+if (exists("lookback")) 
+{
+	lookback = 30
+}
+
 source("./src/Detection_precursor_phenomena.r")
 
 
