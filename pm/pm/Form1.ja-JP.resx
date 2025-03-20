@@ -120,26 +120,231 @@
   <data name="button19.Text" xml:space="preserve">
     <value>全バッチ生成</value>
   </data>
+  <data name="button19.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="checkBox5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="button2.Text" xml:space="preserve">
     <value>パラメータファイル出力</value>
+  </data>
+  <data name="button2.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="button5.Text" xml:space="preserve">
     <value>運用バッチ生成</value>
   </data>
+  <data name="button5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="button4.Text" xml:space="preserve">
     <value>検証バッチ生成</value>
+  </data>
+  <data name="button4.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="button3.Text" xml:space="preserve">
     <value>IoTエミュレータ出力</value>
   </data>
+  <data name="button3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel18.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter13.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pictureBox6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel21.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel20.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter14.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="comboBox6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="comboBox1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel17.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel19.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="radioButton10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 19</value>
+  </data>
+  <data name="radioButton10.Text" xml:space="preserve">
+    <value>予測状況</value>
+  </data>
+  <data name="radioButton10.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 19</value>
+  </data>
+  <data name="radioButton9.Text" xml:space="preserve">
+    <value>異常兆候</value>
+  </data>
+  <data name="radioButton9.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 19</value>
+  </data>
+  <data name="radioButton6.Text" xml:space="preserve">
+    <value>残存寿命</value>
+  </data>
+  <data name="radioButton6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="groupBox3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="listBox1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="listBox2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button13.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label23.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="listBox3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter7.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button17.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel7.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pictureBox5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel16.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter12.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pictureBox3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel15.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel12.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter10.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pictureBox4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel14.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter11.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pictureBox2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel13.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel11.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter9.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button21.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="button18.Text" xml:space="preserve">
     <value>特徴量探索バッチ生成</value>
+  </data>
+  <data name="button18.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="button14.Text" xml:space="preserve">
     <value>特徴量サマリ計算バッチ生成</value>
   </data>
+  <data name="button14.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel10.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="tabPage5.Text" xml:space="preserve">
     <value>特徴量分析</value>
+  </data>
+  <data name="tabPage5.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="label12.ToolTip" xml:space="preserve">
     <value>保持し続けるデータ総行数</value>
@@ -159,6 +364,12 @@
   <data name="label8.ToolTip" xml:space="preserve">
     <value>入ってくるデータ1件あたりの観測量を時間で指定する。単位はunit_of_timeと一致させてください。</value>
   </data>
+  <data name="textBox3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label7.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="label5.ToolTip" xml:space="preserve">
     <value>入力データの時間間隔</value>
   </data>
@@ -167,6 +378,36 @@
   </data>
   <data name="tabPage1.Text" xml:space="preserve">
     <value>入力データ設定</value>
+  </data>
+  <data name="tabPage1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label28.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox21.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label27.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox20.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label26.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox19.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label25.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox16.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label20.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="label19.ToolTip" xml:space="preserve">
     <value>単調性チェックに使用する過去のデータ量を指定する。
@@ -182,8 +423,20 @@
 
 負の値、正の値はどちらもその絶対値の点数を最低必要点数として指定する意味で使われる</value>
   </data>
+  <data name="textBox13.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="label16.ToolTip" xml:space="preserve">
     <value>入力データの基本統計量を特徴量とするデータを作成する際のウィンドウサイズの移動量を指定する。</value>
+  </data>
+  <data name="label17.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox11.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label15.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="label14.ToolTip" xml:space="preserve">
     <value>入力データの基本統計量を特徴量とするデータを作成する際のウィンドウサイズを指定する。</value>
@@ -194,13 +447,109 @@
   <data name="tabPage2.Text" xml:space="preserve">
     <value>計算条件設定</value>
   </data>
+  <data name="tabPage2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton7.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton8.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="groupBox2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="radioButton1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="groupBox1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label24.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="comboBox5.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="textBox18.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label22.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="label21.ToolTip" xml:space="preserve">
     <value>最後に観測されたポイントから将来を予測するポイント数を指定します。</value>
   </data>
   <data name="tabPage3.Text" xml:space="preserve">
     <value>予測条件設定</value>
   </data>
+  <data name="tabPage3.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pictureBox1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel9.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitter8.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button11.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button12.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button9.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button10.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button8.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button7.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="numericUpDown1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="trackBar1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="button6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="panel8.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="tabPage4.Text" xml:space="preserve">
     <value>モニタリング</value>
+  </data>
+  <data name="tabPage4.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tabPage6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="tabControl1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
   </data>
 </root>

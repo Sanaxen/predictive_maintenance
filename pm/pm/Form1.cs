@@ -290,6 +290,7 @@ namespace pm
                     sw.Write("radioButton7," + (radioButton7.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton8," + (radioButton8.Checked ? "TRUE" : "FALSE") + "\n");
                     sw.Write("radioButton9," + (radioButton9.Checked ? "TRUE" : "FALSE") + "\n");
+                    sw.Write("radioButton10," + (radioButton10.Checked ? "TRUE" : "FALSE") + "\n");
 
                     sw.Write("imagePictureBox1," + imagePictureBox1 + "\n");
                     sw.Write("imagePictureBox2," + imagePictureBox2 + "\n");
@@ -823,6 +824,11 @@ namespace pm
                         if (ss[0].IndexOf("radioButton9") >= 0)
                         {
                             radioButton9.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
+                            continue;
+                        }
+                        if (ss[0].IndexOf("radioButton10") >= 0)
+                        {
+                            radioButton10.Checked = (ss[1].Replace("\r\n", "") == "TRUE") ? true : false;
                             continue;
                         }
 
@@ -1400,6 +1406,7 @@ namespace pm
 
             string cmd = "";
             cmd += "options(digits.secs=3)\r\n";
+            cmd += "csv_dir_name <<- '" + csv_dir.Replace("\\", "/") + "'\r\n";
             cmd += "base_name <<- '" + base_name + "'\r\n";
             cmd += "csv_encoding = '" + comboBox1.Text + "'\r\n";
             cmd += "#spline with smoothing\r\n";
@@ -1820,6 +1827,15 @@ namespace pm
             if (validation)
             {
                 cmd += "del \"./work\\" + base_name0 + "_feature_param.csv\"\r\n";
+                cmd += "del \"./work\\Detection_precursor_phenomena_Model.rds\"\r\n";
+                cmd += "del \"./work\\m_mahalanobis.rds\"\r\n";
+                cmd += "del \"./work\\feature_param.rds\"\r\n";
+            }
+            else
+            {
+                cmd += "copy " + "\"" + csv_dir + "\\Detection_precursor_phenomena_Model.rds\" ./work /v /y\r\n";
+                cmd += "copy " + "\"" + csv_dir + "\\m_mahalanobis.rds\" ./work/v /y\r\n";
+                cmd += "copy " + "\"" + csv_dir + "\\feature_param.rds\" ./work/v /y\r\n";
             }
             cmd += "\r\n";
             cmd += "cd %~dp0\r\n";
@@ -2658,6 +2674,17 @@ namespace pm
         }
 
         private void radioButton9_CheckedChanged(object sender, EventArgs e)
+        {
+            button6.Text = "!Monitor!";
+            timer1.Enabled = false;
+            timer1.Stop();
+
+            button6.Text = "Monitor stop";
+            timer1.Enabled = true;
+            timer1.Start();
+        }
+
+        private void radioButton10_CheckedChanged(object sender, EventArgs e)
         {
             button6.Text = "!Monitor!";
             timer1.Enabled = false;
