@@ -256,6 +256,14 @@ init_feature_param <- function(f2, threshold, ymax, ymin)
 		return(feature_param)
 	}
 	
+	if ( is.null(feature_param) && file.exists("./feature_param.rds") )
+	{
+		feature_param <<- readRDS("./feature_param.rds")
+		fixed_threshold_value <<- TRUE
+		return(feature_param)
+	}
+
+	
 	if ( is.null(feature_param))
 	{
 		feature_param <<- f2
@@ -281,6 +289,16 @@ init_feature_param <- function(f2, threshold, ymax, ymin)
 
 	return(feature_param)
 }
+
+fix_feature_param <- function()
+{
+	
+	if ( !is.null(feature_param))
+	{
+		saveRDS(feature_param, file=paste(csv_dir_name,"/feature_param.rds",sep=""))
+	}
+}
+
 get_feature_param <- function()
 {
 	if ( is.null(feature_param))
@@ -3867,9 +3885,9 @@ eval_detection_precursor_phenomena <- function(df2)
 	#print("current_time")
 	#print(current_time)
 	
-	corr_threshold <- 0.39
+	corr_threshold <- 0.38
 	scorTopN <- 6
-	percent= c(0.90, 0.95, 0.99)
+	percent= c(0.80, 0.95, 0.99)
 	window_size=30
 	method="spearman"
 	#method="dcor"
@@ -3878,21 +3896,29 @@ eval_detection_precursor_phenomena <- function(df2)
 	{
 		#cat("str(df2)")
 		#print(str(df2))
-		df_tmp <- moving_mean_smooth(df2, timeStamp, window_size)
+		df_tmp <- moving_mean_smooth2(df2, timeStamp, lookback, lookback_slide)
+		if ( is.null(df_tmp))
+		{
+			df_tmp <- moving_mean_smooth2(df, timeStamp, lookback/2, lookback_slide/2)
+		}
+		if ( is.null(df_tmp))
+		{
+			return(NULL)
+		}
 		
 		#cat("str(df_tmp)")
 		#print(str(df_tmp))
 
-		dpp <- Detection_precursor_phenomena(df_tmp,detection_precursor_phenomena_model,
+		dpp <- Detection_precursor_phenomena(df_tmp, timeStamp, detection_precursor_phenomena_model,
 			corr_threshold=corr_threshold,
-			scorTopN=scorTopN, percent=percent, method=method)
+			scorTopN=scorTopN, percent=percent, window_size = lookback, slide = slide, method=method)
 
 		plt <- dpp[[1]][[1]]
 		num_plt <- dpp[[1]][[3]]
 		detection_precursor_phenomena_model <<- dpp[[2]]
 		
-		saveRDS(detection_precursor_phenomena_model, file="Detection_precursor_phenomena_Model.rds")
-		detection_precursor_phenomena_model <<- readRDS("Detection_precursor_phenomena_Model.rds")
+		saveRDS(detection_precursor_phenomena_model, file=paste(csv_dir_name,"/Detection_precursor_phenomena_Model.rds",sep=""))
+		detection_precursor_phenomena_model <<- readRDS(paste(csv_dir_name,"/Detection_precursor_phenomena_Model.rds",sep=""))
 		
 		if ( dynamic_threshold)
 		{
@@ -4231,8 +4257,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			flush.console()
 			m_mahalanobis <<- anomaly_detection_train(mahalanobis_train)
 		
-			saveRDS(m_mahalanobis, file="m_mahalanobis.rds")
-			m_mahalanobis <<- readRDS("m_mahalanobis.rds")
+			saveRDS(m_mahalanobis, file=paste(csv_dir_name,"/m_mahalanobis.rds",sep=""))
+			m_mahalanobis <<- readRDS(paste(csv_dir_name,"/m_mahalanobis.rds",sep=""))
 		
 			#print("m_mahalanobis end")
 			#print(m_mahalanobis)
@@ -5177,6 +5203,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		freeram()
 		
 		print(feature_param)
+		fix_feature_param()
 		#i = i + 1
 		#print(i)
 	}
