@@ -390,9 +390,12 @@ Only_required_fields <- function(sensor_data, timestamp)
 	sensor_data <- sensor_data[, sapply(sensor_data, function(x) sd(x, na.rm = TRUE) != 0), drop=FALSE]
 	cat("(2)")
 	print(str(sensor_data))
-	sensor_data <- sensor_data[, sapply(sensor_data, function(x) length(unique(x))/total_length > 0.0001), drop=FALSE]
-	cat("(3)")
-	print(str(sensor_data))
+	if ( ncol(sensor_data) > 2 )
+	{
+		sensor_data <- sensor_data[, sapply(sensor_data, function(x) length(unique(x)) > 0.1*total_length), drop=FALSE]
+		cat("(3)")
+		print(str(sensor_data))
+	}
 	
 	# Exclude index columns (integer columns increasing consecutively by 1)
 	is_index_col <- function(x) {
@@ -402,6 +405,25 @@ Only_required_fields <- function(sensor_data, timestamp)
 	# Detect and exclude index-like columns
 	#sensor_data <- sensor_data[, !sapply(sensor_data, is_index_col)]
 	sensor_data <- sensor_data[, !sapply(sensor_data, function(x) is_index_col(x)), drop=FALSE]
+	
+	is_index_n_col <- function(x) {
+	  all(diff(x) == 1) && is.integer(x)
+	}
+
+	remove_index_columns <- function(df, tol = .Machine$double.eps^0.5) {
+	  is_index <- sapply(df, function(x) {
+	    if (is.numeric(x) && length(x) > 1) {
+	      d <- diff(x)
+	      return((max(d) - min(d)) < tol)
+	    } else {
+	      return(FALSE)
+	    }
+	  })
+	  df[ , !is_index, drop = FALSE]
+	}
+	sensor_data <- remove_index_columns(sensor_data)
+	cat("(4)")
+	print(str(sensor_data))
 	
 	if ( !is.null(time_index_sv))
 	{
