@@ -13,6 +13,7 @@ mkdir images\RUL
 :del /Q images\*.r
 :del /Q images\debug\*.png
 :del /Q images\RUL\*.png
+del images\Detect\*.png
 
 
 "%R_INSTALL_PATH%\bin\x64\Rscript.exe" --vanilla ./src/Detection_precursor_phenomena_test.r %1 %2

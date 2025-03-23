@@ -28,6 +28,9 @@ library(ggridges)
 
 library(crayon)
 #library(crayons)
+
+library(grid)
+
 options(crayon.enabled = TRUE)
 
 freeram <- function(...) invisible(gc(...))
@@ -3879,6 +3882,7 @@ eval_detection_precursor_phenomena <- function(df2)
 	}
 	#print("************************************************************")
 	plt <- NULL
+	posterior_abnormal <- NULL
 	
 	#print("delta_time")
 	#print(delta_time)
@@ -3888,11 +3892,11 @@ eval_detection_precursor_phenomena <- function(df2)
 	corr_threshold <- 0.38
 	scorTopN <- 6
 	percent= c(0.80, 0.95, 0.99)
-	window_size=30
+	window_size=lookback
 	method="spearman"
 	#method="dcor"
 	#method="MIC"
-	if ( nrow(df2) > window_size*200 )
+	if ( nrow(df2) > window_size*10 )
 	{
 		#cat("str(df2)")
 		#print(str(df2))
@@ -3900,6 +3904,14 @@ eval_detection_precursor_phenomena <- function(df2)
 		if ( is.null(df_tmp))
 		{
 			df_tmp <- moving_mean_smooth2(df, timeStamp, lookback/2, lookback_slide/2)
+		}
+		if ( is.null(df_tmp))
+		{
+			df_tmp <- moving_mean_smooth2(df, timeStamp, lookback/4, lookback_slide/4)
+		}
+		if ( is.null(df_tmp))
+		{
+			df_tmp <- moving_mean_smooth2(df, timeStamp, lookback/8, lookback_slide/8)
 		}
 		if ( is.null(df_tmp))
 		{
@@ -3916,6 +3928,7 @@ eval_detection_precursor_phenomena <- function(df2)
 		plt <- dpp[[1]][[1]]
 		num_plt <- dpp[[1]][[3]]
 		detection_precursor_phenomena_model <<- dpp[[2]]
+		posterior_abnormal <- dpp[[3]]
 		
 		saveRDS(detection_precursor_phenomena_model, file=paste(csv_dir_name,"/Detection_precursor_phenomena_Model.rds",sep=""))
 		detection_precursor_phenomena_model <<- readRDS(paste(csv_dir_name,"/Detection_precursor_phenomena_Model.rds",sep=""))
@@ -3933,7 +3946,7 @@ eval_detection_precursor_phenomena <- function(df2)
 		}
 		#print("************************************************************")
 	}
-	return( plt )
+	return( list(plt, posterior_abnormal) )
 }
 
 predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
@@ -4238,6 +4251,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			df2_tmp <- df2
 		}
 		
+		posterior_abnormal_text <- NULL
 		detection_precursor_phenomena_plt <- NULL
 		if ( T )
 		{
@@ -4247,7 +4261,27 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			#print(current_time)
 			
 			detection_precursor_phenomena_plt <- eval_detection_precursor_phenomena(df2_tmp)
+			
+			posterior_abnormal <- detection_precursor_phenomena_plt[[2]]
+			for ( k in 1:length(posterior_abnormal))
+			{
+				x <- posterior_abnormal[[k]]
+				print(x)
+				tag <- x[[1]]
+				probability <- x[[2]]
+				
+				text <- sprintf("%s %.2f%%", tag, probability[length(probability)]*100)
+				if ( !is.null(posterior_abnormal_text) )
+				{
+					posterior_abnormal_text <- sprintf("%s\n%s", posterior_abnormal_text, text)
+				}else
+				{
+					posterior_abnormal_text <- text
+				}
+			}
 		}
+		
+
 		
 		#Creation of anomaly calculation model
 		if ( dynamic_threshold )
@@ -4277,10 +4311,11 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			#print("tracking_feature_")
 			#print(tracking_feature_)
 			#print(str(df2_tmp))
+			
 			maintenance_flag_idx = which("maintenance" == colnames(df2_tmp))
 			if ( length(maintenance_flag_idx) > 0 )
 			{
-				df2_tmp <- as.data.frame(df2_tmp[,c(tracking_feature_, "time_index", "maintenance")])
+				df2_tmp <- as.data.frame(df2_tmp[,c(tracking_feature_, "time_index", "maintenance", "mahalanobis")])
 				colnames(df2_tmp) <- c(tracking_feature_, "time_index", "maintenance", "mahalanobis")
 			}else
 			{
@@ -5076,7 +5111,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				}
 				if ( text != "" )
 				{
-					looked_var_plt <- looked_var_plt + annotate("text", x=RUL_hist_tmp$time_index[z1max], y=y, label=text, size=6, colour="blue")
+					looked_var_plt <- looked_var_plt + annotate("text", x=RUL_hist_tmp$time_index[z1max], y=y, label=text, size=8, colour="blue")
 				}
 				
 				#plt_s[[1]] <- plt_s[[1]] + scale_x_continuous(breaks = break_pos, labels = labels)
@@ -5158,6 +5193,29 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		
 		org_plt <- org_plt + geom_line(linewidth =0.1,alpha = 0.5)+theme(axis.title.y = element_blank())
 
+		if ( !is.null(posterior_abnormal_text) )
+		{
+		
+			cat("\n\n\n\n")
+			print("===============================================")
+			print(posterior_abnormal_text)
+			print("===============================================")
+			cat("\n\n\n\n")
+		}
+		text_grob <- textGrob(
+		  label = posterior_abnormal_text,
+		  x = unit(0, "npc"),  # left
+		  y = unit(0.90, "npc"),  # upper
+		  just = c("left", "top"), 
+		  gp = gpar(fontsize = 15))
+		  
+		looked_var_plt <- looked_var_plt + 
+			annotation_custom(
+			  grob = text_grob,
+			  xmin = -Inf, xmax = Inf,
+			  ymin = -Inf, ymax = Inf
+			) 
+			              
 		if ( is.null(tracking_feature))
 		{
 			if ( !is.null(rul_hist_plt) )
@@ -5169,7 +5227,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				plt0 <- plt0 + 
 				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
 				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, org_plt,
-				layout_matrix = layout1, top = current_time, heights=c(0.1,0.5,2,1))
+												layout_matrix = layout1, top = current_time, heights=c(0.1,0.5,2,1))
 			}else
 			{
 				#https://id.fnshr.info/2016/10/10/gridextra/
@@ -5178,7 +5236,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 				                 	c(3, 4, 5))
 				plt0 <- plt0 + 
 				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
+				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+												layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
 			}
 		}else
 		{

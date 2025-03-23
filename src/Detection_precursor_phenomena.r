@@ -9,6 +9,7 @@ library(energy)
 library(minerva)
 
 library(lightgbm)
+library(ggrepel)
 
 #dataset <- NULL
 
@@ -27,6 +28,14 @@ detection_precursor_phenomena_train_sample_max <- 2500
 library(zoo)
 
 
+if( file.exists("./src/SpeedMeter.r"))
+{
+	source("./src/SpeedMeter.r")
+}
+if( file.exists("../src/SpeedMeter.r"))
+{
+	source("../src/SpeedMeter.r")
+}
 
 moving_mean_smooth2 <- function(df, timeStamp, window_size, slide) 
 {
@@ -113,7 +122,7 @@ moving_mean_smooth2 <- function(df, timeStamp, window_size, slide)
 		}
 		if (!is.null(maintenance_sv))
 		{
-			if ( any(maintenance_sv[(j-window_size):j]) == 1 )
+			if ( any(maintenance_sv[(j-slide):j]) == 1 )
 			{
 				maintenance2[i] <- 1
 			}else
@@ -573,7 +582,7 @@ Detection_precursor_phenomena_train <- function(df, target_colnames, timeStamp, 
 	#cat("total_length")
 	#print(total_length)
 
-	rate = 0.75
+	rate = 0.70
 	if ( total_length * rate > 100 )
 	{
 		# rate% of the first half of the data is used as reference data
@@ -615,7 +624,6 @@ Detection_precursor_phenomena_train <- function(df, target_colnames, timeStamp, 
 	zscore_base <- NULL
 	zscore_base_mean <- 0
 	zscore_base_sd <- 0
-	offset <- 0
 	
 	cat("ncol(initial_data)")
 	print(ncol(initial_data))
@@ -644,28 +652,11 @@ Detection_precursor_phenomena_train <- function(df, target_colnames, timeStamp, 
 		print(sum(abs(zscore_base) > y)/length(zscore_base))
 		print(sum(abs(zscore_base) > y))
 		
-		offset <- 0
-		if ( sum(abs(zscore_base) > y)/length(zscore_base) > 0.1 || sum(abs(zscore_base) > y) > 10)
-		{
-			p_v <- c(0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.25, 0.15)
-			for ( i in length(p_v):1 )
-			{
-				offset_ <- as.numeric(quantile(abs(zscore_base- y), c(p_v[i]))[1])
-				
-				cat("sum(abs(zscore_base) > y)/length(zscore_base)")
-				print(sum(abs(zscore_base) > y+offset_)/length(zscore_base)) 
-				if ( sum(abs(zscore_base) > y+offset_)/length(zscore_base) <= 0.1 && sum(abs(zscore_base) > y+offset_) <= 10)
-				{
-					offset <- offset_
-					break
-				}
-			}
-		}		
-		print(sprintf("mean_base:%f sd_base:%f median_base:%f mad_base:%f offset:%f",
-		mean_base, sd_base, median_base, mad_base, offset))
+		print(sprintf("mean_base:%f sd_base:%f median_base:%f mad_base:%f",
+		mean_base, sd_base, median_base, mad_base))
 	}
 	prm = c(mean_base, sd_base, median_base, mad_base,  
-			zscore_base_mean, zscore_base_sd, offset)
+			zscore_base_mean, zscore_base_sd)
 	prm_list <- list()
 	prm_list[[1]] <- prm
 	prm_list[[2]] <- zscore_base
@@ -758,29 +749,47 @@ Detection_precursor_phenomena_train <- function(df, target_colnames, timeStamp, 
 	return (list(selected_pairs, prm_list, initial_data, model_list, target_colnames))
 }
 
-Cumulative_count <- function(df, maintenance_sv, max_threshold_upper, window_size = 30, slide = 1)
+probability_loess <- function(df, maintenance_sv)
 {
-	back_window <-  nrow(df)*0.1
-	
-	ymax <- max(df$plotY[1:(nrow(df) - back_window)])
-	
-	df$count <- df$pre_anomaly_probability1
-	df$count[1] <- 0
-	count_start <- 1
-	for ( k in 1:nrow(df))
+	if ( nrow(df) < 100)
 	{
-		df$count[k] = sum( ifelse(df$pre_anomaly_probability1[count_start:k], 1, 0) )
-		if( !is.null(maintenance_sv))
+		return(df)
+	}
+	min <- min(df$posterior_abnormal)
+	max <- max(df$posterior_abnormal)
+	
+	rescale <- F
+	if ( max - min > 1.0e-10 )
+	{
+		rescale <- T
+		df$posterior_abnormal <- exp(10*df$posterior_abnormal + 1)
+	}
+	
+	loess <- predict(loess(posterior_abnormal ~ time, data = df, span = 0.4))
+
+	if ( rescale )
+	{
+		#loess <- log(loess) - 1
+		loess <- max*loess/max(loess)
+	}
+	
+	loess <- ifelse(loess < 0, 0, loess)
+	loess <- ifelse(loess >= 1, 0.999, loess)
+	
+	count_start <- 1
+	if( !is.null(maintenance_sv))
+	{
+		for ( k in 1:length(loess))
 		{
 			if ( maintenance_sv[k] == 1 )
 			{
-				df$count[k] = 0
+				#loess[k] = 0
 				count_start <- k
 			}
 		}
 	}
 	
-	df$count <- ymax*df$count/max(df$count[1:(nrow(df) - back_window)])
+	df$posterior_abnormal <- loess
 	
 	return (df)
 }
@@ -804,7 +813,6 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 	zscore_base <- dpp_model[[2]][[2]]
 	zscore_base_mean <- dpp_model[[2]][[1]][5]
 	zscore_base_sd <- dpp_model[[2]][[1]][6]
-	offset <- dpp_model[[2]][[1]][7]
 	
 
 	train_data <- dpp_model[[3]]
@@ -814,6 +822,8 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 
 	maintenance_sv <- NULL
 	time_index_sv <- NULL
+	
+	posterior_abnormal <- NULL
 	
 	if (  length(grep("time_index", colnames(df))) > 0)
 	{
@@ -845,7 +855,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 	anomaly_cunt <- 0
 	anomaly_max <- 0
 
-	
+	posterior_abnormal_list <- list()
 	plots <- list()
 	num_plt <- 0
 	if ( !is.null(selected_pairs) && nrow(selected_pairs) >= 1 )
@@ -872,7 +882,33 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 				next
 			}
 
-
+			###### Bayesian estimation
+			
+			# Setting the prior probability
+			prior_normal <- 0.999
+			prior_abnormal <- (1 - prior_normal)
+			
+			mean_nromal <- mean(model_err,na.rm=T)
+			sd_normal <- sd(model_err,na.rm=T)
+			 
+			mean_abnormal <- mean_nromal + 1.2*sd_normal
+			sd_abnormal <- 1.2*sd_normal
+			
+			posterior_abnormal <- pred_residuals_err*0
+			for ( k in 1:length(pred_residuals_err))
+			{
+				x <- pred_residuals_err[k]
+				likelihood_normal <- dnorm(x, mean = mean_nromal, sd = sd_normal)
+				likelihood_abnormal <- dnorm(x, mean = mean_abnormal, sd = sd_abnormal)
+				
+				# Calculating posterior probabilities based on Bayes' theorem
+				posterior_abnormal[k] <- (likelihood_abnormal * prior_abnormal) /
+				  (likelihood_normal * prior_normal + likelihood_abnormal * prior_abnormal)
+			
+				prior_abnormal <- posterior_abnormal
+				prior_normal <- (1 - posterior_abnormal)
+			}
+			
 			# pre_anomaly_d
 			#
 			#Discrepancy between predictions and observed values 
@@ -881,72 +917,50 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			result_df <- data.frame(
 			  time = sensor_data$time_index,
 			  Y = sensor_data[[Y]],
-			  pre_anomaly_d = abs(pred_residuals_err)
+			  pre_anomaly_d = (pred_residuals_err),
+			  posterior_abnormal = posterior_abnormal^0.2
 			)
 			if (!is.null(maintenance_sv))
 			{
 				result_df$maintenance <- sensor_data$maintenance
 			}
-
+			
+			result_df <- probability_loess(result_df, maintenance_sv)
+			#result_df <- moving_mean_smooth2(result_df, timeStamp, 4, 1) 
 
 			delta_ix <- result_df$time[nrow(result_df)]- result_df$time[nrow(result_df)-1]
 			result_df$TimeStamp <- rev(seq(current_time, length.out = length(1:nrow(result_df)), by = -delta_time*delta_ix))
 			result_df$TimeStamp <- as.POSIXct(result_df$TimeStamp, tz='UTC', origin="1970-01-01")
 			
-			threshold_upper <- mean_anomaly + sigma*sd(model_err, na.rm=TRUE) + 0.01*model_errrate
-			
-			offset <- 0
-			x <- sum(model_err > max(threshold_upper))/length(model_err)
-			if ( x > 0.1 )
-			{
-				cat("sum(model_err > max(threshold_upper))/length(model_err)")
-				print(x)
-				offset <- quantile(abs(model_err - max(threshold_upper)), c(0.80))
-			}
-			threshold_upper <- threshold_upper + offset
-			
-			x <- sum(model_err > max(threshold_upper))/length(model_err)
-			cat("sum(model_err > max(threshold_upper))/length(model_err)")
-			print(x)
+			threshold_upper <- c(0.3, 0.6, 0.9)
 			
 			
 			mean_res <- mean(model_err)
 			sd_res <- sd(model_err)
-			p_values <- dnorm(pred_residuals_err, mean = mean_res, sd = sd_res)
+			p_values <- dnorm(result_df$pre_anomaly_d, mean = mean_res, sd = sd_res)
 			result_df$pre_anomaly_probability <-  1 - p_values
 
 			
 			ecdf_normal <- ecdf(model_err)
-			result_df$pre_anomaly_probability <-  1 - ecdf_normal(pred_residuals_err)
-			
-			#if ( nrow(result_df) > 100000 )
-			#{
-			#	result_df <- result_df[(nrow(result_df) - 100000):nrow(result_df),]
-			#}
+			result_df$pre_anomaly_probability <-  1 - ecdf_normal(result_df$pre_anomaly_d)
 
 			
 			# Set the judgment flag
-			#result_df$pre_anomaly_probability1 <- (result_df$pre_anomaly_probability <= percent[1] & result_df$pre_anomaly_probability > 0.5 )
-			result_df$pre_anomaly_probability1 <- (result_df$pre_anomaly_d <= threshold_upper[1] & result_df$pre_anomaly_d > 0)
+			result_df$pre_anomaly_probability1 <- (result_df$posterior_abnormal <= threshold_upper[1] & result_df$posterior_abnormal > 0)
 
 			anomaly_cunt <- sum(result_df$pre_anomaly1)
-			#anomaly_max <- quantile(abs(result_df$pre_anomaly_probability   - percent[1]),c(0.6,0.90), na.rm = TRUE)[2]
-			#anomaly_max <- max(abs(result_df$pre_anomaly_probability   - percent[1]), na.rm = TRUE)
 			anomaly_max <- max(abs(result_df$pre_anomaly_d - threshold_upper[1]), na.rm = TRUE)
 			
-			result_df$pre_anomaly_probability2 <- (result_df$pre_anomaly_probability > 10000000)
-			result_df$pre_anomaly_probability3 <- (result_df$pre_anomaly_probability > 10000000)
+			result_df$pre_anomaly_probability2 <- (result_df$posterior_abnormal > 10000000)
+			result_df$pre_anomaly_probability3 <- (result_df$posterior_abnormal > 10000000)
 			if ( length(percent) > 1 )
 			{
-				#result_df$pre_anomaly_probability2 <- (result_df$pre_anomaly_probability > percent[1] & result_df$pre_anomaly_probability <= percent[2])
-				result_df$pre_anomaly_probability2 <- (result_df$pre_anomaly_d > threshold_upper[1] & result_df$pre_anomaly_d <= threshold_upper[2])
+				result_df$pre_anomaly_probability2 <- (result_df$posterior_abnormal > threshold_upper[1] & result_df$posterior_abnormal <= threshold_upper[2])
 			}
 			if ( length(percent) > 2 )
 			{
-				#result_df$pre_anomaly_probability3 <- (result_df$pre_anomaly_probability > percent[2] & result_df$pre_anomaly_probability <= percent[3])
-				#result_df$pre_anomaly_probability4 <- (result_df$pre_anomaly_probability > percent[3] )
-				result_df$pre_anomaly_probability3 <- (result_df$pre_anomaly_d > threshold_upper[2] & result_df$pre_anomaly_d <= threshold_upper[3])
-				result_df$pre_anomaly_probability4 <- (result_df$pre_anomaly_d > threshold_upper[3] )
+				result_df$pre_anomaly_probability3 <- (result_df$posterior_abnormal > threshold_upper[2] & result_df$posterior_abnormal <= threshold_upper[3])
+				result_df$pre_anomaly_probability4 <- (result_df$posterior_abnormal > threshold_upper[3] )
 			}
 			
 			
@@ -959,11 +973,9 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 				breaks_vec <- seq(min(result_df$TimeStamp), max(result_df$TimeStamp), length.out = 5)
 				
 				#result_df$plotY <- result_df$pre_anomaly_probability
-				result_df$plotY <- result_df$pre_anomaly_d
+				result_df$plotY <- result_df$posterior_abnormal
 				#result_df$plotY <- result_df$Y
-				
-				result_df <- Cumulative_count(result_df, maintenance_sv, max(threshold_upper), window_size, slide)
-				
+								
 				errR <-  model_errrate/100
 				alp <- 1.0
 				if ( errR > 0.1 ) alp <- 0.5
@@ -980,7 +992,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 				
 				plt <- ggplot(result_df, aes(x = TimeStamp, y = plotY)) +
 				  geom_line(color = "steelblue", linewidth = 0.8, alpha = alp) +
-				  geom_hline(yintercept = max(threshold_upper), color = "red", linetype = "dashed")
+				  geom_hline(yintercept = (threshold_upper), color = "red", linetype = "dashed")
 				  #geom_hline(yintercept = min(cor_threshold_lower), color = "red", linetype = "dashed")
 				  #geom_hline(yintercept = 0, color = "orange", linetype = "dashed")
 				  #geom_hline(yintercept = c(0,1), color = "red", linetype = "dashed")
@@ -991,14 +1003,16 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 				  			aes(xintercept = TimeStamp), color = "green", linetype = "solid" , alpha = 0.5)
 				  }				  
 				  
-				  plt <- plt + geom_line(aes(x=TimeStamp, y=count), color = "red", linewidth = 1, alpha = 1)
+				  #plt <- plt + geom_line(aes(x=TimeStamp, y=count), color = "red", linewidth = 0.5, alpha = 0.5)
 
 				  if ( T )
 				  {
 						pal <- c("steelblue", "#3B9AB2", "#56A6BA", "#71B3C2", "#9EBE91", "#D1C74C",
 						         "#E8C520", "#E4B80E", "#E29E00", "#EA5C00", "#F21A00","#fc0082")
 						plt <- plt + geom_point(aes(x=TimeStamp, y=plotY, color=plotY,alpha = 0.8), size=1) + 
-						scale_color_gradientn(colors = pal, name="probability", guide = "none") + theme(legend.position = "none")
+						scale_color_gradientn(colors = pal, name="probability", guide = "none", limits = c(0, 1)) + theme(legend.position = "none") +
+						geom_point(data = subset(result_df, pre_anomaly_probability4), aes(x = TimeStamp, y = plotY),
+						            color = "#fc0082", size = 2, alpha=1)
 				  }else
 				  {
 					  plt <- plt +
@@ -1012,10 +1026,17 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 					            color = "#fc0082", size = 2, alpha=alp/2)
 				  }
 				            
+		  		  plt <- plt +  geom_text_repel(data = subset(result_df,plotY> 0.60),
+		  		   aes(label = sprintf("%.2f%%",plotY*100)),vjust = -0.5, size = 3, 
+		  		   force = 2, max.iter = 1000, box.padding = 0.7, point.padding = 0.5) 
+				  
 				  plt <- plt + labs(title=paste(sensor_X, "-", sensor_Y),
-		         	y = "Anomaly Score", x = paste("time [current:",current_time,"]", sep="")) +
+		         	y = "Anomaly probability", x = paste("time [current:",current_time,"]", sep="")) +
 		          scale_x_datetime(breaks = breaks_vec)+
+		          coord_cartesian(clip = "off") +
 				  theme_minimal() + theme(legend.position = "none")
+				  
+				plt <- SpeedMeter(plt, current_speed = result_df$plotY[nrow(result_df)]*100, title_text = "", x = 0.73, y = 0.8, width = 0.35, height = 0.35)
 			}else
 			{
 				errR <-  model_errrate/100
@@ -1032,11 +1053,15 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 				  geom_hline(yintercept = min(cor_threshold_lower), color = "red", linetype = "dashed") +
 				  geom_hline(yintercept = 0, color = "orange", linetype = "dashed") +
 				  labs(title=paste(sensor_X, "-", sensor_Y),
-		         	y = "Anomaly Score", x = paste("time [current:",current_time,"]", sep="")) +
+		         	y = "Anomaly probability", x = paste("time [current:",current_time,"]", sep="")) +
 		          scale_x_datetime(breaks = breaks_vec)+
+		          coord_cartesian(clip = "off") +
 				  theme_minimal()
 			}
+			
 			plots[[i]] <- plt
+			posterior_abnormal_list[[i]] <- list(paste(sensor_X, "-", sensor_Y, "Anomaly probability"), result_df$posterior_abnormal)
+
 			num_plt <- num_plt + 1
 		}
 
@@ -1046,6 +1071,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		}
 	}else
 	{
+  		
 		anomaly_max <- 0	
 		if ( abs(mad_base) < 1.0e-10 )
 		{
@@ -1072,54 +1098,76 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		print(colnames(sensor_data))
 		ecdf_normal <- ecdf(zscore_base)
 		
+		
+		###### Bayesian estimation
+		
+		# Setting the prior probability
+		prior_normal <- 0.999
+		prior_abnormal <- (1 - prior_normal)
+		
+		mean_nromal <- zscore_base_mean
+		sd_normal <- zscore_base_sd
+		 
+		mean_abnormal <- mean_nromal + 3*sd_normal
+		sd_abnormal <- 1.2*sd_normal
+		
+		posterior_abnormal <- z_scores*0
+		for ( k in 1:length(z_scores))
+		{
+			x <- z_scores[k]
+			likelihood_normal <- dnorm(x, mean = mean_nromal, sd = sd_normal)
+			likelihood_abnormal <- dnorm(z_scores, mean = mean_abnormal, sd = sd_abnormal)
+			
+			# Calculating posterior probabilities based on Bayes' theorem
+			posterior_abnormal[k] <- (likelihood_abnormal * prior_abnormal) /
+			  (likelihood_normal * prior_normal + likelihood_abnormal * prior_abnormal)
+			  
+			prior_abnormal <- posterior_abnormal
+			prior_normal <- (1 - posterior_abnormal)
+		}
+				
+		
+		
+		
 		df_plot <- data.frame(
 		  time = sensor_data$time_index,
 		  value = c(sensor_data[,colnam]),
 		  z_score = abs(z_score_df$z_score),
-		  #pre_anomaly_probability = 1 - pnorm(sensor_data[,colnam], mean = mean_base, sd = sd_base)
-		  pre_anomaly_probability = 1 - ecdf_normal(abs(z_score_df$z_score))
+		  #pre_anomaly_probability = 1 - pnorm(sensor_data[,colnam], mean = mean_base, sd = sd_base),
+		  pre_anomaly_probability = 1 - ecdf_normal(abs(z_score_df$z_score)),
+		  posterior_abnormal = posterior_abnormal^0.2 
 		)
 		if (!is.null(maintenance_sv))
 		{
 			df_plot$maintenance <- sensor_data$maintenance
 		}
+		
+		df_plot <- probability_loess(df_plot, maintenance_sv)
+		#df_plot <- moving_mean_smooth2(df_plot, timeStamp, 4, 1) 
+
+		posterior_abnormal <- df_plot$posterior_abnormal
+		
 		cat("df_plot")
 		str(df_plot)
 		df_plot <- df_plot[, sapply(df_plot, is.numeric)]
 		
-		threshold_upper <- zscore_base_mean + sigma*zscore_base_sd + offset
-		#cat("threshold_upper")
-		#print(threshold_upper)
-		#cat("offset")
-		#print(offset)
+		threshold_upper <- c(0.3, 0.6, 0.9)
 		
-		#if ( nrow(df_plot) > 100000 )
-		#{
-		#	df_plot <- df_plot[(nrow(df_plot) - 100000):nrow(df_plot),]
-		#}
 		
-		df_plot$pre_anomaly_probability1 <- ((df_plot$z_score) > threshold_upper[1] & (df_plot$z_score) > 0)
-		#df_plot$pre_anomaly_probability1 <- ((df_plot$pre_anomaly_probability) <= percent[1] & (df_plot$pre_anomaly_probability) > 0.5)
+		df_plot$pre_anomaly_probability1 <- ((df_plot$posterior_abnormal) > threshold_upper[1] & (df_plot$posterior_abnormal) > 0)
 
-		#anomaly_cunt <- sum(df_plot$pre_anomaly_probability1)
-		anomaly_max[1] <- quantile((df_plot$pre_anomaly_probability1-(threshold_upper[1])),c(0.6, 0.90), na.rm = TRUE)[2]
-		#anomaly_max[1] <- max((df_plot$pre_anomaly_probability1-(percent[1])), na.rm = TRUE)
+		anomaly_max <- quantile((df_plot$pre_anomaly_probability1-(threshold_upper[1])),c(0.6, 0.90), na.rm = TRUE)[2]
 
-		df_plot$pre_anomaly2 <- ((df_plot$z_score) > 10000000)
-		df_plot$pre_anomaly3 <- ((df_plot$z_score) > 10000000)
-		#df_plot$pre_anomaly2 <- ((df_plot$pre_anomaly_probability) > 10000000)
-		#df_plot$pre_anomaly3 <- ((df_plot$pre_anomaly_probability) > 10000000)
+		df_plot$pre_anomaly_probability2 <- ((df_plot$posterior_abnormal) > 10000000)
+		df_plot$pre_anomaly_probability3 <- ((df_plot$posterior_abnormal) > 10000000)
 		if ( length(percent) > 1 )
 		{
-			df_plot$pre_anomaly2 <- ((df_plot$z_score) > threshold_upper[1] & (df_plot$z_score) <= threshold_upper[2])
-			#df_plot$pre_anomaly2 <- ((df_plot$pre_anomaly_probability) > percent[1] & (df_plot$pre_anomaly_probability) <= percent[2])
+			df_plot$pre_anomaly2 <- ((df_plot$posterior_abnormal) > threshold_upper[1] & (df_plot$posterior_abnormal) <= threshold_upper[2])
 		}
 		if ( length(sigma) > 2 )
 		{
-			df_plot$pre_anomaly_probability3 <- ((df_plot$z_score) > threshold_upper[2] & (df_plot$z_score) <= threshold_upper[3])
-			df_plot$pre_anomaly_probability4 <- ((df_plot$z_score) > threshold_upper[3])
-			#df_plot$pre_anomaly_probability3 <- ((df_plot$pre_anomaly_probability) > percent[2] & (df_plot$pre_anomaly_probability) <= percent[3])
-			#df_plot$pre_anomaly_probability4 <- ((df_plot$pre_anomaly_probability) > percent[3])
+			df_plot$pre_anomaly_probability3 <- ((df_plot$posterior_abnormal) > threshold_upper[2] & (df_plot$posterior_abnormal) <= threshold_upper[3])
+			df_plot$pre_anomaly_probability4 <- ((df_plot$posterior_abnormal) > threshold_upper[3])
 		}
 		
 		
@@ -1140,28 +1188,29 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		breaks_vec <- seq(min(df_plot$TimeStamp), max(df_plot$TimeStamp), length.out = 5)
 		
 		#df_plot$plotY <- df_plot$pre_anomaly_probability
-		df_plot$plotY <- df_plot$z_score
+		#df_plot$plotY <- df_plot$z_score
+		df_plot$plotY <- df_plot$posterior_abnormal
 		
-		df_plot <- Cumulative_count(df_plot, maintenance_sv, max(threshold_upper), window_size, slide)
 		
 		plt <- ggplot(df_plot, aes(x=TimeStamp, y=plotY)) +
 		  geom_line(color="steelblue") +
-		  geom_hline(yintercept=c( max(threshold_upper)), color="red", linetype="dashed")
-		  #geom_hline(yintercept=c(0, 1), color="red", linetype="dashed") 
+		  geom_hline(yintercept=c( threshold_upper), color="red", linetype="dashed", alpha = 0.5 )
 		  
 		  if (  length(grep("maintenance", colnames(df_plot))) > 0)
 		  {
 		  	plt <- plt +  geom_vline(data = df_plot[df_plot$maintenance == 1, ],
 		  			aes(xintercept = TimeStamp), color = "green", linetype = "solid", alpha = 0.5 )
 		  }				  
-		  plt <- plt + geom_line(aes(x=TimeStamp, y=count), color = "red", linewidth = 1, alpha = 1)
+		  #plt <- plt + geom_line(aes(x=TimeStamp, y=count), color = "red", linewidth = 0.5, alpha = 0.5)
 
 		  if ( T )
 		  {
 				pal <- c("steelblue", "#3B9AB2", "#56A6BA", "#71B3C2", "#9EBE91", "#D1C74C",
 				         "#E8C520", "#E4B80E", "#E29E00", "#EA5C00", "#F21A00","#fc0082")
 				plt <- plt + geom_point(aes(x=TimeStamp, y=plotY, color=plotY,alpha = 0.8), size=1) + 
-				scale_color_gradientn(colors = pal, name="probability", guide = "none")	+ theme(legend.position = "none")
+				scale_color_gradientn(colors = pal, name="probability", guide = "none",limits = c(0, 1))	+ theme(legend.position = "none")+
+				geom_point(data = subset(df_plot, pre_anomaly_probability4), aes(x = TimeStamp, y = plotY),
+				             color = "#fc0082", size = 2, alpha=1)
 		  }else
 		  {
 		  
@@ -1170,24 +1219,29 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			  geom_point(data = subset(df_plot, pre_anomaly_probability2), aes(x = TimeStamp, y = plotY),
 			             color = "#f59942", size = 1, alpha=0.7) +
 			  geom_point(data = subset(df_plot, pre_anomaly_probability3), aes(x = TimeStamp, y = plotY),
-			             color = "#f55d42", size = 2, alpha=0.7)
+			             color = "#f55d42", size = 2, alpha=0.8)
 			  geom_point(data = subset(df_plot, pre_anomaly_probability4), aes(x = TimeStamp, y = plotY),
-			             color = "#fc0082", size = 2, alpha=0.7)
+			             color = "#fc0082", size = 2, alpha=1)
 		  }
-		  
+		  plt <- plt +  geom_text_repel(data = subset(df_plot,plotY> 0.60), aes(label = sprintf("%.2f%%",plotY*100)),vjust = -0.5, size = 3) 
 
-		  plt <- plt +  labs(title=paste(colnam,":Anomaly Score(Z-score)",sep=""), y="z_score", x="time") +
-          scale_x_datetime(breaks = breaks_vec)
-		  theme_minimal() 
+		  plt <- plt +  labs(title=paste(colnam," :Anomaly probability",sep=""), y="Anomaly probability", x=paste("time [current:",current_time,"]", sep="")) +
+          scale_x_datetime(breaks = breaks_vec) + coord_cartesian(clip = "off") +
+		  theme_minimal() + theme(legend.position = "none")
 		  
+		  pr <- df_plot$plotY[nrow(df_plot)]
+		  pr_text <- sprintf("%.2f%%", pr*100)
+		  plt <- SpeedMeter(plt, current_speed = pr*100, title_text = pr_text, x = 0.75, y = 0.8, width = 0.35, height = 0.35)
+		  
+	  	posterior_abnormal_list[[1]] <- list(paste(colnam,":Anomaly probability",sep=""), c(df_plot$posterior_abnormal))
+	  	
 		plt <- gridExtra::grid.arrange(grobs=list(plt), nrow=nrow(1))
 		num_plt <- num_plt + 1
 		#plt
-		  
 	}
 	print("====== Detection_precursor_phenomena_test end =======")
 	
-	return( list(plt, plots, num_plt, anomaly_cunt, anomaly_max) )
+	return( list(plt, plots, num_plt, anomaly_cunt, anomaly_max, posterior_abnormal_list) )
 }
 
 Detection_precursor_phenomena <- function(df, timeStamp, dpp_model=NULL, 
@@ -1210,8 +1264,8 @@ Detection_precursor_phenomena <- function(df, timeStamp, dpp_model=NULL,
 		test <- df[max(n*0.9, n-nrow_limit_max):n,]
 	}else
 	{
-		train <- df[1:(n*0.3),]
-		test <- df[(n*0.7):n,]
+		train <- df[1:(n*0.4),]
+		test <- df[(n*0.6):n,]
 	}
 	if ( nrow(test) < 1000 )
 	{
@@ -1235,19 +1289,6 @@ Detection_precursor_phenomena <- function(df, timeStamp, dpp_model=NULL,
 		median_base<- dpp_model[[2]][[1]][3]
 		mad_base   <- dpp_model[[2]][[1]][4]
 		train_data <- dpp_model[[3]]
-	
-		plt <- Detection_precursor_phenomena_test(train, timeStamp, dpp_model, percent, window_size, slide, method)
-		anomaly_cunt <- plt[[4]]
-		anomaly_max <- plt[[5]]
-		rate <- anomaly_cunt/nrow(train)
-		
-		#print("anomaly_cunt")
-		#print(anomaly_cunt)
-		#print("anomaly_max")
-		#print(anomaly_max)
-		
-		cat("train error rate")
-		print(rate)
 	}
 	cat("str(test)")
 	print(str(test))
@@ -1257,12 +1298,13 @@ Detection_precursor_phenomena <- function(df, timeStamp, dpp_model=NULL,
 	rate <- anomaly_cunt/nrow(test)
 	cat("train error rate")
 	print(rate)
-	
+	posterior_abnormal <-  plt[[6]]
+
 	if ( is.null(plt)) 
 	{
 		return(NULL)
 	}
-	return ( list(plt,dpp_model) )
+	return ( list(plt,dpp_model, posterior_abnormal) )
 }
 
 
