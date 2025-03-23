@@ -1120,6 +1120,8 @@ anomaly_detection_train <- function( df )
 {
 	#print("========== anomaly_detection_train start ===============")
 	#print( colnames(df))
+	#print("nrow(df)")
+	#print(nrow(df))
 
 	if ( length(which("maintenance" == colnames(df))) > 0 )
 	{
@@ -1135,21 +1137,24 @@ anomaly_detection_train <- function( df )
 	}
 
 	total_length <- nrow(df)
-	df <- df[, sapply(df, function(x) is.numeric(x) != 0), drop=FALSE]
-	#print(str(df))
-	df <- df[, sapply(df, function(x) sd(x, na.rm = TRUE) != 0), drop=FALSE]
-	#print(str(df))
-	df <- df[, sapply(df, function(x) length(unique(x)) > total_length/200), drop=FALSE]
-	#print(str(df))
-	
-	# Exclude index columns (integer columns increasing consecutively by 1)
-	is_index_col <- function(x) {
-	  all(diff(x) == 1) && is.integer(x)
-	}
+	if ( total_length > 2 )
+	{
+		df <- df[, sapply(df, function(x) is.numeric(x) != 0), drop=FALSE]
+		print(str(df))
+		df <- df[, sapply(df, function(x) sd(x, na.rm = TRUE) != 0), drop=FALSE]
+		print(str(df))
+		df <- df[, sapply(df, function(x) length(unique(x)) > total_length/200), drop=FALSE]
+		print(str(df))
+		
+		# Exclude index columns (integer columns increasing consecutively by 1)
+		is_index_col <- function(x) {
+		  all(diff(x) == 1) && is.integer(x)
+		}
 
-	# Detect and exclude index-like columns
-	df <- df[, !sapply(df, function(x) is_index_col(x)), drop=FALSE]
-	#print(str(df))
+		# Detect and exclude index-like columns
+		df <- df[, !sapply(df, function(x) is_index_col(x)), drop=FALSE]
+		#print(str(df))
+	}
 	
 	
 	df_colnames <- colnames(df)
@@ -3896,7 +3901,7 @@ eval_detection_precursor_phenomena <- function(df2)
 	method="spearman"
 	#method="dcor"
 	#method="MIC"
-	if ( nrow(df2) > window_size*10 )
+	if ( nrow(df2) > window_size*2 )
 	{
 		#cat("str(df2)")
 		#print(str(df2))
