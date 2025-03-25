@@ -1224,7 +1224,6 @@ anomaly_detection_test <- function( model, df, method="mahalanobis", threshold=0
 	{
 		df[,timeStamp] <- NULL
 	}
-
 	df_colnames <- model[[6]]
 	df_colnames_in <- colnames(df)
 	#print( "df_colnames")
@@ -1906,6 +1905,9 @@ predict_plot <- function(predict, rank="")
 
 source("../src/fitting_util.r")
 
+#Controlling the rapid rise in the forecast portion of the projection.
+max_rapid_rise_rate <- 100
+
 fit_tray_count <- 0
 fit_success <- 0
 curve_fitting <- function(y, h, reference=NULL, rank="")
@@ -2026,11 +2028,19 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		err_min_stpnt <- 999999.0
 		best_fit <- NULL
 		
+		err_min_sv <- 999999.0
+		err_min_stpnt_sv <- 999999.0
+		best_fit_sv <- NULL
+		
 		err_min2 <- 999999.0
 		err_min_stpnt2 <- 999999.0
 		best_fit2 <- NULL
 		
-		exp_domain_max <- 30
+		err_min2_sv <- 999999.0
+		err_min_stpnt2_sv <- 999999.0
+		best_fit2_sv <- NULL
+
+		exp_domain_max <- 10
 		
 		#for ( kk in lockback_max:lockback_min)
 		for ( kk in lockback_max:lockback_max)
@@ -2116,7 +2126,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					if ( fitting_solver == "auto" || fitting_solver == "Gompertz" )
 					{
 						prm <- fitting_initial_valuse(kk, yy, a_coef2, b_coef2, c_coef2, d_coef2, noise_varience2)
-						fit2 <- GompertzDegradationModel(prm, xx,yy, xx_org[1], yy_org[1])
+						fit2 <- GompertzDegradationModel(prm, xx,yy, xx_org[1], yy_org[1], exp_domain_max)
 					}
 
 
@@ -2127,33 +2137,103 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						err <- WeightedErrorEvaluation(yy_org, fit_pred, x)
 						
 						if ( sum(!is.finite(fit_pred))== 0 )
-						{
-							if ( err_min_stpnt > abs(yy_org[1] - fit_pred[1]))
+						{							
+							too_rapidly <- F
+							
+							x = c(1:(length(xx)+5))/(length(xx) + 5)
+							
+							fit_pred_chk <- evalExponentialDegradationModel(fit, x,exp_domain_max)
+							
+							
+							if (sum(!is.finite(fit_pred_chk))!=0)
 							{
-								err_min_stpnt = abs(yy_org[1] - fit_pred[1])
+								too_rapidly <- T
+								err <- 999999.0
+							}else
+							{
+								y0 <- fit_pred_chk[(length(xx))]
+								y1 <- fit_pred_chk[(length(xx)+5)]
+								if (is.finite(y0) && is.finite(y1))
+								{
+									if ( (abs(y1)+1)/(abs(y0)+1)  > max_rapid_rise_rate)
+									{
+										too_rapidly <- T
+
+										print("")
+										yellow_text("It rises too rapidly.\n\n")
+										print(sprintf("%d %f %g %g",index_number, y0, y1,  (abs(y1)+1)/(abs(y0)+1)))
+									}
+								}
 							}
-							if ( err_min > err )
+							if (!too_rapidly)
 							{
-								best_fit <- fit
-								err_min = err
+								if ( err_min_stpnt > abs(yy_org[1] - fit_pred[1]))
+								{
+									err_min_stpnt = abs(yy_org[1] - fit_pred[1])
+								}
+								
+								if ( err_min > err )
+								{
+									best_fit <- fit
+									err_min = err
+								}
+							}
+							if ( sum(!is.finite(fit_pred_chk))==0 && err_min_sv > err )
+							{
+								best_fit_sv <- fit
+								err_min_sv = err
 							}
 						}
 					}
 					if ( !is.null(fit2))
 					{
-						fit_pred2 <-  evalGompertzDegradationModel(fit2, xx_org)
+						fit_pred2 <-  evalGompertzDegradationModel(fit2, xx_org, exp_domain_max)
 						err <- WeightedErrorEvaluation(yy_org, fit_pred2, x)
 
 						if ( sum(!is.finite(fit_pred2))==0 )
 						{
-							if ( err_min_stpnt2 > abs(yy_org[1] - fit_pred2[1]))
+							too_rapidly <- F
+							
+							x = c(1:(length(xx)+5))/(length(xx) + 5)
+							
+							fit_pred_chk <- evalGompertzDegradationModel(fit2, x, exp_domain_max)
+							
+							
+							if (sum(!is.finite(fit_pred_chk)) != 0)
 							{
-								err_min_stpnt2 = abs(yy_org[1] - fit_pred2[1])
+								too_rapidly <- T
+								err <- 999999.0
+							}else
+							{
+								y0 <- fit_pred_chk[(length(xx))]
+								y1 <- fit_pred_chk[(length(xx)+5)]
+								if (is.finite(y0) && is.finite(y1))
+								{
+									if ( (abs(y1)+1)/(abs(y0)+1)  > max_rapid_rise_rate)
+									{
+										too_rapidly <- T
+										print("")
+										yellow_text("It rises too rapidly.\n\n")
+										print(sprintf("%d %f %g %g",index_number, y0, y1,  (abs(y1)+1)/(abs(y0)+1)))
+									}
+								}
 							}
-							if ( err_min2 > err )
+							if (!too_rapidly)
 							{
-								best_fit2 <- fit2
-								err_min2 = err
+								if ( err_min_stpnt2 > abs(yy_org[1] - fit_pred2[1]))
+								{
+									err_min_stpnt2 = abs(yy_org[1] - fit_pred2[1])
+								}
+								if ( err_min2 > err )
+								{
+									best_fit2 <- fit2
+									err_min2 = err
+								}
+							}
+							if ( sum(!is.finite(fit_pred_chk)) == 0 && err_min2_sv > err )
+							{
+								best_fit2_sv <- fit2
+								err_min2_sv = err
 							}
 						}
 					}
@@ -2161,14 +2241,34 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			}
 			if ( fitting_solver == "auto" )
 			{
+				if (is.null(best_fit) && !is.null(best_fit_sv))
+				{
+					best_fit <- best_fit_sv
+					err_min <- err_min_sv
+				}
+				if (is.null(best_fit2) && !is.null(best_fit2_sv))
+				{
+					best_fit2 <- best_fit2_sv
+					err_min2 <- err_min2_sv
+				}
 				if ( !is.null(best_fit)&&!is.null(best_fit2)) break
 			}
 			if ( fitting_solver == "exp" )
 			{
+				if (is.null(best_fit) && !is.null(best_fit_sv))
+				{
+					best_fit <- best_fit_sv
+					err_min <- err_min_sv
+				}
 				if ( !is.null(best_fit)) break
 			}
 			if ( fitting_solver == "Gompertz" )
 			{
+				if (is.null(best_fit2) && !is.null(best_fit2_sv))
+				{
+					best_fit2 <- best_fit2_sv
+					err_min2 <- err_min2_sv
+				}
 				if ( !is.null(best_fit2)) break
 			}
 		}
@@ -2195,7 +2295,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			fit_pred <- evalExponentialDegradationModel(fit, xx_org,exp_domain_max)
 			err1 <- ErrorEvaluation(yy_org, fit_pred)
 			
-			fit_pred2 <- evalGompertzDegradationModel(fit2, xx_org)
+			fit_pred2 <- evalGompertzDegradationModel(fit2, xx_org,exp_domain_max)
 			err2 <- ErrorEvaluation(yy_org, fit_pred2)
 
 			
@@ -2262,7 +2362,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		{
 			if ( !is.null(best_fit2))
 			{
-				fit_pred2 <- evalGompertzDegradationModel(best_fit2, xx_org)
+				fit_pred2 <- evalGompertzDegradationModel(best_fit2, xx_org,exp_domain_max)
 				err2 <- ErrorEvaluation(yy_org, fit_pred2)
 				
 				err3 <- 1.0e16
@@ -2297,46 +2397,48 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 				model = "Gompertz"
 				best_fit = best_fit2
 				err_min = err_min2
-			}
-			if ( !is.null(best_fit))
+			}else
 			{
-				fit_pred <- evalExponentialDegradationModel(best_fit, xx_org,exp_domain_max)
-				err1 <- ErrorEvaluation(yy_org, fit_pred)
-			
+				if ( !is.null(best_fit))
+				{
+					fit_pred <- evalExponentialDegradationModel(best_fit, xx_org,exp_domain_max)
+					err1 <- ErrorEvaluation(yy_org, fit_pred)
 				
-				err3 <- 1.0e16
-				aic3 <- 1.0e16
-				if (!is.null(lm.fit))
-				{
-					fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
-					err3 <- ErrorEvaluation(yy_org, fit_pred3)
-				}
+					
+					err3 <- 1.0e16
+					aic3 <- 1.0e16
+					if (!is.null(lm.fit))
+					{
+						fit_pred3 = predict(lm.fit, x=data.frame(x=xx_org))
+						err3 <- ErrorEvaluation(yy_org, fit_pred3)
+					}
+					
+					aic1 = aic_manual(yy_org, fit_pred, best_fit)
+					if (!is.null(lm.fit))
+					{
+						aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
+					}
+					print("AIC & err")
+					print(sprintf("exp:aic1:%f err1:%f", aic1, err1))
+					print(sprintf("lm :aic3:%f err3:%f", aic3, err3))
 				
-				aic1 = aic_manual(yy_org, fit_pred, best_fit)
-				if (!is.null(lm.fit))
-				{
-					aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
-				}
-				print("AIC & err")
-				print(sprintf("exp:aic1:%f err1:%f", aic1, err1))
-				print(sprintf("lm :aic3:%f err3:%f", aic3, err3))
-			
-				aic_r = -1
-				if ( aic1 < 0 && aic3 < 0 )
-				{
-					aic_r = max(aic1,aic3)/min(aic1,aic3)
-				}
-				if ( aic1 > 0 && aic3 > 0 )
-				{
-					aic_r = min(aic1,aic3)/max(aic1,aic3)
-				}
-				cat("AICr:")
-				print(aic_r)
+					aic_r = -1
+					if ( aic1 < 0 && aic3 < 0 )
+					{
+						aic_r = max(aic1,aic3)/min(aic1,aic3)
+					}
+					if ( aic1 > 0 && aic3 > 0 )
+					{
+						aic_r = min(aic1,aic3)/max(aic1,aic3)
+					}
+					cat("AICr:")
+					print(aic_r)
 
 
-				model = "exp"
-				best_fit = best_fit
-				err_min = err_min
+					model = "exp"
+					best_fit = best_fit
+					err_min = err_min
+				}
 			}
 		}
 		
@@ -2379,7 +2481,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			}
 			if ( model == "Gompertz" )
 			{
-				fit_pred <- evalGompertzDegradationModel(fit, xx)
+				fit_pred <- evalGompertzDegradationModel(fit, xx, exp_domain_max)
 				a_coef2 <- c(a_coef2, coef[1])
 				b_coef2 <- c(b_coef2, coef[2])
 				c_coef2 <- c(c_coef2, coef[3])
@@ -2406,41 +2508,41 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 
 				if ( model == "exp" )
 				{
-					feature_param <<- set_param(rank, exp(coef[1]), exp(coef[2]), coef[3], exp_domain_max*tanh(coef[4]), model )
+					feature_param <<- set_param(rank, exp(exp_domain_max*tanh(coef[1])), exp(exp_domain_max*tanh(coef[2])), coef[3], exp_domain_max*tanh(coef[4]), model )
 				}else
 				{
-					feature_param <<- set_param(rank, exp(coef[1]), exp(coef[2]), coef[3], exp(coef[4]), model )
+					feature_param <<- set_param(rank, exp(exp_domain_max*tanh(coef[1])), exp(exp_domain_max*tanh(coef[2])), coef[3], exp(exp_domain_max*tanh(coef[4])), model )
 				}
 				rul = -1
 				t_scale = 0
 				if ( model == "exp")
 				{
-					if ( abs(coef[1]) > 1.0e-10 && abs(coef[2]) > 1.0e-10 )
+					if ( abs(coef[1]) > 1.0e-10 && abs(exp_domain_max*tanh(coef[2])) > 1.0e-10 )
 					{
-						tmp <- (threshold - coef[3])/exp(coef[1])
+						tmp <- (threshold - coef[3])/exp(exp_domain_max*tanh(coef[1]))
 						
 						if ( tmp > 0 )
 						{
 							t_scale = (length(yy_org) + h)
-							rul <- ((log(tmp) - fit_prm_e)/exp(coef[2]))
+							rul <- (log(tmp) - fit_prm_e)/exp(exp_domain_max*tanh(coef[2]))
 						}
 					}
 				}else
 				{
 					tmp = 0
-					if ( abs(coef[4]) > 1.0e-10 )
+					if ( abs(exp_domain_max*tanh(coef[4])) > 1.0e-10 )
 					{
-						tmp = (threshold - exp(coef[3]))/coef[4]
+						tmp = (threshold - coef[3])/exp(exp_domain_max*tanh(coef[4]))
 					}
-					if ( tmp != 0 && abs(coef[1]) > 1.0e-10 && abs(coef[2]) > 1.0e-10 )
+					if ( tmp > 0 && abs(exp_domain_max*tanh(coef[1])) > 1.0e-10 && abs(exp_domain_max*tanh(coef[2])) > 1.0e-10 )
 					{
-						tmp2 = exp(coef[1])/exp(coef[2])
-						tmp = log( tmp2 )*tmp -1
+						tmp2 = exp(exp_domain_max*tanh(coef[1]))/exp(exp_domain_max*tanh(coef[2]))
+						tmp = log( tmp )*tmp2 -1
 						
 						if ( tmp < 1 && tmp > 0 )
 						{
 							t_scale = (length(yy_org) + h)
-							rul = -log(tmp)/exp(coef[2])
+							rul = -log(tmp)/exp(exp_domain_max*tanh(coef[2]))
 						}
 					}
 				}
@@ -2463,7 +2565,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					}
 				}else
 				{
-					fit_pred <- evalGompertzDegradationModel(fit, xx)
+					fit_pred <- evalGompertzDegradationModel(fit, xx,exp_domain_max)
 					err <- yy_org[1:length(yy_org)] - fit_pred
 					if ( is.null(residual_error2))
 					{
@@ -2484,7 +2586,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					fit_pred <- evalExponentialDegradationModel(fit, x,exp_domain_max)
 				}else
 				{
-					fit_pred <- evalGompertzDegradationModel(fit, x)
+					fit_pred <- evalGompertzDegradationModel(fit, x,exp_domain_max)
 				}									
 				fit_pred25 <- fit_pred
 				fit_pred75 <- fit_pred
@@ -2635,8 +2737,8 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 						 l05=c(fit_pred05),
 						 u95=c(fit_pred95)
 						 )
-			print("fit_pred")
-			print(head(fit_pred))
+			#print("fit_pred")
+			#print(head(fit_pred))
 		}else
 		{
 			fit_pred <- NULL
@@ -4259,7 +4361,13 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		posterior_abnormal_text <- NULL
 		detection_precursor_phenomena_plt <- NULL
 		if ( T )
-		{
+		{		
+			if ( !dynamic_threshold && file.exists("Detection_precursor_phenomena_Model.rds") )
+			{
+				green_text("Uses trained models for detection\n")
+				detection_precursor_phenomena_model <<- readRDS("Detection_precursor_phenomena_Model.rds")
+			}
+			
 			#print("delta_time")
 			#print(delta_time)
 			#print("current_time")
@@ -4271,7 +4379,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			for ( k in 1:length(posterior_abnormal))
 			{
 				x <- posterior_abnormal[[k]]
-				print(x)
+				#print(x)
 				tag <- x[[1]]
 				probability <- x[[2]]
 				
@@ -4303,6 +4411,11 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			#print(m_mahalanobis)
 			flush.console()
 		}
+		if ( !dynamic_threshold && file.exists("m_mahalanobis.rds") )
+		{
+			green_text("Use trained models for anomaly detection\n")
+			m_mahalanobis <<- readRDS("m_mahalanobis.rds")
+		}
 		
 		#Feature Generation
 		print("create feature start")
@@ -4313,9 +4426,9 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		#if (F)
 		if ( length(tracking_feature_) > 0 )
 		{
-			#print("tracking_feature_")
-			#print(tracking_feature_)
-			#print(str(df2_tmp))
+			print("tracking_feature_")
+			print(tracking_feature_)
+			print(str(df2_tmp))
 			
 			maintenance_flag_idx = which("maintenance" == colnames(df2_tmp))
 			if ( length(maintenance_flag_idx) > 0 )
@@ -4908,7 +5021,9 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			source("./src/rul_info.r")
 			setwd(curdir)
 		}
-		rul_curve_plot(index_number=index_number)
+		
+		rul_curve_plot_plt <- NULL
+		rul_curve_plot_plt <- rul_curve_plot(index_number=index_number)
 		
 #//////////////////////////
 			
@@ -4937,7 +5052,6 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		print("------------------------------------------------------------------")
 		flush.console()
 		
-		rul_hist_plt <- NULL
 
 		if (!is.null(RUL_hist) && nrow(RUL_hist) > 1)
 		{
@@ -5203,7 +5317,8 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		
 			cat("\n\n\n\n")
 			print("===============================================")
-			print(posterior_abnormal_text)
+			cat(posterior_abnormal_text)
+			cat("\n")
 			print("===============================================")
 			cat("\n\n\n\n")
 		}
@@ -5223,43 +5338,19 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			              
 		if ( is.null(tracking_feature))
 		{
-			if ( !is.null(rul_hist_plt) )
-			{
-				layout1 <- rbind(	c(7, 7, 7),
-									c(6, 6, 1),
-									c(2, 2, 1),
-				                 	c(3, 4, 5))
-				plt0 <- plt0 + 
-				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, org_plt,
-												layout_matrix = layout1, top = current_time, heights=c(0.1,0.5,2,1))
-			}else
-			{
-				#https://id.fnshr.info/2016/10/10/gridextra/
-				layout1 <- rbind(	c(6, 6, 1),
-									c(2, 2, 1),
-				                 	c(3, 4, 5))
-				plt0 <- plt0 + 
-				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
-												layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
-			}
+			#https://id.fnshr.info/2016/10/10/gridextra/
+			layout1 <- rbind(	c(6, 6, 1),
+								c(2, 2, 1),
+			                 	c(3, 4, 5))
+			plt0 <- plt0 + 
+			theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+			plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+											layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
 		}else
 		{
-			if ( !is.null(rul_hist_plt) )
-			{
-				layout1 <- rbind(	c(6, 6, 6),
-									c(5, 5, 5),
-									c(1, 1, 1),
-				                 	c(2, 3, 4))
-				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]],rul_hist_plt, org_plt, 
-				layout_matrix = layout1, top = current_time, heights=c(0.1,1,2,1))
-			}else
-			{
-				layout1 <- rbind(c(1, 1, 1),
-				                 c(2, 3, 4))
-				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
-			}
+			layout1 <- rbind(c(1, 1, 1),
+			                 c(2, 3, 4))
+			plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
 		}
 		#ggsave(file = paste(putpng_path, result_png, sep=""), plot = looked_var_plt, dpi = 130, width = 14*1.5, height = 9.8*1.4)
 		ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)

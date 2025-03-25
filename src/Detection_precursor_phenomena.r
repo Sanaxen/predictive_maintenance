@@ -816,6 +816,36 @@ probability_loess <- function(df, maintenance_sv)
 	return (df)
 }
 
+
+posterior_probabilities_Bayes <- function(x, mean_nromal, sd_normal, mean_abnormal, sd_abnormal, prior_normal, prior_abnormal)
+{
+	likelihood_normal <- dnorm(x, mean = mean_nromal, sd = sd_normal)
+	likelihood_abnormal <- dnorm(x, mean = mean_abnormal, sd = sd_abnormal)
+
+
+	if ( abs(likelihood_normal) < 1.0e-10 &&  abs(likelihood_abnormal) < 1.0e-10 )
+	{
+		likelihood_normal <- 1.0e-10
+		likelihood_abnormal <- 1.0e-10
+	}
+	
+	# Calculating posterior probabilities based on Bayes' theorem
+	w <- (likelihood_normal * prior_normal + likelihood_abnormal * prior_abnormal)
+	if ( abs(w) < 1.0e-12 )
+	{
+		w <- 1.0e-12
+	}
+	posterior_abnormal <- (likelihood_abnormal * prior_abnormal) / w
+	
+	if ( posterior_abnormal > 1.0 )
+	{
+		posterior_abnormal <- 1.0
+	}
+	
+	return( posterior_abnormal)
+}
+
+
 Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent=c(0.80, 0.95, 0.99), window_size = 30, slide = 1, method="spearman")
 {
 	print("====== Detection_precursor_phenomena_test start =======")
@@ -909,26 +939,22 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			# Setting the prior probability
 			prior_normal <- 0.999
 			prior_abnormal <- (1 - prior_normal)
-			
+						
 			mean_nromal <- mean(model_err,na.rm=T)
 			sd_normal <- sd(model_err,na.rm=T)
 			 
 			mean_abnormal <- mean_nromal + 1.2*sd_normal
 			sd_abnormal <- 1.2*sd_normal
-			
+
 			posterior_abnormal <- pred_residuals_err*0
 			for ( k in 1:length(pred_residuals_err))
 			{
 				x <- pred_residuals_err[k]
-				likelihood_normal <- dnorm(x, mean = mean_nromal, sd = sd_normal)
-				likelihood_abnormal <- dnorm(x, mean = mean_abnormal, sd = sd_abnormal)
 				
-				# Calculating posterior probabilities based on Bayes' theorem
-				posterior_abnormal[k] <- (likelihood_abnormal * prior_abnormal) /
-				  (likelihood_normal * prior_normal + likelihood_abnormal * prior_abnormal)
-			
-				prior_abnormal <- posterior_abnormal
-				prior_normal <- (1 - posterior_abnormal)
+				posterior_abnormal[k] <- posterior_probabilities_Bayes(x, mean_nromal, sd_normal, mean_abnormal, sd_abnormal, prior_normal, prior_abnormal)
+
+				prior_abnormal <- posterior_abnormal[k]
+				prior_normal <- (1 - posterior_abnormal[k])
 			}
 			
 			# pre_anomaly_d
@@ -1137,15 +1163,11 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		for ( k in 1:length(z_scores))
 		{
 			x <- z_scores[k]
-			likelihood_normal <- dnorm(x, mean = mean_nromal, sd = sd_normal)
-			likelihood_abnormal <- dnorm(z_scores, mean = mean_abnormal, sd = sd_abnormal)
 			
-			# Calculating posterior probabilities based on Bayes' theorem
-			posterior_abnormal[k] <- (likelihood_abnormal * prior_abnormal) /
-			  (likelihood_normal * prior_normal + likelihood_abnormal * prior_abnormal)
-			  
-			prior_abnormal <- posterior_abnormal
-			prior_normal <- (1 - posterior_abnormal)
+			posterior_abnormal[k] <- posterior_probabilities_Bayes(x, mean_nromal, sd_normal, mean_abnormal, sd_abnormal, prior_normal, prior_abnormal)
+
+			prior_abnormal <- posterior_abnormal[k]
+			prior_normal <- (1 - posterior_abnormal[k])
 		}
 				
 		

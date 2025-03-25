@@ -263,7 +263,7 @@ rul_curve_plot <- function(index_number=-1)
 		}else
 		{
 			cur_rul_pltly <- ggplotly(cur_rul_plt)
-			print(cur_rul_pltly)
+			#print(cur_rul_pltly)
 			htmlwidgets::saveWidget(as_widget(cur_rul_pltly), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
 		}
 	}
@@ -280,8 +280,8 @@ rul_curve_plot <- function(index_number=-1)
 	pred_min_time_stamp <- min(cur_rul_df$percent5_timestmp,na.rm = TRUE)
 	pred_max_time_stamp <- max(cur_rul_df$percent95_timestmp,na.rm = TRUE)
 	
-	print(pred_min_time_stamp)
-	print(pred_max_time_stamp)
+	#print(pred_min_time_stamp)
+	#print(pred_max_time_stamp)
 	
 	len <- difftime(pred_max_time_stamp, pred_min_time_stamp, units = conv_unit_name2(valid_unit))
 	ds <- seq(as.POSIXlt(pred_min_time_stamp), by = conv_unit_name2(valid_unit), length.out = len+1)
@@ -441,7 +441,8 @@ rul_curve_plot <- function(index_number=-1)
 	}
 	file = paste("../", base_name, "_RUL.png", sep="")
 	ggsave(file = file, plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
-	
+
+	return(plt)	
 }
 
 

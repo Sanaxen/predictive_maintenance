@@ -161,26 +161,6 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 
 ---
 
-# Detection precursor phenomena
-<img src="./dataset/detection_000002.png">  
-
-Train for a period of time while reading the data.
-Test the **Spearman correlation** between each data and select pairs with constant correlation.
-
-For the (x,y) pairs, fit $`y=f(x)`$ and $`x=f(y)`$ with **lightgbm** (Light Gradient Boosting Machine ), and use the model with the highest accuracy in the **SMAPE** accuracy index as the training model.
-
-$`SMAPE = \frac{1}{n}\sum_{t=1}^{n} \frac{2 \, |F_t - A_t|}{|F_t| + |A_t|} \times 100 `$  
-
-$` F_t `$ is the forecast (predicted value) at time $`( t ),  `$   
-$` A_t `$ is the actual (observed) value at time $`( t ),`$  
-$`( n ) `$ is the total number of data points. 
-
-
-After the learning period, the state of deviation from the predictions made by this model is taken as an indication of abnormality.
-The density at the threshold (p_threshold) position is calculated using the density function of the normally distributed prediction error distribution, and the top score is calculated as the probability of abnormality.  
-$`probability = -log(p_threshold)`$
-
----
 ## requirements  
 
 - [R-4.2.3](https://www.r-project.org/)
@@ -213,11 +193,12 @@ To run on non-Windows operating systems, OS-dependent parts must be modified.
 
 ---
 ### Exponential Degradation Model
-
-$` \Large y(t) = c + exp(\alpha)\ exp(exp(\beta)\cdot t+ s \cdot tanh(\delta)) `$  
+$` \eta(x) \equiv s \cdot tanh(x) `$   
 s = Upper limit of exponential function domain that can be evaluated numerically  
 
-$`a=\exp(\alpha),\quad b=\exp(\beta)\quad  d=s\cdot tanh(\delta)`$    
+$` \Large y(t) = c + exp(\eta(\alpha))\ exp(exp(\eta(\beta))\cdot t+ \eta(\delta)) `$  
+
+$`a=\exp(\eta(\alpha)),\quad b=\exp(\eta(\beta))\quad  d=\eta(\delta)`$    
 s = Upper limit of exponential function domain that can be evaluated numerically  
   
 $` y(t) = c + a \cdot \exp(b \cdot t + d)`$  
@@ -234,9 +215,9 @@ In practice, it is common to assume \(a > 0\) and \(b > 0\).
 
 ### Gompertz Degradation Model  
 
-$` \Large y(t) = c + exp(\delta) \cdot exp(\frac{exp(\alpha)}{exp(\beta)}\ (1-exp(-exp(\beta)\cdot t)) )`$  
+$` \Large y(t) = c + exp(\eta(\delta)) \cdot exp(\frac{exp(\eta(\alpha))}{exp(\eta(\beta))}\ (1-exp(-exp(\eta(\beta)\cdot t)) ))`$  
 
-$`a=\exp(\alpha),\quad b=\exp(\beta) \quad d=\exp(\delta)`$   
+$`a=\exp(\eta(\alpha)),\quad b=\exp(\eta(\beta)) \quad d=\exp(\eta(\delta))`$   
 
 $`  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )`$  
 
@@ -248,9 +229,16 @@ $` \Large y(t) = a + b\cdot t `$
 #### output file  
 wrk/[csv_file_name]feature_params.csv  
 
-|feature|	threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time|unit| fit_start_time| model |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| ---| ---|
-|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL|fit_start_index|delta_index|delta_time| time of unit|fit_start timestamp| "exp" or "Gompertz" or "lm"|
+
+|feature|threshold|	ymax|	ymin|	count|	a|	b|	c|	d|t_scale| RUL|
+|---|---|---|---|---|---|---|---|---|---|---|
+|feature name|	threshold value | feature ymax|feature	ymin|	Number of times considered best|	a|	b|	c|	d|t_scale| RUL| 
+
+
+|unit| fit_start_time| model |fit_start_index|delta_index|delta_time|
+|---|---|---|---|---|---|
+|time of unit|fit_start timestamp| "exp" or "Gompertz" or "lm"|fit_start_index|delta_index|delta_time|
+
 
 **fitting_solver** = "auto" model is dynamically selected.
 Which model is adopted is determined by comparing 
@@ -312,7 +300,7 @@ $` threshold > c`$
  
 $` \Large  y(t) = c + d \cdot exp(\frac{a}{b}\ (1-exp(-b\cdot t)) )`$  
 
-$`  \acute{RUL} =  \Large \frac{-log(\frac{\frac{log(threshold)-c)}{d})}{\frac{a}{b}}-1 ) }{b}`$  
+$`  \acute{RUL} =  \Large \frac{-log(\frac{\frac{log(threshold-c)}{d}}{\frac{a}{b}}-1 ) }{b}`$  
 
 $`  1 > \frac{\frac{log(threshold)-c)}{d})}{\frac{a}{b}}-1  > 0`$  
 
@@ -340,7 +328,39 @@ $`RUL = RUL \cdot delta\_time [time\ of\ unit]`$
 If the elapsed time from **fit_start_time** is **t**, RUL can be calculated as follows  
 $`RUL = RUL \cdot delta\_time [time\ of\ unit]  - t [time\ of\ unit]``$  
 
+---  
 
+# Detection precursor phenomena
+<img src="./dataset/detection_000002.png">  
+
+Train for a period of time while reading the data.
+Test the **Spearman correlation** between each data and select pairs with constant correlation.
+
+For the (x,y) pairs, fit $`y=f(x)`$ and $`x=f(y)`$ with **lightgbm** (Light Gradient Boosting Machine ), and use the model with the highest accuracy in the **SMAPE** accuracy index as the training model.
+
+$`SMAPE = \frac{1}{n}\sum_{t=1}^{n} \frac{2 \, |F_t - A_t|}{|F_t| + |A_t|} \times 100 `$  
+
+$` F_t `$ is the forecast (predicted value) at time $`( t ),  `$   
+$` A_t `$ is the actual (observed) value at time $`( t ),`$  
+$`( n ) `$ is the total number of data points. 
+
+
+## Sequential Bayesian Updating
+For observed value x , the posterior probability of being in an abnormal state  
+
+$` \Large P(abnormal|x) = \frac{P(x|abnormal)P(abnormal)}{P(x|normal)P(normal)+P(x|abnormal)}`$  
+
+For a given observed value x, compare both normal and abnormal state hypotheses and calculate the probability of being in an abnormal state as a number using Bayesian estimation
+
+
+Each time a new observation is obtained, the method uses the previous posterior probability as the next prior probability and updates it.
+
+In this method, “evidence” accumulates over time, so the probability of an anomaly naturally increases as the system degrades.  
+
+$` mean(abnormal) = mean(normal) + k \cdot sd(normal) `$   
+$` sd(abnormal) = c \cdot sd(normal) `$   
+
+---
 ---  
 ## References  
 https://calce.umd.edu/data#CS2  
