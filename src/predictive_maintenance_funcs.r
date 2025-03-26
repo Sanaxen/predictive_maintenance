@@ -2042,6 +2042,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 
 		exp_domain_max <- 10
 		
+		
 		#for ( kk in lockback_max:lockback_min)
 		for ( kk in lockback_max:lockback_max)
 		{
@@ -2134,34 +2135,35 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					{
 						fit_pred <-  evalExponentialDegradationModel(fit,xx_org, exp_domain_max)
 						
-						err <- WeightedErrorEvaluation(yy_org, fit_pred, x)
-						
-						if ( sum(!is.finite(fit_pred))== 0 )
+						#err <- WeightedErrorEvaluation(yy_org, fit_pred, xx_org)
+						err <- aic_manual(yy_org, fit_pred, fit)
+
+						if ( sum(!is.finite(fit_pred))== 0 && is.finite(err))
 						{							
 							too_rapidly <- F
 							
-							x = c(1:(length(xx)+5))/(length(xx) + 5)
+							x = c(1:(length(xx_org)+5))/(length(xx_org) + 5)
 							
 							fit_pred_chk <- evalExponentialDegradationModel(fit, x,exp_domain_max)
 							
 							
-							if (sum(!is.finite(fit_pred_chk))!=0)
+							if (sum(!is.finite(fit_pred_chk))!=0 )
 							{
 								too_rapidly <- T
 								err <- 999999.0
 							}else
 							{
-								y0 <- fit_pred_chk[(length(xx))]
-								y1 <- fit_pred_chk[(length(xx)+5)]
-								if (is.finite(y0) && is.finite(y1))
+								y0 <- fit_pred_chk[(length(x))]
+								y1 <- fit_pred_chk[(length(x)+5)]
+								if (is.finite(y0) && is.finite(y1) )
 								{
-									if ( (abs(y1)+1)/(abs(y0)+1)  > max_rapid_rise_rate)
+									if ( (abs(y1)+1)/(abs(y0)+1)  > max_rapid_rise_rate || y0 > 1.0e100)
 									{
 										too_rapidly <- T
 
 										print("")
 										yellow_text("It rises too rapidly.\n\n")
-										print(sprintf("%d %f %g %g",index_number, y0, y1,  (abs(y1)+1)/(abs(y0)+1)))
+										print(sprintf("%d %g %g %g",index_number, y0, y1,  (abs(y1)+1)/(abs(y0)+1)))
 									}
 								}
 							}
@@ -2177,24 +2179,27 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 									best_fit <- fit
 									err_min = err
 								}
-							}
-							if ( sum(!is.finite(fit_pred_chk))==0 && err_min_sv > err )
+							}else
 							{
-								best_fit_sv <- fit
-								err_min_sv = err
+								if ( sum(!is.finite(fit_pred_chk))==0 && err_min_sv > err )
+								{
+									best_fit_sv <- fit
+									err_min_sv = err
+								}
 							}
 						}
 					}
 					if ( !is.null(fit2))
 					{
 						fit_pred2 <-  evalGompertzDegradationModel(fit2, xx_org, exp_domain_max)
-						err <- WeightedErrorEvaluation(yy_org, fit_pred2, x)
+						#err <- WeightedErrorEvaluation(yy_org, fit_pred2, xx_org)
+						err <- aic_manual(yy_org, fit_pred2, fit2)
 
-						if ( sum(!is.finite(fit_pred2))==0 )
+						if ( sum(!is.finite(fit_pred2))==0 && is.finite(err))
 						{
 							too_rapidly <- F
 							
-							x = c(1:(length(xx)+5))/(length(xx) + 5)
+							x = c(1:(length(xx_org)+5))/(length(xx_org) + 5)
 							
 							fit_pred_chk <- evalGompertzDegradationModel(fit2, x, exp_domain_max)
 							
@@ -2205,16 +2210,16 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 								err <- 999999.0
 							}else
 							{
-								y0 <- fit_pred_chk[(length(xx))]
-								y1 <- fit_pred_chk[(length(xx)+5)]
+								y0 <- fit_pred_chk[(length(x))]
+								y1 <- fit_pred_chk[(length(x)+5)]
 								if (is.finite(y0) && is.finite(y1))
 								{
-									if ( (abs(y1)+1)/(abs(y0)+1)  > max_rapid_rise_rate)
+									if ( (abs(y1)+1)/(abs(y0)+1)  > max_rapid_rise_rate || y0 > 1.0e100)
 									{
 										too_rapidly <- T
 										print("")
 										yellow_text("It rises too rapidly.\n\n")
-										print(sprintf("%d %f %g %g",index_number, y0, y1,  (abs(y1)+1)/(abs(y0)+1)))
+										print(sprintf("%d %g %g %g",index_number, y0, y1,  (abs(y1)+1)/(abs(y0)+1)))
 									}
 								}
 							}
@@ -2229,11 +2234,13 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 									best_fit2 <- fit2
 									err_min2 = err
 								}
-							}
-							if ( sum(!is.finite(fit_pred_chk)) == 0 && err_min2_sv > err )
+							}else
 							{
-								best_fit2_sv <- fit2
-								err_min2_sv = err
+								if ( sum(!is.finite(fit_pred_chk)) == 0 && err_min2_sv > err )
+								{
+									best_fit2_sv <- fit2
+									err_min2_sv = err
+								}
 							}
 						}
 					}
@@ -2251,7 +2258,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					best_fit2 <- best_fit2_sv
 					err_min2 <- err_min2_sv
 				}
-				if ( !is.null(best_fit)&&!is.null(best_fit2)) break
+				#if ( !is.null(best_fit)&&!is.null(best_fit2)) break
 			}
 			if ( fitting_solver == "exp" )
 			{
@@ -2260,7 +2267,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					best_fit <- best_fit_sv
 					err_min <- err_min_sv
 				}
-				if ( !is.null(best_fit)) break
+				#if ( !is.null(best_fit)) break
 			}
 			if ( fitting_solver == "Gompertz" )
 			{
@@ -2269,7 +2276,7 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 					best_fit2 <- best_fit2_sv
 					err_min2 <- err_min2_sv
 				}
-				if ( !is.null(best_fit2)) break
+				#if ( !is.null(best_fit2)) break
 			}
 		}
 		
@@ -2292,10 +2299,10 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 		
 		if ( !is.null(best_fit)&&!is.null(best_fit2))
 		{
-			fit_pred <- evalExponentialDegradationModel(fit, xx_org,exp_domain_max)
+			fit_pred <- evalExponentialDegradationModel(best_fit, xx_org,exp_domain_max)
 			err1 <- ErrorEvaluation(yy_org, fit_pred)
 			
-			fit_pred2 <- evalGompertzDegradationModel(fit2, xx_org,exp_domain_max)
+			fit_pred2 <- evalGompertzDegradationModel(best_fit2, xx_org,exp_domain_max)
 			err2 <- ErrorEvaluation(yy_org, fit_pred2)
 
 			
@@ -2314,6 +2321,15 @@ curve_fitting <- function(y, h, reference=NULL, rank="")
 			{
 				aic3 = aic_manual(yy_org, fit_pred3, lm.fit)
 			}
+			
+			if (is.finite(aic1)){
+			 	cat("aic1")
+			 	print(aic1)
+			 }
+			if (is.finite(aic2)){
+			 	cat("aic2")
+			 	print(aic2)
+			 }
 
 			print("AIC & err")
 			print(sprintf("exp     :aic1:%f err1:%f", aic1, err1))

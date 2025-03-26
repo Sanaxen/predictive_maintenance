@@ -70,7 +70,7 @@ fitting_initial_valuse<- function( cond , yy, a_coef, b_coef, c_coef, d_coef, no
 	return(c(lm_pa,lm_pb,lm_pc,lm_pd))
 }
 
-ExponentialDegradationModel <- function(prm, xx, yy, x0, y0, exp_domain_max=30)
+ExponentialDegradationModel <- function(prm, xx, yy, x0, y0, exp_domain_max)
 {
 	lm_pa <- prm[1]
 	lm_pb <- prm[2]
@@ -97,7 +97,7 @@ ExponentialDegradationModel <- function(prm, xx, yy, x0, y0, exp_domain_max=30)
 	return( fit)
 }
 
-evalExponentialDegradationModel <- function(fit, x, exp_domain_max=100)
+evalExponentialDegradationModel <- function(fit, x, exp_domain_max)
 {
 	coef = coefficients(fit)
 	pred <-  coef[3] + exp(exp_domain_max*tanh(coef[1]))*exp(exp(exp_domain_max*tanh(coef[2]))*x + exp_domain_max*tanh(coef[4]))
@@ -105,7 +105,7 @@ evalExponentialDegradationModel <- function(fit, x, exp_domain_max=100)
 	return( pred )
 }
 
-GompertzDegradationModel <- function(prm, xx, yy, x0, y0, exp_domain_max=30)
+GompertzDegradationModel <- function(prm, xx, yy, x0, y0, exp_domain_max)
 {
 	lm_pa <- prm[1]
 	lm_pb <- prm[2]
@@ -131,7 +131,7 @@ GompertzDegradationModel <- function(prm, xx, yy, x0, y0, exp_domain_max=30)
 	return( fit2)
 }
 
-evalGompertzDegradationModel <- function(fit2, x, exp_domain_max=30)
+evalGompertzDegradationModel <- function(fit2, x, exp_domain_max)
 {
 	coef = coefficients(fit2)
 	pred <-  coef[3] + exp(exp_domain_max*tanh(coef[4]))*exp(exp(exp_domain_max*tanh(coef[1]))/exp(exp_domain_max*tanh(coef[2]))*(1 - exp(-exp(exp_domain_max*tanh(coef[2]))*x)))
