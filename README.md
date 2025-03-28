@@ -360,6 +360,90 @@ In this method, “evidence” accumulates over time, so the probability of an a
 $` mean(abnormal) = mean(normal) + k \cdot sd(normal) `$   
 $` sd(abnormal) = c \cdot sd(normal) `$   
 
+**Note**  
+At this time, the following methods have been changed.  
+
+---
+## Mathematical Derivation: Z-score → P-value → Rarity Score
+
+This document clearly explains how to convert a **Z-score** into a **two-sided P-value** and subsequently into a convenient "rarity score," a metric ranging from **0 (common)** to **1 (rare)**.
+
+---
+
+### 1 Definition of the Z-score
+
+Given an observed data point $` x `$, a population mean $` \mu `$, and a population standard deviation $` \sigma `$, the Z-score is defined as:
+
+$`
+Z = \frac{x - \mu}{\sigma}
+`$
+
+The Z-score measures how many standard deviations an observed value $` x `$ is away from the mean.
+
+---
+
+### 2 Definition of the Two-sided P-value
+
+The two-sided P-value represents the probability of observing a value at least as extreme as the observed data point (either above or below the mean), assuming a normal distribution:
+
+Mathematically:
+
+$`
+{prob\_two\_sided} = P(|X - \mu| \geq |x - \mu|)
+`$
+
+For a standard normal distribution (mean = 0, standard deviation = 1), this simplifies to:
+
+$`
+{prob\_two\_sided} = 2 \times [\,1 - \Phi(|Z|)\,]
+`$
+
+- Where $` \Phi(\cdot) `$ is the cumulative distribution function (CDF) of the standard normal distribution (e.g., `pnorm` in R).
+
+---
+
+### 3 Converting the Two-sided P-value into a Rarity Score
+
+To provide a more intuitive measure of rarity or unusualness, define a "rarity score" as follows:
+
+$`
+{rarity\_score} = 1 - {prob\_two\_sided}
+`$
+
+Expanding this expression:
+
+$`
+\begin{aligned}
+1 - \text{prob\_two\_sided} &= 1 - 2[\,1 - \Phi(|Z|)\,] \\
+&= 1 - 2 + 2\Phi(|Z|) \\
+&= 2\Phi(|Z|) - 1
+\end{aligned}
+`$
+
+---
+
+### 4 Final Simplified Formula
+
+Thus, the final simplified formula linking the Z-score to a rarity score is:
+
+$`
+\boxed{\text{rarity\_score} = 2\Phi(|Z|) - 1}
+`$
+
+- Where:
+  - $` \Phi `$ is the standard normal cumulative distribution function (CDF).
+  - $` Z `$ is the absolute value of the Z-score.
+
+---
+
+## ✅ **Interpretation**
+
+- **Rarity score ≈ 1**: Indicates an extremely rare event, highly unlikely by random chance.
+- **Rarity score ≈ 0**: Indicates a common event, frequently occurring by random chance.
+
+This derivation clearly demonstrates the intuitive relationship between Z-scores, two-sided P-values, and the resulting rarity score.
+
+
 ---
 ---  
 ## References  
