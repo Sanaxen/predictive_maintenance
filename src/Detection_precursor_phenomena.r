@@ -784,11 +784,19 @@ probability_loess <- function(df, maintenance_sv)
 	if ( max - min > 1.0e-10 )
 	{
 		rescale <- T
-		df$posterior_abnormal <- exp(10*df$posterior_abnormal + 1)
+		df$posterior_abnormal <- exp(5*df$posterior_abnormal + 1)
+	}
+	#print(df$posterior_abnormal)
+	
+	loess <- predict(loess(posterior_abnormal ~ time, data = df, span = 0.15))
+	if ( sum(!is.finite(loess)) != 0 )
+	{
+		print("error:loess################")
+		#print(loess)
+		loess <- df$posterior_abnormal
+		#quit()
 	}
 	
-	loess <- predict(loess(posterior_abnormal ~ time, data = df, span = 0.4))
-
 	if ( rescale )
 	{
 		#loess <- log(loess) - 1
@@ -811,7 +819,7 @@ probability_loess <- function(df, maintenance_sv)
 		}
 	}
 	
-	df$posterior_abnormal <- loess
+	df$posterior_abnormal <- as.numeric(loess)
 	
 	return (df)
 }
@@ -937,13 +945,13 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			###### Bayesian estimation
 			
 			# Setting the prior probability
-			prior_normal <- 0.999
+			prior_normal <- 0.6
 			prior_abnormal <- (1 - prior_normal)
 						
 			mean_nromal <- mean(model_err,na.rm=T)
 			sd_normal <- sd(model_err,na.rm=T)
 			 
-			mean_abnormal <- mean_nromal + 1.2*sd_normal
+			mean_abnormal <- 3*mean_nromal
 			sd_abnormal <- 1.2*sd_normal
 
 			posterior_abnormal <- pred_residuals_err*0
@@ -965,7 +973,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			result_df <- data.frame(
 			  time = sensor_data$time_index,
 			  Y = sensor_data[[Y]],
-			  pre_anomaly_d = (pred_residuals_err),
+			  pre_anomaly_d = pred_residuals_err,
 			  posterior_abnormal = posterior_abnormal^0.2
 			)
 			if (!is.null(maintenance_sv))
@@ -973,8 +981,32 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 				result_df$maintenance <- sensor_data$maintenance
 			}
 			
+			mean_res <- mean(model_err)
+			sd_res <- sd(model_err)
+			#p_values <- dnorm(result_df$pre_anomaly_d, mean = mean_res, sd = sd_res)
+			#result_df$pre_anomaly_probability <-  1 - p_values
+
+			
+			#ecdf_normal <- ecdf(model_err)
+			#result_df$pre_anomaly_probability <-  1 - ecdf_normal(result_df$pre_anomaly_d)
+
+			result_df$pre_anomaly_probability  <- (result_df$pre_anomaly_d - mean_res)/sd_res
+			result_df$pre_anomaly_probability <- 1 - pnorm(abs(result_df$pre_anomaly_probability))	#pvalue of one side (upper side)
+			result_df$pre_anomaly_probability <- 2*result_df$pre_anomaly_probability				#pvalue of both sides
+			result_df$pre_anomaly_probability <- 1 - result_df$pre_anomaly_probability				#1 - pvalue
+
+			# no use  posterior_probabilities_Bayes -> TRUE
+			if ( T )
+			{
+				result_df$posterior_abnormal <- result_df$pre_anomaly_probability
+			}
+
 			result_df <- probability_loess(result_df, maintenance_sv)
 			#result_df <- moving_mean_smooth2(result_df, timeStamp, 4, 1) 
+
+			#print("result_df")
+			#print(str(result_df))
+			#quit()
 
 			delta_ix <- result_df$time[nrow(result_df)]- result_df$time[nrow(result_df)-1]
 			result_df$TimeStamp <- rev(seq(current_time, length.out = length(1:nrow(result_df)), by = -delta_time*delta_ix))
@@ -983,15 +1015,6 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			threshold_upper <- c(0.3, 0.6, 0.9)
 			
 			
-			mean_res <- mean(model_err)
-			sd_res <- sd(model_err)
-			p_values <- dnorm(result_df$pre_anomaly_d, mean = mean_res, sd = sd_res)
-			result_df$pre_anomaly_probability <-  1 - p_values
-
-			
-			ecdf_normal <- ecdf(model_err)
-			result_df$pre_anomaly_probability <-  1 - ecdf_normal(result_df$pre_anomaly_d)
-
 			
 			# Set the judgment flag
 			result_df$pre_anomaly_probability1 <- (result_df$posterior_abnormal <= threshold_upper[1] & result_df$posterior_abnormal > 0)
@@ -1012,9 +1035,6 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			}
 			
 			
-			#print("result_df")
-			#print(str(result_df))
-			#quit()
 			
 			if ( !is.null(result_df$pre_anomaly_probability1))
 			{			
@@ -1150,13 +1170,13 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		###### Bayesian estimation
 		
 		# Setting the prior probability
-		prior_normal <- 0.999
+		prior_normal <- 0.6
 		prior_abnormal <- (1 - prior_normal)
 		
 		mean_nromal <- zscore_base_mean
 		sd_normal <- zscore_base_sd
 		 
-		mean_abnormal <- mean_nromal + 3*sd_normal
+		mean_abnormal <- 3*mean_nromal
 		sd_abnormal <- 1.2*sd_normal
 		
 		posterior_abnormal <- z_scores*0
@@ -1176,9 +1196,9 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		df_plot <- data.frame(
 		  time = sensor_data$time_index,
 		  value = c(sensor_data[,colnam]),
-		  z_score = abs(z_score_df$z_score),
-		  #pre_anomaly_probability = 1 - pnorm(sensor_data[,colnam], mean = mean_base, sd = sd_base),
-		  pre_anomaly_probability = 1 - ecdf_normal(abs(z_score_df$z_score)),
+		  z_score = (z_score_df$z_score),
+		  pre_anomaly_probability = 1 - pnorm(sensor_data[,colnam], mean = mean_base, sd = sd_base),
+		  #pre_anomaly_probability = 1 - ecdf_normal((z_score_df$z_score)),
 		  posterior_abnormal = posterior_abnormal^0.2 
 		)
 		if (!is.null(maintenance_sv))
@@ -1186,6 +1206,16 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 			df_plot$maintenance <- sensor_data$maintenance
 		}
 		
+		df_plot$pre_anomaly_probability <- 1 - pnorm(abs(df_plot$z_score))		#pvalue of one side (upper side)
+		df_plot$pre_anomaly_probability <- 2*df_plot$pre_anomaly_probability	#pvalue of both sides
+		df_plot$pre_anomaly_probability <- 1 - df_plot$pre_anomaly_probability	#1 - pvalue
+		
+		# no use  posterior_probabilities_Bayes -> TRUE
+		if ( T )
+		{
+			df_plot$posterior_abnormal <- df_plot$pre_anomaly_probability
+		}
+
 		df_plot <- probability_loess(df_plot, maintenance_sv)
 		#df_plot <- moving_mean_smooth2(df_plot, timeStamp, 4, 1) 
 

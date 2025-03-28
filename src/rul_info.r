@@ -170,6 +170,8 @@ rul_curve_plot <- function(index_number=-1)
 	cur_rul_df$percent50_timestmp <- cur_rul_df$timestmp
 	cur_rul_df$percent95_timestmp <- cur_rul_df$timestmp
 
+	start_time <- Sys.time()
+	
 	for ( i in 1:nrow(cur_rul_df))
 	{
 		if ( !is.na(cur_rul_df$percent5[i]) )
@@ -205,10 +207,17 @@ rul_curve_plot <- function(index_number=-1)
 			cur_rul_df$percent95_timestmp[i] <- NA
 		}
 	}
+	end_time <- Sys.time()
+
+	execution_time <- end_time - start_time
+	cat("execution_time1:")
+	print(execution_time)
+
 	cur_rul_df$percent5_timestmp <- as.POSIXct(cur_rul_df$percent5_timestmp, tz="UTC", origin="2024-01-01")
 	cur_rul_df$percent50_timestmp <- as.POSIXct(cur_rul_df$percent50_timestmp, tz="UTC", origin="2024-01-01")
 	cur_rul_df$percent95_timestmp <- as.POSIXct(cur_rul_df$percent95_timestmp, tz="UTC", origin="2024-01-01")
 
+	start_time <- Sys.time()
 
 	cur_rul_plt <- NULL
 	if ( sum(!is.na(cur_rul_df$percent5)) >= 2)
@@ -219,7 +228,7 @@ rul_curve_plot <- function(index_number=-1)
 		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent5, color="percent5"),linewidth =1.0,na.rm = TRUE)
 		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent50, color="percent50"),linewidth =1.0,na.rm = TRUE)
 		cur_rul_plt <- cur_rul_plt + geom_line(aes(y=percent95, color="percent95"),linewidth =1.0,na.rm = TRUE)
-		cur_rul_plt <- cur_rul_plt + labs(y = paste("RUL [ ", valid_unit, " ]", sep=""))
+		cur_rul_plt <- cur_rul_plt + labs(y = paste("RUL [ ", valid_unit, " ]", sep=""), x="time")
 		cur_rul_plt <- cur_rul_plt + geom_hline(yintercept = 0, color = "red", size = 1)
 
 		#cur_rul_plt <- cur_rul_plt + geom_text(aes(x=cycle,y=percent5,label = percent5, color="percent5"), vjust = -0.25, size = 2.5 ,show.legend = FALSE, na.rm = TRUE)
@@ -251,14 +260,14 @@ rul_curve_plot <- function(index_number=-1)
 		cur_rul_plt
 
 		file = paste("../", base_name, "_RUL.png", sep="")
-		ggsave(file = file, plot = cur_rul_plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+		ggsave(file = file, plot = cur_rul_plt, dpi = 100, width = 14*1.5, height = 6.8*1.4)
 		if ( index_number > 0 )
 		{
 			if (!dir.exists("../images/RUL")) {
 			  dir.create("../images/RUL")
 			}
 			file <- sprintf("../images/RUL/%s_RUL%06d.png", base_name, index_number)
-			ggsave(file = file, plot = cur_rul_plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+			ggsave(file = file, plot = cur_rul_plt, dpi = 100, width = 14*1.5, height = 6.8*1.4)
 			
 		}else
 		{
@@ -267,6 +276,11 @@ rul_curve_plot <- function(index_number=-1)
 			htmlwidgets::saveWidget(as_widget(cur_rul_pltly), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
 		}
 	}
+	end_time <- Sys.time()
+
+	execution_time <- end_time - start_time
+	cat("execution_time2:")
+	print(execution_time)
 
 	rul_csv <- paste("../", base_name,"_RUL_output.csv", sep="")
 	write.csv(cur_rul_df, rul_csv, row.names = FALSE)
@@ -274,174 +288,196 @@ rul_curve_plot <- function(index_number=-1)
 	
 	if (is.null(cur_rul_plt))
 	{
-		return(1)
+		return(NULL)
 	}
 	
-	pred_min_time_stamp <- min(cur_rul_df$percent5_timestmp,na.rm = TRUE)
-	pred_max_time_stamp <- max(cur_rul_df$percent95_timestmp,na.rm = TRUE)
-	
-	#print(pred_min_time_stamp)
-	#print(pred_max_time_stamp)
-	
-	len <- difftime(pred_max_time_stamp, pred_min_time_stamp, units = conv_unit_name2(valid_unit))
-	ds <- seq(as.POSIXlt(pred_min_time_stamp), by = conv_unit_name2(valid_unit), length.out = len+1)
-	
-	rul_hist <- data.frame(time=ds, probability=numeric(length(ds)))
-	
-	rul_hist
-	
-	for ( i in 1:length(ds) )
+	if (F)
 	{
-		row1 = -1
-		row2 = -1
-		if ( !is.na(cur_rul_df$percent5_timestmp[i]))
-		{
-			diff <- difftime(rul_hist$time, cur_rul_df$percent5_timestmp[i], units = conv_unit_name(valid_unit))
+		pred_min_time_stamp <- min(cur_rul_df$percent5_timestmp,na.rm = TRUE)
+		pred_max_time_stamp <- max(cur_rul_df$percent95_timestmp,na.rm = TRUE)
 		
-			row1 =  which.min( abs(diff))
-		}
-		if ( !is.na(cur_rul_df$percent95_timestmp[i]))
-		{
-			diff <- difftime(rul_hist$time, cur_rul_df$percent50_timestmp[i], units = conv_unit_name(valid_unit))
+		#print(pred_min_time_stamp)
+		#print(pred_max_time_stamp)
 		
-			row2 =  which.min( abs(diff))
-		}
-		if ( row1 > 0 && row2 > 0 )
+		len <- difftime(pred_max_time_stamp, pred_min_time_stamp, units = conv_unit_name2(valid_unit))
+		ds <- seq(as.POSIXlt(pred_min_time_stamp), by = conv_unit_name2(valid_unit), length.out = len+1)
+		
+		rul_hist <- data.frame(time=ds, probability=numeric(length(ds)))
+		
+		rul_hist
+		
+		for ( i in 1:length(ds) )
 		{
-			rul_hist$probability[row1:row2] <- rul_hist$probability[row1:row2] + 1
+			row1 = -1
+			row2 = -1
+			if ( !is.na(cur_rul_df$percent5_timestmp[i]))
+			{
+				diff <- difftime(rul_hist$time, cur_rul_df$percent5_timestmp[i], units = conv_unit_name(valid_unit))
+			
+				row1 =  which.min( abs(diff))
+			}
+			if ( !is.na(cur_rul_df$percent95_timestmp[i]))
+			{
+				diff <- difftime(rul_hist$time, cur_rul_df$percent50_timestmp[i], units = conv_unit_name(valid_unit))
+			
+				row2 =  which.min( abs(diff))
+			}
+			if ( row1 > 0 && row2 > 0 )
+			{
+				rul_hist$probability[row1:row2] <- rul_hist$probability[row1:row2] + 1
+			}
 		}
-	}
-	
+		
 
-	
-	fmt = "%Y-%m-%d %H:%M:%S"
-	if ( valid_unit == "day" )
-	{
-		fmt = "%Y-%m-%d"
-	}
-	if ( valid_unit == "h" )
-	{
-		fmt = "%Y-%m-%d %H"
-	}
-	if ( valid_unit == "min" )
-	{
-		fmt = "%Y-%m-%d %H:%M"
-	}
-
-	n = 5
-	step <- nrow(rul_hist)/n
-	break_pos <- c()
-	labels <- c()
-	for ( i in 1:(n+1) )
-	{
-		k = (i-1)*step+1
-		if ( k > nrow(rul_hist))
+		
+		fmt = "%Y-%m-%d %H:%M:%S"
+		if ( valid_unit == "day" )
 		{
-			k = nrow(rul_hist)
+			fmt = "%Y-%m-%d"
 		}
-		break_pos <- c(break_pos, rul_hist$time[k])
-		labels <- c(labels, as.character(format(rul_hist$time[k], fmt)))
-	}
-	#break_pos <- (as.factor(break_pos))
-	#rul_hist$time <-(as.factor(rul_hist$time))
-	
-	rul_hist_org <- rul_hist
-	rul_hist$probability <- 100*rul_hist$probability/sum(rul_hist$probability)
-	
-	hist_plt <- ggplot(rul_hist, aes(x=time, y=probability))
-	hist_plt <- hist_plt + geom_bar(stat = "identity")
-	
-	hist_plt <- hist_plt +  scale_x_continuous(breaks = break_pos, labels = labels)
-	#hist_plt <- hist_plt +  scale_x_discrete(breaks = break_pos, labels = labels)
-	
-	hist_plt <- hist_plt + ylab("probability[%]")
-	hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))
-	hist_plt <- hist_plt + theme(axis.title.y = element_text(size = 20))
-	hist_plt <- hist_plt + theme(axis.text.x = element_text(size = 10)) 
-	hist_plt <- hist_plt + theme(axis.text.y = element_text(size = 10))
-
-	hist_plt1 <- hist_plt
-
-	rul_hist <- rul_hist[order(rul_hist$probability, decreasing = TRUE), ]
-	rul_hist$order <- c(1:nrow(rul_hist))
-	
-	n = 5
-	step <- nrow(rul_hist)/n
-	break_pos <- c()
-	labels <- c()
-	for ( i in 1:(n+1) )
-	{
-		k = (i-1)*step+1
-		if ( k > nrow(rul_hist))
+		if ( valid_unit == "h" )
 		{
-			k = nrow(rul_hist)
+			fmt = "%Y-%m-%d %H"
 		}
-		break_pos <- c(break_pos, rul_hist$order[k])
-		labels <- c(labels, as.character(format(rul_hist$time[k], fmt)))
-	}	
-	hist_plt <- ggplot(rul_hist, aes(x=order, y=probability))
-	hist_plt <- hist_plt + geom_bar(stat = "identity")
-	
-	hist_plt <- hist_plt +  scale_x_continuous(breaks = break_pos, labels = labels)
-	
-	hist_plt <- hist_plt + ylab("probability[%]")
-	hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))
-	hist_plt <- hist_plt + theme(axis.title.y = element_text(size = 20))
-	hist_plt <- hist_plt + theme(axis.text.x = element_text(size = 10)) 
-	hist_plt <- hist_plt + theme(axis.text.y = element_text(size = 10))
-	hist_plt
-	hist_plt2 <- hist_plt
-	
-	rul_hist2 <- rul_hist_org[rul_hist_org$probability > max(rul_hist_org$probability)-0.2*(max(rul_hist_org$probability)-min(rul_hist_org$probability)),]
-	rul_hist2 <- rul_hist_org[order(rul_hist_org$probability, decreasing = TRUE), ]
-	
-	rul_hist3 <- NULL
-	for ( i in 5:nrow(rul_hist2))
-	{
-		rul_hist3 <- rul_hist2[1:i,]
-		if ( length(unique(rul_hist3$probability)) > 3 ) break
-	}
-	
-	rul_hist3$time <- as.factor(format(rul_hist3$time, "%Y-%m-%d"))
-	while ( length(unique(rul_hist3$time)) > 6 )
-	{
-		if ( nrow(rul_hist3) > 6 )
+		if ( valid_unit == "min" )
 		{
-			rul_hist3 <- rul_hist3 %>% slice_tail(n = nrow(rul_hist3)-2)
+			fmt = "%Y-%m-%d %H:%M"
+		}
+
+		n = 5
+		step <- nrow(rul_hist)/n
+		break_pos <- c()
+		labels <- c()
+		for ( i in 1:(n+1) )
+		{
+			k = (i-1)*step+1
+			if ( k > nrow(rul_hist))
+			{
+				k = nrow(rul_hist)
+			}
+			break_pos <- c(break_pos, rul_hist$time[k])
+			labels <- c(labels, as.character(format(rul_hist$time[k], fmt)))
+		}
+		#break_pos <- (as.factor(break_pos))
+		#rul_hist$time <-(as.factor(rul_hist$time))
+		
+		rul_hist_org <- rul_hist
+		rul_hist$probability <- 100*rul_hist$probability/sum(rul_hist$probability)
+		
+		start_time <- Sys.time()
+
+		hist_plt <- ggplot(rul_hist, aes(x=time, y=probability))
+		hist_plt <- hist_plt + geom_bar(stat = "identity")
+		
+		hist_plt <- hist_plt +  scale_x_continuous(breaks = break_pos, labels = labels)
+		#hist_plt <- hist_plt +  scale_x_discrete(breaks = break_pos, labels = labels)
+		
+		hist_plt <- hist_plt + ylab("probability[%]")
+		hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))
+		hist_plt <- hist_plt + theme(axis.title.y = element_text(size = 20))
+		hist_plt <- hist_plt + theme(axis.text.x = element_text(size = 10)) 
+		hist_plt <- hist_plt + theme(axis.text.y = element_text(size = 10))
+
+		hist_plt1 <- hist_plt
+
+		rul_hist <- rul_hist[order(rul_hist$probability, decreasing = TRUE), ]
+		rul_hist$order <- c(1:nrow(rul_hist))
+		
+		n = 5
+		step <- nrow(rul_hist)/n
+		break_pos <- c()
+		labels <- c()
+		for ( i in 1:(n+1) )
+		{
+			k = (i-1)*step+1
+			if ( k > nrow(rul_hist))
+			{
+				k = nrow(rul_hist)
+			}
+			break_pos <- c(break_pos, rul_hist$order[k])
+			labels <- c(labels, as.character(format(rul_hist$time[k], fmt)))
+		}	
+		hist_plt <- ggplot(rul_hist, aes(x=order, y=probability))
+		hist_plt <- hist_plt + geom_bar(stat = "identity")
+		
+		hist_plt <- hist_plt +  scale_x_continuous(breaks = break_pos, labels = labels)
+		
+		hist_plt <- hist_plt + ylab("probability[%]")
+		hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))
+		hist_plt <- hist_plt + theme(axis.title.y = element_text(size = 20))
+		hist_plt <- hist_plt + theme(axis.text.x = element_text(size = 10)) 
+		hist_plt <- hist_plt + theme(axis.text.y = element_text(size = 10))
+		hist_plt
+		hist_plt2 <- hist_plt
+		
+		rul_hist2 <- rul_hist_org[rul_hist_org$probability > max(rul_hist_org$probability)-0.2*(max(rul_hist_org$probability)-min(rul_hist_org$probability)),]
+		rul_hist2 <- rul_hist_org[order(rul_hist_org$probability, decreasing = TRUE), ]
+		
+		rul_hist3 <- NULL
+		for ( i in 5:nrow(rul_hist2))
+		{
+			rul_hist3 <- rul_hist2[1:i,]
+			if ( length(unique(rul_hist3$probability)) > 3 ) break
+		}
+		
+		rul_hist3$time <- as.factor(format(rul_hist3$time, "%Y-%m-%d"))
+		while ( length(unique(rul_hist3$time)) > 6 )
+		{
+			if ( nrow(rul_hist3) > 6 )
+			{
+				rul_hist3 <- rul_hist3 %>% slice_tail(n = nrow(rul_hist3)-2)
+			}else
+			{
+				break
+			}	
+		}
+		
+		hist_plt <- ggplot(rul_hist3, aes(x=time))
+		hist_plt <- hist_plt + geom_histogram(stat="count")
+		hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))
+		hist_plt <- hist_plt + theme(axis.title.y = element_text(size = 20))
+		hist_plt <- hist_plt + theme(axis.text.x = element_text(size = 10)) 
+		hist_plt <- hist_plt + theme(axis.text.y = element_text(size = 10))
+		hist_plt
+		hist_plt3 <- hist_plt
+
+		end_time <- Sys.time()
+
+		execution_time <- end_time - start_time
+		cat("execution_time3:")
+		print(execution_time)
+		
+		start_time <- Sys.time()
+
+		layout1 <- rbind(c(1, 1, 1),
+		                 c(2, 3, 4))
+		plt <- gridExtra::grid.arrange(cur_rul_plt, hist_plt1, hist_plt2, hist_plt3, layout_matrix = layout1, top = "--")
+		if ( index_number > 0 )
+		{
+			#if (!dir.exists("../images/RUL")) {
+			#  dir.create("../images/RUL")
+			#}
+			file <- sprintf("../images/RUL/%s_RUL%06d.png", base_name, index_number)
+			ggsave(file = file, plot = plt, dpi = 100, width = 14*1.5, height = 6.8*1.4)
 		}else
 		{
-			break
-		}	
-	}
-	
-	hist_plt <- ggplot(rul_hist3, aes(x=time))
-	hist_plt <- hist_plt + geom_histogram(stat="count")
-	hist_plt <- hist_plt + theme(axis.title.x = element_text(size = 20))
-	hist_plt <- hist_plt + theme(axis.title.y = element_text(size = 20))
-	hist_plt <- hist_plt + theme(axis.text.x = element_text(size = 10)) 
-	hist_plt <- hist_plt + theme(axis.text.y = element_text(size = 10))
-	hist_plt
-	hist_plt3 <- hist_plt
-	
-	layout1 <- rbind(c(1, 1, 1),
-	                 c(2, 3, 4))
-	plt <- gridExtra::grid.arrange(cur_rul_plt, hist_plt1, hist_plt2, hist_plt3, layout_matrix = layout1, top = "--")
-	if ( index_number > 0 )
-	{
-		if (!dir.exists("../images/RUL")) {
-		  dir.create("../images/RUL")
+			#plt_pltly <- ggplotly(cur_rul_plt)
+			#print(plt_pltly)
+			#htmlwidgets::saveWidget(as_widget(plt_pltly), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
 		}
-		file <- sprintf("../images/RUL/%s_RUL%06d.png", base_name, index_number)
-		ggsave(file = file, plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+		file = paste("../", base_name, "_RUL.png", sep="")
+		ggsave(file = file, plot = plt, dpi = 100, width = 14*1.5, height = 6.8*1.4)
 	}else
 	{
-		#plt_pltly <- ggplotly(cur_rul_plt)
-		#print(plt_pltly)
-		#htmlwidgets::saveWidget(as_widget(plt_pltly), paste("./",base_name,"_RUL.html",sep=''), selfcontained = F)
+		plt <- cur_rul_plt
 	}
-	file = paste("../", base_name, "_RUL.png", sep="")
-	ggsave(file = file, plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+	
+	end_time <- Sys.time()
 
+	execution_time <- end_time - start_time
+	cat("execution_time4:")
+	print(execution_time)
+	
 	return(plt)	
 }
 
