@@ -446,7 +446,10 @@ Only_required_fields <- function(sensor_data, timestamp)
 }
 
 smape__ <- function(actual, predicted) {
-  return(mean(2 * abs(predicted - actual) / (abs(actual) + abs(predicted))) * 100)
+	x <- 2 * abs(predicted - actual)
+	y <- (abs(actual) + abs(predicted) + 1.0e-10)
+	z <- x / y
+  return(mean(z, na.rm=T)*100)
 }
 
 make_lgbmodel <- function(initial_data, selected_pairs, idx)
