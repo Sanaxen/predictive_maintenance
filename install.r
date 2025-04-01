@@ -32,6 +32,7 @@ install.packages("lightgbm", repos = "https://cran.r-project.org",lib=install_li
 
 }
 install.packages("ggrepel", repos = "https://cran.r-project.org",lib=install_libpath, type = "binary")
+install.packages("ggplotify", repos = "https://cran.r-project.org",lib=install_libpath, type = "binary")
 
 .libPaths( org_libpath)
 

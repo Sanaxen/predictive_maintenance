@@ -921,6 +921,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 	posterior_abnormal_list <- list()
 	plots <- list()
 	num_plt <- 0
+	pltGrob <- NULL
 	if ( !is.null(selected_pairs) && nrow(selected_pairs) >= 1 )
 	{
 
@@ -1127,7 +1128,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		         	y = "Anomaly probability", x = paste("time [current:",current_time,"]", sep="")) +
 		          scale_x_datetime(breaks = breaks_vec)+
 		          coord_cartesian(clip = "off") +
-				  theme_minimal()
+				  theme_minimal()+ theme(plot.background = element_rect(fill="white"))
 			}
 			
 			plots[[i]] <- plt
@@ -1139,6 +1140,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		if ( length(plots) >= 1 )
 		{					
 			plt <- gridExtra::grid.arrange(grobs=plots, nrow=nrow(selected_pairs))
+			pltGrob <- arrangeGrob(grobs=plots, nrow=nrow(selected_pairs))
 		}
 	}else
 	{
@@ -1304,21 +1306,24 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 
 		  plt <- plt +  labs(title=paste(colnam," :Anomaly probability",sep=""), y="Anomaly probability", x=paste("time [current:",current_time,"]", sep="")) +
           scale_x_datetime(breaks = breaks_vec) + coord_cartesian(clip = "off") +
-		  theme_minimal() + theme(legend.position = "none")
+		  theme(legend.position = "none")
 		  
 		  pr <- df_plot$plotY[nrow(df_plot)]
 		  pr_text <- sprintf("%.2f%%", pr*100)
 		  plt <- SpeedMeter(plt, current_speed = pr*100, title_text = pr_text, x = 0.75, y = 0.8, width = 0.35, height = 0.35)
+		  plt <- plt + theme_minimal() + theme(plot.background = element_rect(fill="white"))
+
 		  
 	  	posterior_abnormal_list[[1]] <- list(paste(colnam,":Anomaly probability",sep=""), c(df_plot$posterior_abnormal))
 	  	
+		pltGrob <- arrangeGrob(grobs=list(plt), nrow=nrow(1))
 		plt <- gridExtra::grid.arrange(grobs=list(plt), nrow=nrow(1))
 		num_plt <- num_plt + 1
 		#plt
 	}
 	print("====== Detection_precursor_phenomena_test end =======")
 	
-	return( list(plt, plots, num_plt, anomaly_cunt, anomaly_max, posterior_abnormal_list) )
+	return( list(plt, plots, num_plt, anomaly_cunt, anomaly_max, posterior_abnormal_list, pltGrob) )
 }
 
 Detection_precursor_phenomena <- function(df, timeStamp, dpp_model=NULL, 
@@ -1376,12 +1381,13 @@ Detection_precursor_phenomena <- function(df, timeStamp, dpp_model=NULL,
 	cat("train error rate")
 	print(rate)
 	posterior_abnormal <-  plt[[6]]
+	pltGrob <-  plt[[7]]
 
 	if ( is.null(plt)) 
 	{
 		return(NULL)
 	}
-	return ( list(plt,dpp_model, posterior_abnormal) )
+	return ( list(plt,dpp_model, posterior_abnormal, pltGrob) )
 }
 
 

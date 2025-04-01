@@ -148,7 +148,7 @@ rul_curve_plot <- function(index_number=-1)
 	{
 		#cat("sum(!is.na(cur_rul_df$percent5))")
 		#print(sum(!is.na(cur_rul_df$percent5)))
-		return(1)
+		return(NULL)
 	}
 	#cat("---sum(!is.na(cur_rul_df$percent5))")
 	#print(sum(!is.na(cur_rul_df$percent5)))
@@ -156,7 +156,7 @@ rul_curve_plot <- function(index_number=-1)
 	print(valid_unit)
 	if ( valid_unit == "" ) 
 	{
-		return(1)
+		return(NULL)
 	}
 	#print(valid_unit)
 	
@@ -219,6 +219,7 @@ rul_curve_plot <- function(index_number=-1)
 
 	start_time <- Sys.time()
 
+	
 	cur_rul_plt <- NULL
 	if ( sum(!is.na(cur_rul_df$percent5)) >= 2)
 	{

@@ -30,6 +30,7 @@ library(crayon)
 #library(crayons)
 
 library(grid)
+library(ggplotify)
 
 options(crayon.enabled = TRUE)
 
@@ -4006,6 +4007,7 @@ eval_detection_precursor_phenomena <- function(df2)
 	#print("************************************************************")
 	plt <- NULL
 	posterior_abnormal <- NULL
+	pltGrob <- NULL
 	
 	#print("delta_time")
 	#print(delta_time)
@@ -4052,6 +4054,7 @@ eval_detection_precursor_phenomena <- function(df2)
 		num_plt <- dpp[[1]][[3]]
 		detection_precursor_phenomena_model <<- dpp[[2]]
 		posterior_abnormal <- dpp[[3]]
+		pltGrob <- dpp[[4]]
 		
 		saveRDS(detection_precursor_phenomena_model, file=paste(csv_dir_name,"/Detection_precursor_phenomena_Model.rds",sep=""))
 		detection_precursor_phenomena_model <<- readRDS(paste(csv_dir_name,"/Detection_precursor_phenomena_Model.rds",sep=""))
@@ -4069,7 +4072,7 @@ eval_detection_precursor_phenomena <- function(df2)
 		}
 		#print("************************************************************")
 	}
-	return( list(plt, posterior_abnormal) )
+	return( list(plt, posterior_abnormal, pltGrob) )
 }
 
 predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
@@ -5040,7 +5043,11 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 		
 		rul_curve_plot_plt <- NULL
 		rul_curve_plot_plt <- rul_curve_plot(index_number=index_number)
-		
+		if ( !is.null(rul_curve_plot_plt))
+		{
+			#saveRDS(rul_curve_plot_plt, file="rul_curve_plot_plt.obj")
+			#quit()
+		}
 #//////////////////////////
 			
 
@@ -5351,25 +5358,106 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			  xmin = -Inf, xmax = Inf,
 			  ymin = -Inf, ymax = Inf
 			) 
-			              
-		if ( is.null(tracking_feature))
+			     
+		if ( T )
 		{
-			#https://id.fnshr.info/2016/10/10/gridextra/
-			layout1 <- rbind(	c(6, 6, 1),
-								c(2, 2, 1),
-			                 	c(3, 4, 5))
-			plt0 <- plt0 + 
-			theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-			plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
-											layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
+			if ( is.null(tracking_feature))
+			{
+				#https://id.fnshr.info/2016/10/10/gridextra/
+				layout1 <- rbind(	c(6, 6, 1),
+									c(2, 2, 1),
+				                 	c(3, 4, 5))
+				plt0 <- plt0 + 
+				theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+				plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+												layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
+			}else
+			{
+				layout1 <- rbind(c(1, 1, 1),
+				                 c(2, 3, 4))
+				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
+			}
+			ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4, limitsize =F)
 		}else
 		{
-			layout1 <- rbind(c(1, 1, 1),
-			                 c(2, 3, 4))
-			plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
+			if ( is.null(tracking_feature))
+			{
+				plt <- NULL
+				if (!is.null(rul_curve_plot_plt) && !is.null(detection_precursor_phenomena_plt[[3]]))
+				{
+					layout1 <- rbind(	c(6, 6, 8, 8),
+										c(2, 2, 8, 8),
+										c(7, 7, 8, 8),
+					                 	c(1, 3, 4, 5))
+					                 	
+					plt0 <- plt0 + 
+					theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+					
+					dpp_plt <- as.ggplot(grid.arrange(grobs = list(detection_precursor_phenomena_plt[[3]])))
+					 
+					#gridExtra::grid.arrange
+					#arrangeGrob
+					plt <- arrangeGrob( plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+													rul_curve_plot_plt,
+													dpp_plt,
+													layout_matrix = layout1, top = current_time, heights=c(1.2,2,2,2))
+				}
+				if (is.null(plt) && !is.null(rul_curve_plot_plt) && is.null(detection_precursor_phenomena_plt[[3]]))
+				{
+					layout1 <- rbind(	c(6, 6, 6, 6),
+										c(2, 2, 2, 2),
+										c(7, 7, 7, 7),
+					                 	c(1, 3, 4, 5))
+					                 	
+					plt0 <- plt0 + 
+					theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+										 
+					#gridExtra::grid.arrange
+					#arrangeGrob
+					plt <- arrangeGrob( plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+													rul_curve_plot_plt,
+													layout_matrix = layout1, top = current_time, heights=c(1.2,2,2,2))
+				}
+				if (is.null(plt) && is.null(rul_curve_plot_plt) && !is.null(detection_precursor_phenomena_plt[[3]]))
+				{
+					layout1 <- rbind(	c(6, 6, 7, 7),
+										c(2, 2, 7, 7),
+										c(3, 4, 7, 7),
+					                 	c(1, 5, 7, 7))
+					                 	
+					plt0 <- plt0 + 
+					theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+					
+					dpp_plt <- as.ggplot(grid.arrange(grobs = list(detection_precursor_phenomena_plt[[3]])))
+					 
+					#gridExtra::grid.arrange
+					#arrangeGrob
+					plt <- arrangeGrob( plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+													dpp_plt,
+													layout_matrix = layout1, top = current_time, heights=c(1.2,2,2,2))
+				}
+				
+				if (is.null(plt))
+				{
+					#https://id.fnshr.info/2016/10/10/gridextra/
+					layout1 <- rbind(	c(6, 6, 1),
+										c(2, 2, 1),
+					                 	c(3, 4, 5))
+					plt0 <- plt0 + 
+					theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+					plt <- gridExtra::grid.arrange(plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
+													layout_matrix = layout1, top = current_time, heights=c(0.5,2,1))
+				}
+			}else
+			{
+				layout1 <- rbind(c(1, 1, 1),
+				                 c(2, 3, 4))
+				plt <- gridExtra::grid.arrange( looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], layout_matrix = layout1, top = current_time)
+			}
+			ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*2.5, height = 6.8*2.4, limitsize =F)
 		}
-		#ggsave(file = paste(putpng_path, result_png, sep=""), plot = looked_var_plt, dpi = 130, width = 14*1.5, height = 9.8*1.4)
-		ggsave(file = paste(putpng_path, result_png, sep=""), plot = plt, dpi = 130, width = 14*1.5, height = 6.8*1.4)
+		
+
 		rm(plt)
 		freeram()
 		
