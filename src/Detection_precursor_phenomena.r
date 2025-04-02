@@ -1310,7 +1310,7 @@ Detection_precursor_phenomena_test <- function(df, timeStamp, dpp_model, percent
 		  
 		  pr <- df_plot$plotY[nrow(df_plot)]
 		  pr_text <- sprintf("%.2f%%", pr*100)
-		  plt <- SpeedMeter(plt, current_speed = pr*100, title_text = pr_text, x = 0.75, y = 0.8, width = 0.35, height = 0.35)
+		  plt <- SpeedMeter(plt, current_speed = pr*100, title_text = pr_text, x = 0.75, y = 0.75, width = 0.30, height = 0.30)
 		  plt <- plt + theme_minimal() + theme(plot.background = element_rect(fill="white"))
 
 		  

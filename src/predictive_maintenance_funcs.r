@@ -5359,7 +5359,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 			  ymin = -Inf, ymax = Inf
 			) 
 			     
-		if ( T )
+		if ( F )
 		{
 			if ( is.null(tracking_feature))
 			{
@@ -5400,7 +5400,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					plt <- arrangeGrob( plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
 													rul_curve_plot_plt,
 													dpp_plt,
-													layout_matrix = layout1, top = current_time, heights=c(1.2,2,2,2))
+													layout_matrix = layout1, top = current_time, heights=c(0.5,2,1,1))
 				}
 				if (is.null(plt) && !is.null(rul_curve_plot_plt) && is.null(detection_precursor_phenomena_plt[[3]]))
 				{
@@ -5416,7 +5416,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					#arrangeGrob
 					plt <- arrangeGrob( plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
 													rul_curve_plot_plt,
-													layout_matrix = layout1, top = current_time, heights=c(1.2,2,2,2))
+													layout_matrix = layout1, top = current_time, heights=c(0.5,2,1,1))
 				}
 				if (is.null(plt) && is.null(rul_curve_plot_plt) && !is.null(detection_precursor_phenomena_plt[[3]]))
 				{
@@ -5434,7 +5434,7 @@ predictin <- function(df, tracking_feature_args, timeStamp_arg, sigin_arg)
 					#arrangeGrob
 					plt <- arrangeGrob( plt0, looked_var_plt, plt_s[[1]], plt_s[[2]], plt_s[[3]], org_plt, 
 													dpp_plt,
-													layout_matrix = layout1, top = current_time, heights=c(1.2,2,2,2))
+													layout_matrix = layout1, top = current_time, heights=c(0.5,2,1,1))
 				}
 				
 				if (is.null(plt))
