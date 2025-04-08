@@ -306,8 +306,8 @@ namespace Sequential_number_viewer
             string ffmpeg = path + "\\ffmpeg.exe";
             var app = new ProcessStartInfo();
             app.FileName = ffmpeg;
-            app.Arguments = " -i \"" + textBox1.Text+ "\\tmp\\result-%06d.png\"" +
-                " -crf 6  -vf scale=1024:-1  -b:v 5M -framerate 1  " +
+            app.Arguments = " -r 4 -i \"" + textBox1.Text+ "\\tmp\\result-%06d.png\"" +
+                " -vf scale=1024:-1  -b:v 5M  -r 8 -q:v 2 " +
                 " image.avi";
 
             var p = Process.Start(app);
