@@ -1115,7 +1115,21 @@ namespace pm
 
             var encoding = new System.Text.UTF8Encoding(false);
 
+            string nkf_bat_main = "_tmp_nkf_main.bat";
             string nkf_bat = "_tmp_nkf.bat";
+            try
+            {
+                using (System.IO.StreamWriter sw = new StreamWriter(nkf_bat_main, false, encoding))
+                {
+                    sw.Write("chcp 65001 >nul" + "\n");
+                    sw.Write("  call "+ nkf_bat + "\n");
+                }
+            }
+            catch
+            {
+                if (MessageBox.Show("nkf", "", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                    return "";
+            }
             try
             {
                 using (System.IO.StreamWriter sw = new StreamWriter(nkf_bat, false, encoding))
@@ -1132,7 +1146,7 @@ namespace pm
 
 
             pInfo.FileName = "cmd.exe";
-            pInfo.Arguments = " /c " + nkf_bat;
+            pInfo.Arguments = " /c " + nkf_bat_main;
 
             if (!File.Exists(nkf_bat))
             {
@@ -1336,7 +1350,22 @@ namespace pm
 
                 var encoding2 = new System.Text.UTF8Encoding(false);
 
+                string nkf_main_bat = base_name + "_nkf_.bat";
                 string nkf_bat = base_name + "_nkf.bat";
+                try
+                {
+                    using (System.IO.StreamWriter sw = new StreamWriter(nkf_main_bat, false, encoding2))
+                    {
+                        sw.Write("chcp 65001 >nul\n");
+                        sw.Write("  call " + nkf_bat + "\n");
+                    }
+                }
+                catch
+                {
+                    if (MessageBox.Show("nkf", "", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        return;
+                }
+
                 try
                 {
                     using (System.IO.StreamWriter sw = new StreamWriter(nkf_bat, false, encoding2))
@@ -2664,35 +2693,68 @@ namespace pm
 
         private void radioButton6_CheckedChanged(object sender, EventArgs e)
         {
-            button6.Text = "!Monitor!";
-            timer1.Enabled = false;
-            timer1.Stop();
+            bool s = timer1.Enabled;
+            if (s)
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                timer1.Enabled = true;
+                timer1.Start();
+                button6.Text = "Monitor stop";
+            }
+            else
+            {
+                timer1.Enabled = true;
+                timer1.Start();
+                timer1.Enabled = false;
+                timer1.Stop();
+                button6.Text = "!Monitor!";
 
-            button6.Text = "Monitor stop";
-            timer1.Enabled = true;
-            timer1.Start();
+            }
         }
 
         private void radioButton9_CheckedChanged(object sender, EventArgs e)
         {
-            button6.Text = "!Monitor!";
-            timer1.Enabled = false;
-            timer1.Stop();
+            bool s = timer1.Enabled;
+            if (s)
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                timer1.Enabled = true;
+                timer1.Start();
+                button6.Text = "Monitor stop";
+            }
+            else
+            {
+                timer1.Enabled = true;
+                timer1.Start();
+                timer1.Enabled = false;
+                timer1.Stop();
+                button6.Text = "!Monitor!";
 
-            button6.Text = "Monitor stop";
-            timer1.Enabled = true;
-            timer1.Start();
+            }
         }
 
         private void radioButton10_CheckedChanged(object sender, EventArgs e)
         {
-            button6.Text = "!Monitor!";
-            timer1.Enabled = false;
-            timer1.Stop();
+            bool s = timer1.Enabled;
+            if (s)
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                timer1.Enabled = true;
+                timer1.Start();
+                button6.Text = "Monitor stop";
+            }
+            else
+            {
+                timer1.Enabled = true;
+                timer1.Start();
+                timer1.Enabled = false;
+                timer1.Stop();
+                button6.Text = "!Monitor!";
 
-            button6.Text = "Monitor stop";
-            timer1.Enabled = true;
-            timer1.Start();
+            }
         }
     }
 }
