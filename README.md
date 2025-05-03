@@ -59,8 +59,9 @@ Therefore, the simulation of the RUL estimation below may be unrelated to the cu
 
 - Time stamp items added as appropriate  
 
-## milling cutter(tool wear (flank wear)) 1
-<img src="./md/images/result-000238.png">  
+## milling cutter(tool wear (flank wear)) 1  
+[![](./md/images/result-000238.png)](https://youtu.be/Mc_zkOA10KM)
+
 
 The data set is useful for measuring tool wear and predicting remaining tool life,
  including tool replacement.
@@ -74,7 +75,9 @@ Although the simulation of RUL estimation predicts tool wear conditions,
 Therefore, the following example shows a RUL estimation simulation without tool wear values (column VB).  
 
 ## milling cutter(tool wear (flank wear)) 2 
-<img src="./md/images/result-000313.png">  
+[![](./md/images/result-000313.png)](https://youtu.be/kkP_sw-L8xI) 
+
+
 
 The threshold could not be fixed if wear was not used as an indicator of residual life
  and **smcAC** (AC spindle motor current), which is easier to observe, was used instead.
@@ -96,7 +99,8 @@ https://calce.umd.edu/data#CS2
 
 
 <img src="./dataset/BatteryLife.png">  
-<img src="./md/images/result-000454.png">  
+
+[![](./md/images/result-000454.png)](https://youtu.be/THiEjM4Vt3U)  
 
 **Gompertz degradation model**  
 
@@ -114,14 +118,16 @@ https://www.kaggle.com/datasets/behrad3d/nasa-cmaps
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD001_Uint1  
 <img src="./dataset/Turbofan_Jet_Engine_s7.png">  
-<img src="./md/images/result-000084.png">  
+
+[![](./md/images/result-000084.png)](https://youtu.be/lMFMfrXT2x8)  
 
 - Time stamp items added as appropriate  
 
 
 ## NASA_Turbofan_Jet_Engine_Data_train_FD004_Uint1  
 <img src="./dataset/Turbofan_Jet_Engine2_s7.png">  
-<img src="./md/images/result-000155.png">  
+
+[![](./md/images/result-000155.png)](https://youtu.be/nAtrxDTQSxA)  
 - Time stamp items added as appropriate  
 
 ---
@@ -136,7 +142,8 @@ https://www.kaggle.com/datasets/luishpinto/wind-turbine-high-speed-bearing-progn
 <img src="./dataset/dataset-card.jpeg" width="60%">
 </div>  
 <img src="./dataset/vibration.png">  
-<img src="./md/images/result-000040.png">  
+
+[![](./md/images/result-000040.png)](https://youtu.be/ICAmTAv9s3M)  
 - Time stamp items added as appropriate
 
 ### remaining useful life (RUL)
